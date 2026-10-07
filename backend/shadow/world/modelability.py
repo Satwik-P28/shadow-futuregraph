@@ -22,7 +22,7 @@ _DAYS = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "su
 
 
 class ModelabilityResult(BaseModel):
-    status: Literal["SUPPORTED", "NEEDS_INFORMATION", "UNSUPPORTED"]
+    status: Literal["SUPPORTED", "NEEDS_INFORMATION", "UNSUPPORTED", "CONTRADICTORY"]
     reason: str
     missing_information: list[str] = Field(default_factory=list)
     compiled_constraints: list[str] = Field(default_factory=list)

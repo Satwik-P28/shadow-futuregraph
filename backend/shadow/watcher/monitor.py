@@ -44,7 +44,7 @@ class FutureWatcher:
 
     def restore(self) -> int:
         loaded = 0
-        for payload in self.service.events.load_approved():
+        for payload in self.service.events.load_approved(session_id=self.service.session_id):
             plan_id = payload["plan_id"]
             if plan_id in self.service.plans:
                 continue

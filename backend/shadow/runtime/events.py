@@ -117,12 +117,19 @@ class EventLog:
                 row.payload = encoded
             session.commit()
 
-    def clear_approved(self) -> None:
+    def clear_approved(self, session_id: str | None = None) -> None:
         with self._lock, self.factory() as session:
-            session.query(ContractRow).delete()
+            rows = session.query(ContractRow).all()
+            for row in rows:
+                if session_id is None or json.loads(row.payload).get("session_id") == session_id:
+                    session.delete(row)
             session.commit()
 
-    def load_approved(self, statuses: tuple[str, ...] = ("ACTIVE", "REAFFIRMED")) -> list[dict[str, Any]]:
+    def load_approved(
+        self,
+        statuses: tuple[str, ...] = ("ACTIVE", "REAFFIRMED"),
+        session_id: str | None = None,
+    ) -> list[dict[str, Any]]:
         with self._lock, self.factory() as session:
             rows = session.query(ContractRow).all()
         found = []
@@ -130,6 +137,12 @@ class EventLog:
             if row.status not in statuses:
                 continue
             payload = json.loads(row.payload)
+            row_session = payload.get("session_id")
+            if session_id is None:
+                if row_session not in {None, ""}:
+                    continue
+            elif row_session != session_id:
+                continue
             payload["status"] = row.status
             found.append(payload)
         return found

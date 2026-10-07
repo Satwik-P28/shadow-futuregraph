@@ -63,6 +63,9 @@ def create_app(service: PlanService | None = None) -> FastAPI:
     @app.middleware("http")
     async def bind_session(request: Request, call_next):
         session_id, bound, created = request.app.state.sessions.get_or_create(request.cookies.get("shadow_session"))
+        bound.session_id = session_id
+        if created:
+            bound.watcher.restore()
         request.state.service = bound
         response = await call_next(request)
         if created or request.cookies.get("shadow_session") != session_id:

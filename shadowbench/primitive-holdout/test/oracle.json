@@ -1,0 +1,146 @@
+{
+  "test-00": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "test-01": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "test-02": {
+    "status": "CONTRADICTORY"
+  },
+  "test-03": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "test-04": {
+    "status": "UNSUPPORTED"
+  },
+  "test-05": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "test-06": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "test-07": {
+    "status": "CONTRADICTORY"
+  },
+  "test-08": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "test-09": {
+    "status": "UNSUPPORTED"
+  },
+  "test-10": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "test-11": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "test-12": {
+    "status": "CONTRADICTORY"
+  },
+  "test-13": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "test-14": {
+    "status": "UNSUPPORTED"
+  },
+  "test-15": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "test-16": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "test-17": {
+    "status": "CONTRADICTORY"
+  },
+  "test-18": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "test-19": {
+    "status": "UNSUPPORTED"
+  },
+  "test-20": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "test-21": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "test-22": {
+    "status": "CONTRADICTORY"
+  },
+  "test-23": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "test-24": {
+    "status": "UNSUPPORTED"
+  },
+  "test-25": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "test-26": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "test-27": {
+    "status": "CONTRADICTORY"
+  },
+  "test-28": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "test-29": {
+    "status": "UNSUPPORTED"
+  },
+  "test-30": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "test-31": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "test-32": {
+    "status": "CONTRADICTORY"
+  },
+  "test-33": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "test-34": {
+    "status": "UNSUPPORTED"
+  },
+  "test-35": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "test-36": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "test-37": {
+    "status": "CONTRADICTORY"
+  },
+  "test-38": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "test-39": {
+    "status": "UNSUPPORTED"
+  }
+}

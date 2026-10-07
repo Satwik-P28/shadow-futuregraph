@@ -1,0 +1,146 @@
+{
+  "dev-00": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "dev-01": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "dev-02": {
+    "status": "CONTRADICTORY"
+  },
+  "dev-03": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "dev-04": {
+    "status": "UNSUPPORTED"
+  },
+  "dev-05": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "dev-06": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "dev-07": {
+    "status": "CONTRADICTORY"
+  },
+  "dev-08": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "dev-09": {
+    "status": "UNSUPPORTED"
+  },
+  "dev-10": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "dev-11": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "dev-12": {
+    "status": "CONTRADICTORY"
+  },
+  "dev-13": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "dev-14": {
+    "status": "UNSUPPORTED"
+  },
+  "dev-15": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "dev-16": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "dev-17": {
+    "status": "CONTRADICTORY"
+  },
+  "dev-18": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "dev-19": {
+    "status": "UNSUPPORTED"
+  },
+  "dev-20": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "dev-21": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "dev-22": {
+    "status": "CONTRADICTORY"
+  },
+  "dev-23": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "dev-24": {
+    "status": "UNSUPPORTED"
+  },
+  "dev-25": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "dev-26": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "dev-27": {
+    "status": "CONTRADICTORY"
+  },
+  "dev-28": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "dev-29": {
+    "status": "UNSUPPORTED"
+  },
+  "dev-30": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "dev-31": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "dev-32": {
+    "status": "CONTRADICTORY"
+  },
+  "dev-33": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "dev-34": {
+    "status": "UNSUPPORTED"
+  },
+  "dev-35": {
+    "status": "READY",
+    "low_feasible": true,
+    "high_feasible": true
+  },
+  "dev-36": {
+    "status": "NEEDS_INFORMATION"
+  },
+  "dev-37": {
+    "status": "CONTRADICTORY"
+  },
+  "dev-38": {
+    "status": "READY",
+    "over_budget": true
+  },
+  "dev-39": {
+    "status": "UNSUPPORTED"
+  }
+}

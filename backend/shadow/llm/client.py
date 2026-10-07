@@ -27,6 +27,7 @@ PURPOSE_TOKENS = {
     "plan_choice": ("plan_choice.txt", 256),
     "critique_choice": ("critique_choice.txt", 256),
     "compile_world": ("compile_world.txt", 512),
+    "compile_executable": ("compile_executable.txt", 768),
     "audit_world": ("audit_world.txt", 384),
 }
 
@@ -264,6 +265,8 @@ class FakeNemotronClient:
             payload = _fake_plan(context)
         elif purpose == "propose_repairs":
             payload = _fake_repairs(context)
+        elif purpose == "compile_executable":
+            payload = {"variables": [], "constraints": [], "actions": []}
         else:
             raise SchemaError(f"unknown purpose {purpose}")
         return schema.model_validate(payload)

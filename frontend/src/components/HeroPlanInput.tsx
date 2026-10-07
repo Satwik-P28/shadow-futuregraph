@@ -80,6 +80,14 @@ export function HeroPlanInput({
           <p className="mt-3 text-[11px] uppercase tracking-[0.16em] text-mute">Missing information</p>
         </div>
       ) : null}
+      {modelability?.status === "CONTRADICTORY" ? (
+        <div className="mt-4 max-w-xl text-sm text-clay" aria-label="Conflicting records">
+          <p>{modelability.reason}</p>
+          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-paper">
+            {modelability.missing_information.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </div>
+      ) : null}
       {modelability?.status === "UNSUPPORTED" ? (
         <div className="mt-4 max-w-xl text-sm text-clay">
           <p>{modelability.reason}</p>

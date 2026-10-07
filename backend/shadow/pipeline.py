@@ -44,10 +44,30 @@ def _now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def _compiled_modelability(compiled: Any) -> dict[str, Any]:
+    from shadow.world.modelability import ModelabilityResult
+
+    status = {
+        "READY": "SUPPORTED",
+        "NEEDS_INFORMATION": "NEEDS_INFORMATION",
+        "CONTRADICTORY": "CONTRADICTORY",
+        "UNSUPPORTED": "UNSUPPORTED",
+    }[compiled.status]
+    return ModelabilityResult(
+        status=status,
+        reason=compiled.reason,
+        missing_information=list(compiled.missing or compiled.contradictions),
+        compiled_constraints=list(compiled.constraint_labels),
+        compiled_dependencies=list(compiled.dependency_labels),
+        provenance="executable primitive compiler",
+    ).model_dump(mode="json")
+
+
 class PlanService:
-    def __init__(self, events: EventLog, client: Any | None = None) -> None:
+    def __init__(self, events: EventLog, client: Any | None = None, session_id: str | None = None) -> None:
         self.events = events
         self.client = client or FakeNemotronClient()
+        self.session_id = session_id
         self.plans: dict[str, dict[str, Any]] = {}
         self.demo_futures = demo_pair()
         self.skills = SkillRegistry()
@@ -105,6 +125,18 @@ class PlanService:
             raise ValueError("Enter what you are planning.")
         if demo_context_id not in {None, "travel", "apartment"}:
             raise ValueError("Unknown example context.")
+        if demo_context_id is None:
+            from shadow.world.executable import compile_primitives
+
+            compiled = compile_primitives(
+                cleaned,
+                [{"id": "user_plan", "text": cleaned, "observed_at": "1970-01-01T00:00:00Z"}],
+            )
+            if compiled.status == "READY" and compiled.scenario is not None:
+                view = self.open_compiled(cleaned, compiled.scenario, seed)
+                return {"modelability": _compiled_modelability(compiled), "plan": view}
+            if compiled.status in {"NEEDS_INFORMATION", "CONTRADICTORY"}:
+                return {"modelability": _compiled_modelability(compiled), "plan": None}
         result = assess_freeform(cleaned, demo_context_id)
         if result.status != "SUPPORTED" or demo_context_id is None:
             return {"modelability": result.model_dump(mode="json"), "plan": None}
@@ -170,6 +202,26 @@ class PlanService:
         self._stage(record, "READY")
         record["future_summary"] = _future_summary(record)
         return self.view(plan_id)
+
+    def open_compiled(self, text: str, scenario: Scenario, seed: int = 7) -> dict[str, Any]:
+        """Run search on a world the executable compiler produced. Not a fixture."""
+        plan_id = uuid.uuid4().hex[:12]
+        record = {
+            "id": plan_id,
+            "text": text,
+            "scenario_id": scenario.id,
+            "seed": seed,
+            "status": "CREATED",
+            "stages": [],
+            "contract": None,
+            "providers": SandboxProviders(),
+            "scenario": scenario,
+            "compiled_from": "executable primitive compiler",
+            "skill_id": None,
+        }
+        self.plans[plan_id] = record
+        self.events.append(plan_id, "PLAN_CREATED", {"scenario_id": scenario.id, "route": "executable"}, "compiler")
+        return self.analyze(plan_id)
 
     def approve(self, plan_id: str, repair_id: str) -> dict[str, Any]:
         record = self.plans[plan_id]
@@ -321,6 +373,7 @@ class PlanService:
                 "skill_id": record.get("skill_id"),
                 "contract": contract.model_dump(mode="json"),
                 "scenario": record["scenario"].model_dump(mode="json"),
+                "session_id": self.session_id,
             },
         )
 
@@ -346,7 +399,7 @@ class PlanService:
 
     def reset_demo(self) -> dict[str, Any]:
         self.plans.clear()
-        self.events.clear_approved()
+        self.events.clear_approved(self.session_id)
         self.demo_futures = demo_pair()
         created = self.create(
             "Move my NYC trip to Friday and make sure everything still works.",

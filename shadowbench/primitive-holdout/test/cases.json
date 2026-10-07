@@ -1,0 +1,722 @@
+[
+  {
+    "id": "test-00",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Harbor Desk ends at 8:00 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Harbor Desk to badge queue takes 15-35 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Badge Queue to clinic intake takes 10-25 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "d",
+        "text": "Clinic Intake starts at 9:10 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-01",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Pottery Studio arrives at 8:30 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Notary Desk starts at 9:40 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-02",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Gallery Talk starts at 10:10 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Gallery Talk starts at 11:10 AM.",
+        "observed_at": "2026-10-02T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-03",
+    "plan": "Can I buy both?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Ink Set costs $70.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Field Recorder costs $180.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Available budget is at most $200.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-04",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Maybe we can sort of get there before the thing.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-05",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Harbor Desk ends at 8:30 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Harbor Desk to badge queue takes 25-45 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Badge Queue to clinic intake takes 10-25 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "d",
+        "text": "Clinic Intake starts at 9:40 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-06",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Pottery Studio arrives at 9:00 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Notary Desk starts at 10:10 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-07",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Gallery Talk starts at 10:40 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Gallery Talk starts at 11:40 AM.",
+        "observed_at": "2026-10-02T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-08",
+    "plan": "Can I buy both?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Field Recorder costs $180.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Spare Battery costs $90.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Available budget is at most $200.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-09",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Maybe we can sort of get there before the thing.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-10",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Harbor Desk ends at 9:00 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Harbor Desk to badge queue takes 20-40 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Badge Queue to clinic intake takes 10-25 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "d",
+        "text": "Clinic Intake starts at 10:10 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-11",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Pottery Studio arrives at 9:30 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Notary Desk starts at 10:40 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-12",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Gallery Talk starts at 9:10 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Gallery Talk starts at 10:10 AM.",
+        "observed_at": "2026-10-02T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-13",
+    "plan": "Can I buy both?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Spare Battery costs $90.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Linen Roll costs $240.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Available budget is at most $200.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-14",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Maybe we can sort of get there before the thing.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-15",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Harbor Desk ends at 9:30 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Harbor Desk to badge queue takes 15-35 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Badge Queue to clinic intake takes 10-25 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "d",
+        "text": "Clinic Intake starts at 10:40 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-16",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Pottery Studio arrives at 8:00 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Notary Desk starts at 9:10 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-17",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Gallery Talk starts at 9:40 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Gallery Talk starts at 10:40 AM.",
+        "observed_at": "2026-10-02T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-18",
+    "plan": "Can I buy both?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Linen Roll costs $240.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Ink Set costs $70.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Available budget is at most $200.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-19",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Maybe we can sort of get there before the thing.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-20",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Harbor Desk ends at 8:00 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Harbor Desk to badge queue takes 25-45 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Badge Queue to clinic intake takes 10-25 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "d",
+        "text": "Clinic Intake starts at 9:10 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-21",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Pottery Studio arrives at 8:30 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Notary Desk starts at 9:40 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-22",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Gallery Talk starts at 10:10 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Gallery Talk starts at 11:10 AM.",
+        "observed_at": "2026-10-02T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-23",
+    "plan": "Can I buy both?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Ink Set costs $70.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Field Recorder costs $180.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Available budget is at most $200.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-24",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Maybe we can sort of get there before the thing.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-25",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Harbor Desk ends at 8:30 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Harbor Desk to badge queue takes 20-40 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Badge Queue to clinic intake takes 10-25 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "d",
+        "text": "Clinic Intake starts at 9:40 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-26",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Pottery Studio arrives at 9:00 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Notary Desk starts at 10:10 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-27",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Gallery Talk starts at 10:40 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Gallery Talk starts at 11:40 AM.",
+        "observed_at": "2026-10-02T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-28",
+    "plan": "Can I buy both?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Field Recorder costs $180.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Spare Battery costs $90.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Available budget is at most $200.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-29",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Maybe we can sort of get there before the thing.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-30",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Harbor Desk ends at 9:00 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Harbor Desk to badge queue takes 15-35 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Badge Queue to clinic intake takes 10-25 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "d",
+        "text": "Clinic Intake starts at 10:10 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-31",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Pottery Studio arrives at 9:30 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Notary Desk starts at 10:40 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-32",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Gallery Talk starts at 9:10 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Gallery Talk starts at 10:10 AM.",
+        "observed_at": "2026-10-02T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-33",
+    "plan": "Can I buy both?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Spare Battery costs $90.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Linen Roll costs $240.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Available budget is at most $200.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-34",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Maybe we can sort of get there before the thing.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-35",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Harbor Desk ends at 9:30 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Harbor Desk to badge queue takes 25-45 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Badge Queue to clinic intake takes 10-25 minutes.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "d",
+        "text": "Clinic Intake starts at 10:40 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-36",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Pottery Studio arrives at 8:00 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Notary Desk starts at 9:10 AM and cannot move.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-37",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Gallery Talk starts at 9:40 AM.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Gallery Talk starts at 10:40 AM.",
+        "observed_at": "2026-10-02T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-38",
+    "plan": "Can I buy both?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Linen Roll costs $240.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "b",
+        "text": "Ink Set costs $70.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      },
+      {
+        "id": "c",
+        "text": "Available budget is at most $200.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "test-39",
+    "plan": "Can I arrive in time?",
+    "records": [
+      {
+        "id": "a",
+        "text": "Maybe we can sort of get there before the thing.",
+        "observed_at": "2026-10-01T00:00:00Z"
+      }
+    ]
+  }
+]

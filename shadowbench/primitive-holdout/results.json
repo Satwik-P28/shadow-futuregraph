@@ -1,0 +1,21 @@
+{
+  "dev": {
+    "cases": 40,
+    "status_hit": 40,
+    "executable_ready": 16,
+    "low_hit": 8,
+    "low_total": 8,
+    "high_hit": 8,
+    "high_total": 8
+  },
+  "test": {
+    "cases": 40,
+    "status_hit": 40,
+    "executable_ready": 16,
+    "low_hit": 8,
+    "low_total": 8,
+    "high_hit": 8,
+    "high_total": 8
+  },
+  "note": "grammar holdout, not open-world NLP, no model"
+}

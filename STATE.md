@@ -46,9 +46,9 @@ P0 depth. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - Adversarial holdout: Shadow 9/10, no-search 7/10, failure recall 6/6, false hazards 0/10, regret 0.1. Miss: non_monotonic selected the larger-radius repair
 
 ## Next 3 tasks
-1. Confirm the red-team commit on the public sandbox, including two-browser isolation
+1. Confirm the executable-compiler commit on the public sandbox without breaking the NYC example
 2. Leave live Calendar, Gmail, and Tavily off until credentials exist
-3. Do not rerun the frozen 30-world pilot, compiler study, or red-team live pass
+3. Do not rerun the frozen 30-world pilot, compiler study, red-team live pass, or primitive holdout
 
 ## This pass
 - Cross-plan conflicts now cover value, time overlap, explicit shared budget, protected resources, and asset state
@@ -68,6 +68,17 @@ P0 depth. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - New Nebius spend this red-team pass: 0.00678450
 - recorded repo ledger: 0.04120818
 - recorded known total: 0.06153630
+
+## Executable compiler
+- `backend/shadow/world/executable.py` builds Expr constraints from documented time, duration, and budget sentences
+- It does not read `example_world.py` or `fixtures/travel/world.json`
+- Missing durations return NEEDS_INFORMATION. Unsuperseded conflicts return CONTRADICTORY
+- Model proposals are accepted only through the allowlisted schema and citation checks
+- Grammar holdout `shadowbench/primitive-holdout/`: dev status 40/40, test status 40/40. This is not open-world NLP
+- Public demo still uses the example fixture when the NYC or apartment context is selected. NEBIUS_LIVE stays off there
+- Google Calendar credentials are absent. No live read or write
+- Durable session restore works on a sqlite file. The public demo still uses in-memory sqlite unless SHADOW_DB_PATH is set. Render's disk is ephemeral, so hosted durability is not claimed
+- New Nebius spend this pass: 0
 
 ## Test commands
 - `make test`

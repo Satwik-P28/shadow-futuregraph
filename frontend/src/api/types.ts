@@ -42,7 +42,7 @@ export type Repair = {
   failures: Failure[];
 };
 
-export type ModelabilityStatus = "SUPPORTED" | "NEEDS_INFORMATION" | "UNSUPPORTED";
+export type ModelabilityStatus = "SUPPORTED" | "NEEDS_INFORMATION" | "UNSUPPORTED" | "CONTRADICTORY";
 
 export type ModelabilityResult = {
   status: ModelabilityStatus;

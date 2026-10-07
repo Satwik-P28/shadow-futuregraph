@@ -61,6 +61,8 @@ class SandboxProviders:
 
     def verify(self, action: ActionDef) -> bool:
         resource = self.state.get(action.resource)
+        if "state_token" in action.effects:
+            return resource is not None and resource.get("state_token") == action.effects["state_token"]
         if resource is None:
             return action.resource == "workshop" or action.resource.startswith("move") or action.resource.startswith("lease")
         if action.resource == "bk_nyc" and "flight_departure_min" in action.effects:
@@ -118,3 +120,7 @@ class SandboxProviders:
             self.state["cal_dinner"]["time"] = "23:00"
         elif action.resource == "cal_exam":
             self.state["cal_exam"]["moved"] = True
+        elif "state_token" in action.effects:
+            bucket = self.state.setdefault(action.resource, {})
+            if isinstance(bucket, dict):
+                bucket["state_token"] = action.effects["state_token"]

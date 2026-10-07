@@ -1,7 +1,7 @@
 # STATE
 
 ## Phase
-Published. https://github.com/Satwik-P28/shadow-futuregraph @ 11364a9fd09ab2277e6e0827c2bb612785a5bb01
+Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 
 ## Completed
 - Hero loop on synthetic Alex data: graph, minimal failure, repair, diff, contract, broker, sandbox execute, inject

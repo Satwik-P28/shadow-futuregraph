@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { analyzeFreeform, approveRepair, attemptAction, executePlan, injectEvent, loadBenchmark, loadEvents, loadPersonalStatus, loadPlan } from "./api/client";
+import { analyzeFreeform, approveRepair, attemptAction, executePlan, injectEvent, loadBenchmark, loadEvents, loadFutures, loadPersonalStatus, loadPlan, type CrossPlanConflict, type FutureCard } from "./api/client";
 import type { ConnectedTools, GraphNode, ModelabilityResult, PlanView, TraceEvent } from "./api/types";
 import { DecisionTrace } from "./components/DecisionTrace";
 import { EvaluationPanel, formatBenchmark } from "./components/EvaluationPanel";
 import { FutureEmptyState } from "./components/FutureEmptyState";
+import { FuturesHome } from "./components/FuturesHome";
 import { FutureWorkspace } from "./components/FutureWorkspace";
 import { GraphSkeleton } from "./components/AnalysisProgress";
 import { EXAMPLES, HeroPlanInput } from "./components/HeroPlanInput";
@@ -31,12 +32,23 @@ export function App() {
   const [showEval, setShowEval] = useState(false);
   const [bench, setBench] = useState("");
   const [pulseToken, setPulseToken] = useState(0);
+  const [futures, setFutures] = useState<FutureCard[]>([]);
+  const [conflicts, setConflicts] = useState<CrossPlanConflict[]>([]);
 
   useEffect(() => {
     void loadPersonalStatus()
       .then((status) => setTools(status.connected_tools))
       .catch(() => undefined);
   }, []);
+
+  useEffect(() => {
+    void loadFutures()
+      .then((body) => {
+        setFutures(body.futures);
+        setConflicts(body.conflicts);
+      })
+      .catch(() => undefined);
+  }, [plan?.id, plan?.status]);
 
   function loadExample(next: "travel" | "apartment") {
     setExampleId(next);
@@ -165,6 +177,18 @@ export function App() {
           <p className="rounded-full border border-white/10 px-3 py-1 text-[11px] tracking-[0.12em] text-clay">{plan?.provider_mode ?? "SANDBOX"}</p>
         </div>
       </header>
+      <FuturesHome
+        futures={futures}
+        conflicts={conflicts}
+        onOpen={(id) => {
+          void loadPlan(id).then((view) => {
+            setPlan(view);
+            setText(view.text);
+            setRepairId(view.recommended_repair_id);
+            setWorkspace(Boolean(view.graph));
+          });
+        }}
+      />
 
       {workspace && plan?.graph ? (
         <FutureWorkspace
@@ -184,6 +208,7 @@ export function App() {
           onSelectNode={setSelected}
           onSelectFailure={(_id, constraint, variables) => setHighlight([`con:${constraint}`, ...variables.map((item) => `var:${item}`)])}
           onSelectRepair={setRepairId}
+          onHighlight={setHighlight}
           onApprove={() => void approve()}
           onExecute={() => void execute()}
           onBlock={() => void blockUnrelated()}

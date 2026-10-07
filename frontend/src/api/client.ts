@@ -26,6 +26,66 @@ export async function analyzeFreeform(
   }));
 }
 
+export type LabVariable = { id: string; label: string; lower: number; upper: number; baseline: number; unit: string };
+export type LabResult = {
+  overrides: Record<string, number>;
+  holds: boolean;
+  violated_labels: string[];
+  highlight: string[];
+  message: string;
+  simulation: boolean;
+};
+export type FutureCard = {
+  future_id: string;
+  plan_id: string;
+  name: string;
+  status: string;
+  material_unknowns: number;
+  nearest_failure: string;
+};
+export type CrossPlanConflict = {
+  future_ids: string[];
+  shared_resource: string;
+  constraint: string;
+  severity: string;
+  repairable: boolean;
+};
+
+export async function loadFutures(): Promise<{ futures: FutureCard[]; conflicts: CrossPlanConflict[] }> {
+  return json(await fetch("/api/futures"));
+}
+
+export async function loadLab(id: string): Promise<{ variables: LabVariable[]; simulation: boolean }> {
+  return json(await fetch(`/api/plans/${id}/lab`));
+}
+
+export async function simulateLab(id: string, overrides: Record<string, number>, repairId: string | null): Promise<LabResult> {
+  return json(await fetch(`/api/plans/${id}/lab`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ overrides, repair_id: repairId }),
+  }));
+}
+
+export async function nearestLab(id: string, repairId: string | null): Promise<LabResult> {
+  return json(await fetch(`/api/plans/${id}/lab/nearest`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ repair_id: repairId }),
+  }));
+}
+
+export async function loadReceipt(id: string): Promise<{
+  approved: string | null;
+  executed: string[];
+  blocked: string[];
+  verification: string | null;
+  matched: boolean | null;
+  contract_status: string | null;
+}> {
+  return json(await fetch(`/api/plans/${id}/receipt`));
+}
+
 export async function loadPersonalStatus(): Promise<{ connected_tools: ConnectedTools }> {
   return json(await fetch("/api/personal-ai/status"));
 }

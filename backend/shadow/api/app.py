@@ -43,6 +43,11 @@ class RelaxIn(BaseModel):
     constraint_id: str
 
 
+class LabIn(BaseModel):
+    overrides: dict[str, float] = {}
+    repair_id: str | None = None
+
+
 def create_app(service: PlanService | None = None) -> FastAPI:
     app = FastAPI(title="Shadow", version="1.0.0")
     app.state.service = service or PlanService(EventLog("sqlite://"), build_client())
@@ -140,6 +145,39 @@ def create_app(service: PlanService | None = None) -> FastAPI:
                 yield f"data: {stage['name']}\n\n"
 
         return StreamingResponse(gen(), media_type="text/event-stream")
+
+    @app.get("/api/futures")
+    def futures() -> dict:
+        return app.state.service.list_futures()
+
+    @app.get("/api/plans/{plan_id}/lab")
+    def lab_controls(plan_id: str) -> dict:
+        _require(app, plan_id)
+        try:
+            return app.state.service.lab_controls(plan_id)
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+    @app.post("/api/plans/{plan_id}/lab")
+    def lab_simulate(plan_id: str, body: LabIn) -> dict:
+        _require(app, plan_id)
+        try:
+            return app.state.service.simulate_lab(plan_id, body.overrides, body.repair_id)
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+    @app.post("/api/plans/{plan_id}/lab/nearest")
+    def lab_nearest(plan_id: str, body: LabIn) -> dict:
+        _require(app, plan_id)
+        try:
+            return app.state.service.nearest_lab(plan_id, body.repair_id)
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+    @app.get("/api/plans/{plan_id}/receipt")
+    def receipt(plan_id: str) -> dict:
+        _require(app, plan_id)
+        return app.state.service.receipt(plan_id)
 
     @app.post("/api/demo/reset")
     def demo_reset() -> dict:

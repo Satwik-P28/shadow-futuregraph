@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { loadReceipt } from "../api/client";
 import type { PlanView, TraceEvent } from "../api/types";
 import { actionLabel } from "./format";
 
@@ -14,6 +16,7 @@ export function ExecutionTimeline({
   onExecute: () => void;
   onBlock: () => void;
 }) {
+  const [receipt, setReceipt] = useState<string>("");
   const executed = events.filter((event) => event.event_type === "ACTION_EXECUTED");
   return (
     <section aria-label="Execution">
@@ -33,6 +36,20 @@ export function ExecutionTimeline({
       {plan.reconciliation ? (
         <p className={`mt-3 text-sm ${plan.reconciliation.matched ? "text-moss" : "text-fault"}`}>{plan.reconciliation.message}</p>
       ) : null}
+      <button
+        type="button"
+        className="mt-3 text-xs text-tide"
+        onClick={() => {
+          void loadReceipt(plan.id).then((body) => {
+            const executedText = body.executed.length ? body.executed.join(", ") : "none";
+            const blockedText = body.blocked.length ? body.blocked.join(", ") : "none";
+            setReceipt(`Approved ${body.approved ?? "nothing"}. Executed ${executedText}. Blocked ${blockedText}. ${body.verification ?? "Not verified yet."}`);
+          });
+        }}
+      >
+        View outcome receipt
+      </button>
+      {receipt ? <p className="mt-2 text-sm text-paper">{receipt}</p> : null}
       <div className="mt-3 flex flex-wrap gap-2">
         <button type="button" className="rounded-control border border-white/10 px-3 py-2 text-sm" onClick={onExecute} disabled={busy}>
           Execute sandbox actions

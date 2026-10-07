@@ -6,6 +6,7 @@ import { STAGE_LABELS } from "./format";
 import { ConnectedContext } from "./ConnectedContext";
 import { DemoControls } from "./DemoControls";
 import { EvidenceDrawer } from "./EvidenceDrawer";
+import { FutureLab } from "./FutureLab";
 import { ExecutionTimeline } from "./ExecutionTimeline";
 import { FutureDiffPanel } from "./FutureDiffPanel";
 import { RepairPanel } from "./RepairPanel";
@@ -28,6 +29,7 @@ export function FutureWorkspace({
   onSelectNode,
   onSelectFailure,
   onSelectRepair,
+  onHighlight,
   onApprove,
   onExecute,
   onBlock,
@@ -49,6 +51,7 @@ export function FutureWorkspace({
   onSelectNode: (node: GraphNode | null) => void;
   onSelectFailure: (failureId: string, constraint: string, variables: string[]) => void;
   onSelectRepair: (id: string) => void;
+  onHighlight: (ids: string[]) => void;
   onApprove: () => void;
   onExecute: () => void;
   onBlock: () => void;
@@ -111,6 +114,7 @@ export function FutureWorkspace({
           />
           <RepairPanel plan={plan} repairId={repairId} onSelect={onSelectRepair} onDiff={() => document.getElementById("future-diff")?.scrollIntoView({ block: "nearest" })} />
           <FutureDiffPanel plan={plan} />
+          <FutureLab planId={plan.id} repairId={repairId} onHighlight={onHighlight} />
           {approved ? (
             <ExecutionTimeline plan={plan} events={events} busy={busy} onExecute={onExecute} onBlock={onBlock} />
           ) : (

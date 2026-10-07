@@ -1,7 +1,7 @@
 # STATE
 
 ## Phase
-Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
+P0 depth. https://github.com/Satwik-P28/shadow-futuregraph (main)
 
 ## Completed
 - Hero loop on synthetic Alex data: graph, minimal failure, repair, diff, contract, broker, sandbox execute, inject
@@ -45,9 +45,17 @@ Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - Adversarial holdout: Shadow 9/10, no-search 7/10, failure recall 6/6, false hazards 0/10, regret 0.1. Miss: non_monotonic selected the larger-radius repair
 
 ## Next 3 tasks
-1. Record the demo video, including Shadow Watch after approval
-2. Submit the Devpost form
-3. Leave Tavily, Duffel, and Google Calendar unconfigured unless a key already exists
+1. Record the demo, including Future Lab and Shadow Watch
+2. Cross-plan combined graph when two saved futures disagree
+3. Leave live Calendar, Gmail, and Tavily off until credentials exist
+
+## This pass
+- Future Lab simulates material exogenous variables locally. Nearest failure reuses the stored search
+- Life graph is projected from scenario facts. Links stay INFERRED
+- Each analyzed plan is a Future. Status is FRAGILE when a failure was discovered
+- Cross-plan conflict fires only when two futures set the same resource differently
+- Outcome receipt reads the existing event ledger
+- No new Nebius spend. Frozen benchmarks were not rerun
 
 ## Test commands
 - `make test`

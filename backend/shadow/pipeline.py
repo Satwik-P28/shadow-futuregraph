@@ -21,7 +21,10 @@ from shadow.core.models import (
 )
 from shadow.failures.search import describe_failure
 from shadow.future_graph.build import build_graph
+from shadow.futures.conflicts import cross_plan_conflicts
+from shadow.futures.lab import material_controls, nearest_failure, simulate
 from shadow.integrations.sandbox import SandboxProviders
+from shadow.life.graph import project_life
 from shadow.llm.client import FakeNemotronClient
 from shadow.repair.evaluate import binding_for, evaluate_repairs, select_naive
 from shadow.retrieval.engine import compact_context, retrieve
@@ -139,6 +142,7 @@ class PlanService:
             }
         )
         self._stage(record, "READY")
+        record["future_summary"] = _future_summary(record)
         return self.view(plan_id)
 
     def approve(self, plan_id: str, repair_id: str) -> dict[str, Any]:
@@ -268,6 +272,8 @@ class PlanService:
             "recommended_label": None if recommended is None else recommended.label,
             "watch": _watch(record, self.skills),
             "memory": _memory(record["scenario"]),
+            "life": None if record.get("future_summary") is None else record["future_summary"]["life"],
+            "future": None if record.get("future_summary") is None else _public_future(record["future_summary"]),
             "no_feasible_message": None
             if record["status"] != "NO_FEASIBLE_FUTURE"
             else "No feasible future found under the current hard constraints.",
@@ -290,6 +296,53 @@ class PlanService:
                 "scenario": record["scenario"].model_dump(mode="json"),
             },
         )
+
+    def lab_controls(self, plan_id: str) -> dict[str, Any]:
+        record = self._ready(plan_id)
+        return {"variables": material_controls(record["scenario"]), "simulation": True}
+
+    def simulate_lab(self, plan_id: str, overrides: dict[str, Any], repair_id: str | None = None) -> dict[str, Any]:
+        record = self._ready(plan_id)
+        repair = self._repair(record, repair_id)
+        return simulate(record["scenario"], repair.action_ids, overrides)
+
+    def nearest_lab(self, plan_id: str, repair_id: str | None = None) -> dict[str, Any]:
+        record = self._ready(plan_id)
+        repair = self._repair(record, repair_id)
+        return nearest_failure(record["scenario"], repair)
+
+    def list_futures(self) -> dict[str, Any]:
+        futures = [_public_future(record["future_summary"]) for record in self.plans.values() if record.get("future_summary")]
+        return {"futures": futures, "conflicts": cross_plan_conflicts([record["future_summary"] for record in self.plans.values() if record.get("future_summary")])}
+
+    def receipt(self, plan_id: str) -> dict[str, Any]:
+        record = self.plans[plan_id]
+        events = self.events.list_for(plan_id)
+        contract = record.get("contract")
+        reconciliation = record.get("reconciliation")
+        coverage = record.get("coverage")
+        return {
+            "approved": record.get("recommended_id"),
+            "executed": [event.payload.get("action_id") for event in events if event.event_type == "ACTION_EXECUTED"],
+            "blocked": [event.payload.get("action_id") for event in events if event.event_type == "ACTION_BLOCKED"],
+            "verification": None if reconciliation is None else reconciliation.get("message"),
+            "matched": None if reconciliation is None else reconciliation.get("matched"),
+            "unknowns": [] if coverage is None else coverage.unknown_ids,
+            "contract_status": None if contract is None else contract.status,
+        }
+
+    def _ready(self, plan_id: str) -> dict[str, Any]:
+        record = self.plans[plan_id]
+        if not record.get("repairs"):
+            raise ValueError("Analyze the plan before simulating it.")
+        return record
+
+    def _repair(self, record: dict[str, Any], repair_id: str | None):
+        chosen = repair_id or record.get("recommended_id")
+        repair = next((item for item in record["repairs"] if item.id == chosen), None)
+        if repair is None:
+            raise ValueError("No repair is selected.")
+        return repair
 
     def personal_status(self) -> dict[str, Any]:
         import os
@@ -371,6 +424,52 @@ def _coverage(scenario: Scenario) -> CoverageReport:
     else:
         summary = f"{counts['unknown']} material unknowns remain"
     return CoverageReport(unknown_ids=unknown_ids, summary=summary, percentage=None, **counts)
+
+
+def _future_summary(record: dict[str, Any]) -> dict[str, Any]:
+    scenario: Scenario = record["scenario"]
+    recommended = next((item for item in record.get("repairs", []) if item.recommended), None)
+    coverage = record.get("coverage")
+    unknowns = 0 if coverage is None else coverage.unknown
+    failure = None if recommended is None or not recommended.failures else recommended.failures[0]
+    effects = {} if recommended is None else effects_for(scenario, recommended.action_ids)
+    return {
+        "future_id": record["id"],
+        "plan_id": record["id"],
+        "name": record["text"],
+        "status": _future_status(record, recommended, unknowns),
+        "material_unknowns": unknowns,
+        "nearest_failure": describe_failure(scenario, failure),
+        "scenario_id": record["scenario_id"],
+        "effects": effects,
+        "linked_entities": [fact.id for fact in scenario.facts],
+        "life": project_life(scenario, record["text"]),
+    }
+
+
+def _public_future(summary: dict[str, Any]) -> dict[str, Any]:
+    hidden = {"effects", "linked_entities"}
+    return {key: value for key, value in summary.items() if key not in hidden}
+
+
+def _future_status(record: dict[str, Any], recommended: Any, unknowns: int) -> str:
+    contract = record.get("contract")
+    if contract is not None and contract.status == "STALE":
+        return "DRIFT DETECTED"
+    reconciliation = record.get("reconciliation")
+    if reconciliation and reconciliation.get("matched"):
+        return "VERIFIED"
+    if contract is not None and contract.status == "COMPLETED":
+        return "EXECUTED"
+    if record.get("status") == "NO_FEASIBLE_FUTURE":
+        return "UNKNOWN"
+    if recommended is not None and recommended.failures:
+        return "FRAGILE"
+    if unknowns:
+        return "UNKNOWN"
+    if contract is not None and contract.status in {"ACTIVE", "REAFFIRMED"}:
+        return "MONITORING"
+    return "HEALTHY"
 
 
 def _contract(plan_id: str, scenario: Scenario, repair: Any, spec: PlanSpec) -> FutureContract:

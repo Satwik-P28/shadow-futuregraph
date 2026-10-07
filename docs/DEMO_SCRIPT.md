@@ -17,11 +17,14 @@ The afternoon flight is nominally valid. It is the cheapest plan that still reac
 1:05–1:25 Failure search
 Show flight delay plus traffic. Together they violate the dinner constraint. Say: Nemotron itself missed this hazard in our live run. Shadow still found it.
 
+1:15–1:25 Future Lab
+Open Future lab. Move flight delay. The hard constraint holds, then it does not. Click **Find nearest failure**. Say this is a local simulation. It does not call the model and it does not execute anything.
+
 1:25–1:45 Repair
 The search selects the 11:20 flight. Show the Future Diff: flight 14:40 to 11:20, ride 12:05 to 8:45, incremental cost +$76. Hotel, dinner, review, and exam stay put.
 
 1:45–1:55 Approve
-Click **Approve repaired future**.
+Click **Approve future**.
 
 1:55–2:10 Execution
 Execute the sandbox flight, ride, and calendar updates.
@@ -30,7 +33,7 @@ Execute the sandbox flight, ride, and calendar updates.
 Click **Try unrelated change**. The algorithms exam is blocked. The line is "Blocked: action is outside the approved future."
 
 2:22–2:40 Always-on
-Do not retype the plan. Point at Shadow Watch: it is monitoring the approved future, and dinner is protected from saved commitment memory. **+74 min delay** is a world event. The future still holds. **Fare +$80** is another world event. Shadow Watch reports drift, the contract goes stale, and authority is revoked. The repair waits for approval. This is event-driven, not a background poll of every service.
+Do not retype the plan. Point at Shadow Watch: it is monitoring the approved future, and dinner is protected from saved commitment memory. Open **Inject world change**, then **+74 min delay**. The future still holds. **Fare +$80** is another world event. Shadow Watch reports drift, the contract goes stale, and authority is revoked. The repair waits for approval. This is event-driven, not a background poll of every service.
 
 2:35–2:42 Reconciliation
 "Observed state matches approved future."

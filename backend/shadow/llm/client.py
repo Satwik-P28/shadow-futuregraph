@@ -26,6 +26,7 @@ PURPOSE_TOKENS = {
     "direct_choice": ("direct_choice.txt", 256),
     "plan_choice": ("plan_choice.txt", 256),
     "critique_choice": ("critique_choice.txt", 256),
+    "compile_world": ("compile_world.txt", 512),
 }
 
 
@@ -89,6 +90,10 @@ def coerce_payload(schema: type[BaseModel], payload: dict[str, Any]) -> dict[str
         return _coerce_repairs(payload)
     if schema.__name__ == "ChoiceSpec":
         return _coerce_choice(payload)
+    if schema.__name__ == "SemanticProposal":
+        from shadow.world.compiler import proposal_from_payload
+
+        return proposal_from_payload(payload).model_dump()
     return payload
 
 

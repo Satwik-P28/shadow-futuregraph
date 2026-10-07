@@ -29,6 +29,7 @@ from shadow.runtime.broker import AuthorizationDenied, authorize
 from shadow.runtime.events import EventLog
 from shadow.runtime.execute import execute_bundle
 from shadow.simulation.engine import bind, evaluate_constraints, hard_status
+from shadow.world.compiler import attach_compiled
 from shadow.world.loader import action_map, effects_for, load_scenario
 
 
@@ -44,6 +45,7 @@ class PlanService:
 
     def create(self, text: str, scenario_id: str = "travel", seed: int = 7) -> dict[str, Any]:
         plan_id = uuid.uuid4().hex[:12]
+        scenario, compiled = attach_compiled(load_scenario(scenario_id))
         record = {
             "id": plan_id,
             "text": text,
@@ -53,7 +55,8 @@ class PlanService:
             "stages": [],
             "contract": None,
             "providers": SandboxProviders(),
-            "scenario": load_scenario(scenario_id),
+            "scenario": scenario,
+            "compiled_from": None if compiled is None else "calendar, email, reservation, preferences",
         }
         self.plans[plan_id] = record
         self.events.append(plan_id, "PLAN_CREATED", {"scenario_id": scenario_id}, "user")
@@ -254,6 +257,7 @@ class PlanService:
             "status": record["status"],
             "stages": record["stages"],
             "provider_mode": "SANDBOX",
+            "compiled_from": record.get("compiled_from"),
             "solver": record.get("solver"),
             "coverage": None if "coverage" not in record else record["coverage"].model_dump(mode="json"),
             "graph": None if "graph" not in record else record["graph"].model_dump(mode="json"),

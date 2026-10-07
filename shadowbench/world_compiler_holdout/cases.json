@@ -1,0 +1,118 @@
+[
+  {
+    "id": "fixed_calendar",
+    "plan_text": "Keep Friday workable.",
+    "records": [
+      {"id": "cal", "kind": "calendar", "text": "Design review is fixed and cannot move."}
+    ]
+  },
+  {
+    "id": "movable_calendar",
+    "plan_text": "Shift the optional sync if needed.",
+    "records": [
+      {"id": "cal", "kind": "calendar", "text": "Optional team sync. It can move."}
+    ]
+  },
+  {
+    "id": "email_hard",
+    "plan_text": "Make the evening work.",
+    "records": [
+      {"id": "mail", "kind": "email", "text": "The client dinner cannot move. Reservation is at 7:00 PM."}
+    ]
+  },
+  {
+    "id": "preference_not_hard",
+    "plan_text": "Book something reasonable.",
+    "records": [
+      {"id": "pref", "kind": "preference", "text": "Alex prefers a window seat."}
+    ]
+  },
+  {
+    "id": "conflict",
+    "plan_text": "Resolve the schedule.",
+    "records": [
+      {"id": "a", "kind": "email", "text": "The review cannot move."},
+      {"id": "b", "kind": "email", "text": "Please move the review to Thursday."}
+    ]
+  },
+  {
+    "id": "stale",
+    "plan_text": "Use the current reservation.",
+    "records": [
+      {"id": "old", "kind": "email", "text": "Old note: hotel was canceled. Sent last month."},
+      {"id": "new", "kind": "reservation", "text": "Current hotel reservation is confirmed. This supersedes the old note."}
+    ]
+  },
+  {
+    "id": "missing_unknown",
+    "plan_text": "Check the street.",
+    "records": [
+      {"id": "mail", "kind": "email", "text": "Nobody has said whether the street closure is in effect."}
+    ]
+  },
+  {
+    "id": "irrelevant",
+    "plan_text": "Move the meeting.",
+    "records": [
+      {"id": "fact", "kind": "note", "text": "Alex likes oat milk."},
+      {"id": "cal", "kind": "calendar", "text": "The dentist visit is fixed and cannot move."}
+    ]
+  },
+  {
+    "id": "other_person",
+    "plan_text": "Do not disrupt Sam.",
+    "records": [
+      {"id": "mail", "kind": "email", "text": "Sam confirmed dinner. Sam cannot move it."}
+    ]
+  },
+  {
+    "id": "reservation_dependency",
+    "plan_text": "Retie the ride.",
+    "records": [
+      {"id": "res", "kind": "reservation", "text": "The airport ride is linked to the flight. If the flight changes, the ride must change."}
+    ]
+  },
+  {
+    "id": "budget",
+    "plan_text": "Stay inside the cap.",
+    "records": [
+      {"id": "pref", "kind": "preference", "text": "Maximum additional travel cost $100."}
+    ]
+  },
+  {
+    "id": "sequence",
+    "plan_text": "Leave after the review.",
+    "records": [
+      {"id": "cal", "kind": "calendar", "text": "Alex cannot leave for the airport before the design review ends."}
+    ]
+  },
+  {
+    "id": "impossible",
+    "plan_text": "Be in two places.",
+    "records": [
+      {"id": "a", "kind": "calendar", "text": "Alex must arrive before 08:20."},
+      {"id": "b", "kind": "calendar", "text": "Alex must not arrive before 20:00."}
+    ]
+  },
+  {
+    "id": "no_repair",
+    "plan_text": "Leave the plan as it is.",
+    "records": [
+      {"id": "cal", "kind": "calendar", "text": "Every listed commitment already fits. No change is required."}
+    ]
+  },
+  {
+    "id": "ambiguous",
+    "plan_text": "Handle the note from Jordan.",
+    "records": [
+      {"id": "mail", "kind": "email", "text": "Jordan said maybe we should move dinner, or maybe not."}
+    ]
+  },
+  {
+    "id": "protected_exam",
+    "plan_text": "Change only the trip.",
+    "records": [
+      {"id": "cal", "kind": "calendar", "text": "The algorithms exam is unrelated and cannot move."}
+    ]
+  }
+]

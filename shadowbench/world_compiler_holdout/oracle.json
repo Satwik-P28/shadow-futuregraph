@@ -1,0 +1,18 @@
+{
+  "fixed_calendar": {"hard": ["cannot move"], "not_hard": ["window"], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "movable_calendar": {"hard": [], "not_hard": ["optional", "can move"], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "email_hard": {"hard": ["cannot move"], "not_hard": [], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "preference_not_hard": {"hard": [], "not_hard": ["window", "prefers"], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "conflict": {"hard": ["cannot move"], "not_hard": [], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "stale": {"hard": ["confirmed"], "not_hard": ["canceled"], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "missing_unknown": {"hard": [], "not_hard": ["street closure"], "dependencies": [], "not_dependencies": [], "unknowns": ["street"], "repair": "abstain"},
+  "irrelevant": {"hard": ["cannot move"], "not_hard": ["oat"], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "other_person": {"hard": ["cannot move"], "not_hard": [], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "reservation_dependency": {"hard": [], "not_hard": [], "dependencies": ["ride"], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "budget": {"hard": ["100"], "not_hard": [], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "sequence": {"hard": ["before"], "not_hard": [], "dependencies": ["review"], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "impossible": {"hard": ["before"], "not_hard": [], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "abstain"},
+  "no_repair": {"hard": [], "not_hard": ["no change"], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "keep"},
+  "ambiguous": {"hard": [], "not_hard": ["dinner"], "dependencies": [], "not_dependencies": ["dinner"], "unknowns": ["maybe"], "repair": "abstain"},
+  "protected_exam": {"hard": ["cannot move"], "not_hard": [], "dependencies": [], "not_dependencies": [], "unknowns": [], "repair": "keep"}
+}

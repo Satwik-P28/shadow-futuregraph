@@ -1,0 +1,46 @@
+{
+  "id": "alex_friday_trip",
+  "plan_text": "Move my NYC trip to Friday and make sure everything still works.",
+  "records": [
+    {
+      "id": "cal_review",
+      "kind": "calendar",
+      "text": "Friday design review, 9:00 to 9:00 end 09:00, marked fixed. This block cannot move."
+    },
+    {
+      "id": "cal_dinner",
+      "kind": "calendar",
+      "text": "Friday 7:00 PM dinner with Sam."
+    },
+    {
+      "id": "cal_exam",
+      "kind": "calendar",
+      "text": "Algorithms exam. Unrelated to the trip and marked fixed."
+    },
+    {
+      "id": "mail_dinner",
+      "kind": "email",
+      "text": "Dinner reservation confirmed at 7:00 PM. Please do not move it."
+    },
+    {
+      "id": "mail_hold",
+      "kind": "email",
+      "text": "Your existing Thursday NYC booking is still held until a Friday replacement is confirmed."
+    },
+    {
+      "id": "res_flights",
+      "kind": "reservation",
+      "text": "Existing Thursday trip. Friday flight choices are listed on the reservation. The airport ride is currently linked to the old flight."
+    },
+    {
+      "id": "res_hotel",
+      "kind": "reservation",
+      "text": "Hotel remains confirmed for the trip."
+    },
+    {
+      "id": "pref_budget",
+      "kind": "preference",
+      "text": "Preserve fixed commitments. Maximum additional travel cost $100."
+    }
+  ]
+}

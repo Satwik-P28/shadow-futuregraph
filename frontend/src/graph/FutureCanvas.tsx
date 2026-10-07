@@ -62,7 +62,7 @@ export function FutureCanvas({
       style: { stroke: highlight.includes(edge.source) || highlight.includes(edge.target) ? "#e07a6a" : "#5c616b" },
     }));
   return (
-    <div className="h-[640px] rounded-lg border border-line bg-ink" aria-label="Future graph">
+    <div className="h-[50vh] min-h-[360px] overflow-hidden rounded-lg border border-line bg-ink lg:h-[640px]" aria-label="Future graph">
       <ReactFlow
         nodes={flowNodes}
         edges={flowEdges}

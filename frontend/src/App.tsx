@@ -114,7 +114,11 @@ export function App() {
               Check the apartment move
             </button>
           </div>
+          {busy ? <p className="mt-3 text-sm text-mute">Checking the future…</p> : null}
           {error ? <p className="mt-3 text-sm text-fault">{error}</p> : null}
+          {plan?.compiled_from ? (
+            <p className="mt-3 text-sm text-mute">Compiled from {plan.compiled_from}. The model may structure the problem. Shadow does not treat that structure as proof.</p>
+          ) : null}
           {plan ? (
             <p className="mt-3 text-xs text-mute">
               {plan.stages.map((stage) => stage.name).join(" · ")} · {plan.observability.worlds_simulated} worlds · {plan.observability.model_calls} model calls

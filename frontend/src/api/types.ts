@@ -48,6 +48,7 @@ export type PlanView = {
   scenario_id: string;
   status: string;
   provider_mode: string;
+  compiled_from?: string | null;
   stages: { name: string }[];
   coverage: { summary: string; unknown: number; percentage: null } | null;
   graph: { nodes: GraphNode[]; edges: GraphEdge[] } | null;

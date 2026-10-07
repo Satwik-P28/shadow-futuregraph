@@ -59,6 +59,15 @@ class WorldFact(BaseModel):
     supersedes: str | None = None
     tags: list[str] = Field(default_factory=list)
     text: str
+    memory_kind: Literal[
+        "COMMITMENT",
+        "PREFERENCE",
+        "RELATIONSHIP",
+        "RESERVATION",
+        "RESPONSIBILITY",
+        "DECISION",
+        "APPROVED_FUTURE",
+    ] | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 

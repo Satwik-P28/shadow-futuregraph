@@ -487,6 +487,7 @@
       "privacy_label": "personal",
       "tags": ["attack", "support", "fixed"],
       "text": "Friday dinner with Jordan at 7:00 PM. The reservation cannot move.",
+      "memory_kind": "COMMITMENT",
       "metadata": {"resource": "cal_dinner"}
     },
     {
@@ -529,6 +530,7 @@
       "source_id": "pref_budget",
       "epistemic_status": "VERIFIED",
       "tags": ["support", "attack"],
+      "memory_kind": "PREFERENCE",
       "text": "Incremental trip cost must stay at or below $100."
     },
     {

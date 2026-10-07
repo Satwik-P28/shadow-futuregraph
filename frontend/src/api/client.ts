@@ -35,6 +35,9 @@ export async function injectEvent(id: string, eventId: string): Promise<{
   message: string;
   authority: string;
   approved_future_holds: boolean;
+  watch_message?: string;
+  drift_status?: string;
+  skill_name?: string;
 }> {
   return json(await fetch(`/api/plans/${id}/inject-event`, {
     method: "POST",

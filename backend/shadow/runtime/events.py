@@ -30,6 +30,14 @@ class EventRow(Base):
     provenance: Mapped[str] = mapped_column(String(128))
 
 
+class ContractRow(Base):
+    __tablename__ = "approved_futures"
+    contract_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    plan_id: Mapped[str] = mapped_column(String(64), index=True)
+    status: Mapped[str] = mapped_column(String(32))
+    payload: Mapped[str] = mapped_column(Text)
+
+
 class EventLog:
     def __init__(self, url: str = "sqlite://") -> None:
         kwargs: dict[str, object] = {"future": True}
@@ -94,3 +102,27 @@ class EventLog:
                 if resource:
                     state[resource] = {"compensated": True}
         return state
+
+    def save_approved(self, contract_id: str, plan_id: str, status: str, payload: dict[str, Any]) -> None:
+        encoded = json.dumps(payload, default=str)
+        with self.factory() as session:
+            row = session.get(ContractRow, contract_id)
+            if row is None:
+                session.add(ContractRow(contract_id=contract_id, plan_id=plan_id, status=status, payload=encoded))
+            else:
+                row.status = status
+                row.plan_id = plan_id
+                row.payload = encoded
+            session.commit()
+
+    def load_approved(self, statuses: tuple[str, ...] = ("ACTIVE", "REAFFIRMED")) -> list[dict[str, Any]]:
+        with self.factory() as session:
+            rows = session.query(ContractRow).all()
+        found = []
+        for row in rows:
+            if row.status not in statuses:
+                continue
+            payload = json.loads(row.payload)
+            payload["status"] = row.status
+            found.append(payload)
+        return found

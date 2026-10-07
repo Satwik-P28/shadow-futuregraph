@@ -44,6 +44,10 @@ def create_app(service: PlanService | None = None) -> FastAPI:
     def healthz() -> dict[str, str]:
         return {"status": "ok"}
 
+    @app.get("/api/personal-ai/status")
+    def personal_ai() -> dict:
+        return app.state.service.personal_status()
+
     @app.post("/api/plans")
     def create_plan(body: PlanIn) -> dict[str, str]:
         return app.state.service.create(body.text, body.scenario_id, body.seed)

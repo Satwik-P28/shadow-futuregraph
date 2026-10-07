@@ -10,6 +10,12 @@ test("sandbox hero finds a failure, approves, executes, and reacts to an injecti
   await expect(page.getByText("Observed state matches approved future")).toBeVisible();
   await page.getByRole("button", { name: "Try unrelated change" }).click();
   await expect(page.getByText("Blocked: action is outside the approved future.")).toBeVisible();
+  await expect(page.getByText("Dinner is protected")).toBeVisible();
+  await expect(page.getByLabel("Shadow Watch")).toContainText("Monitoring 1 approved future");
   await page.getByRole("button", { name: "+74 min delay" }).click();
   await expect(page.getByText(/assumption changed/i)).toBeVisible();
+  await expect(page.getByText("Approved future still valid")).toBeVisible();
+  await page.getByRole("button", { name: "Fare +$80" }).click();
+  await expect(page.getByText("Approved future is no longer valid")).toBeVisible();
+  await expect(page.getByText("Authority revoked")).toBeVisible();
 });

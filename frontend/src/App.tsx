@@ -132,6 +132,18 @@ export function App() {
           {plan?.reconciliation ? (
             <p className={`mt-3 text-sm ${plan.reconciliation.matched ? "text-moss" : "text-fault"}`}>{plan.reconciliation.message}</p>
           ) : null}
+          {plan?.memory ? (
+            <p className="mt-3 text-sm text-paper">{plan.memory.label} <span className="text-mute">· {plan.memory.source}</span></p>
+          ) : null}
+          <div className="mt-4 border-t border-line pt-3" aria-label="Shadow Watch">
+            <p className="text-xs uppercase tracking-[0.18em] text-tide">Shadow Watch</p>
+            <p className="mt-1 text-sm">
+              {plan?.watch?.monitoring ? `Monitoring ${plan.watch.approved_futures} approved future` : "No approved future is being monitored yet."}
+            </p>
+            {plan?.watch?.last_checked_at ? <p className="mt-1 text-xs text-mute">Last checked after world event: {plan.watch.last_checked_at}</p> : null}
+            {plan?.watch?.message ? <p className="mt-2 text-sm text-clay">{plan.watch.message}</p> : null}
+            {plan?.watch?.skill_name ? <p className="mt-1 text-xs text-mute">Reusable skill: {plan.watch.skill_name}</p> : null}
+          </div>
           {notice ? <p className="mt-3 text-sm text-clay">{notice}</p> : null}
         </aside>
       </section>

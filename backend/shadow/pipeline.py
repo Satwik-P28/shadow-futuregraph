@@ -29,6 +29,9 @@ from shadow.runtime.broker import AuthorizationDenied, authorize
 from shadow.runtime.events import EventLog
 from shadow.runtime.execute import execute_bundle
 from shadow.simulation.engine import bind, evaluate_constraints, hard_status
+from shadow.skills.registry import SkillRegistry
+from shadow.watcher.models import WorldEvent
+from shadow.watcher.monitor import FutureWatcher
 from shadow.world.compiler import attach_compiled
 from shadow.world.loader import action_map, effects_for, load_scenario
 
@@ -42,6 +45,9 @@ class PlanService:
         self.events = events
         self.client = client or FakeNemotronClient()
         self.plans: dict[str, dict[str, Any]] = {}
+        self.skills = SkillRegistry()
+        self.watcher = FutureWatcher(self)
+        self.watcher.restore()
 
     def create(self, text: str, scenario_id: str = "travel", seed: int = 7) -> dict[str, Any]:
         plan_id = uuid.uuid4().hex[:12]
@@ -57,6 +63,7 @@ class PlanService:
             "providers": SandboxProviders(),
             "scenario": scenario,
             "compiled_from": None if compiled is None else "calendar, email, reservation, preferences",
+            "skill_id": self.skills.available_for(text).id,
         }
         self.plans[plan_id] = record
         self.events.append(plan_id, "PLAN_CREATED", {"scenario_id": scenario_id}, "user")
@@ -131,6 +138,7 @@ class PlanService:
         record["status"] = "APPROVED"
         self.events.append(plan_id, "FUTURE_APPROVED", {"repair_id": repair_id}, "user")
         self.events.append(plan_id, "CONTRACT_CREATED", {"contract_id": contract.contract_id}, "contract")
+        self.persist_contract(record)
         return contract.model_dump(mode="json")
 
     def execute(self, plan_id: str) -> dict[str, Any]:
@@ -172,69 +180,34 @@ class PlanService:
         record = self.plans[plan_id]
         scenario: Scenario = record["scenario"]
         event = next(item for item in scenario.events if item.id == event_id)
-        updated = scenario.model_copy(deep=True)
-        for var in updated.variables:
-            if var.id in event.set_baseline:
-                var.baseline = event.set_baseline[var.id]
-            if var.id in event.set_distribution:
-                var.distribution = event.set_distribution[var.id]  # type: ignore[assignment]
-                if var.distribution == "point" and isinstance(var.baseline, (int, float)):
-                    var.lower = float(var.baseline)
-                    var.upper = float(var.baseline)
-        record["scenario"] = updated
+        world_event = WorldEvent(
+            event_id=event.id,
+            source="demo",
+            event_type=event.id,
+            observed_at=_now(),
+            affected_entities=list(event.set_baseline),
+            payload={"set_baseline": event.set_baseline, "set_distribution": event.set_distribution},
+            epistemic_status="VERIFIED",
+            provenance="demo-injection",
+        )
+        record["skill_id"] = self.skills.available_for(record["text"], event.id).id
+        drift = self.watcher.process_event(world_event, plan_id=plan_id)[0]
         contract: FutureContract | None = record.get("contract")
-        invalidated = []
-        if contract:
-            for assumption in contract.assumptions:
-                if assumption.variable in event.set_baseline and event.set_baseline[assumption.variable] != assumption.expected:
-                    assumption.status = "invalidated"
-                    invalidated.append(assumption.variable)
-                    self.events.append(
-                        plan_id,
-                        "ASSUMPTION_INVALIDATED",
-                        {"assumption": assumption.variable, "event": event_id},
-                        "inject",
-                    )
-        repairs = evaluate_repairs(
-            updated,
-            [(bundle.id, bundle.label, bundle.action_ids, "catalog") for bundle in updated.bundles],
-            seed=record["seed"],
-        )
-        approved_id = None if contract is None else contract.approved_future_id
-        approved = next((item for item in repairs if item.id == approved_id), None)
-        holds = bool(approved and approved.feasible)
-        if contract and not holds:
-            contract.status = "STALE"
-            record["status"] = "STALE"
-            self.events.append(plan_id, "EXECUTION_HALTED", {"reason": "contract stale", "event": event_id}, "contract")
-        elif contract and invalidated:
-            contract.status = "REAFFIRMED"
-            record["status"] = "REAFFIRMED"
-            current = {var.id: var.baseline for var in updated.variables}
-            for assumption in contract.assumptions:
-                if assumption.variable in current and assumption.status == "invalidated":
-                    assumption.expected = current[assumption.variable]
-                    assumption.status = "updated"
-        recommended = next((item for item in repairs if item.recommended), None)
-        record["repairs"] = repairs
-        record["naive_id"] = select_naive(updated)
-        record["recommended_id"] = None if recommended is None else recommended.id
-        record["graph"] = build_graph(
-            updated,
-            repairs,
-            naive_id=record["naive_id"],
-            recommended_id=record["recommended_id"],
-        )
-        if record["naive_id"] and record["recommended_id"]:
-            record["diff"] = _diff(updated, record["naive_id"], record["recommended_id"], repairs)
+        holds = drift.still_feasible is True
+        if record.get("naive_id") and record.get("recommended_id"):
+            record["diff"] = _diff(record["scenario"], record["naive_id"], record["recommended_id"], record.get("repairs") or [])
+        skill = self.skills.get(record["skill_id"])
         return {
             "event": event.model_dump(mode="json"),
-            "invalidated": invalidated,
+            "invalidated": drift.affected_assumptions,
             "approved_future_holds": holds,
             "contract_status": None if contract is None else contract.status,
             "authority": "revoked" if contract and contract.status == "STALE" else "active",
-            "recommended_repair_id": record["recommended_id"],
-            "message": _inject_message(holds, invalidated),
+            "recommended_repair_id": record.get("recommended_id"),
+            "message": _inject_message(holds, drift.affected_assumptions),
+            "drift_status": drift.new_status,
+            "watch_message": drift.explanation,
+            "skill_name": skill.name,
         }
 
     def relax(self, plan_id: str, constraint_id: str) -> dict[str, Any]:
@@ -278,9 +251,58 @@ class PlanService:
                 "graph_edges": 0 if "graph" not in record else len(record["graph"].edges),
             },
             "recommended_label": None if recommended is None else recommended.label,
+            "watch": _watch(record, self.skills),
+            "memory": _memory(record["scenario"]),
             "no_feasible_message": None
             if record["status"] != "NO_FEASIBLE_FUTURE"
             else "No feasible future found under the current hard constraints.",
+        }
+
+    def persist_contract(self, record: dict[str, Any]) -> None:
+        contract: FutureContract | None = record.get("contract")
+        if contract is None:
+            return
+        self.events.save_approved(
+            contract.contract_id,
+            record["id"],
+            contract.status,
+            {
+                "plan_id": record["id"],
+                "text": record.get("text"),
+                "seed": record.get("seed") or 7,
+                "skill_id": record.get("skill_id"),
+                "contract": contract.model_dump(mode="json"),
+                "scenario": record["scenario"].model_dump(mode="json"),
+            },
+        )
+
+    def personal_status(self) -> dict[str, Any]:
+        import os
+
+        watched = [
+            record
+            for record in self.plans.values()
+            if isinstance(record.get("contract"), FutureContract) and record["contract"].status in {"ACTIVE", "REAFFIRMED"}
+        ]
+        counts: dict[str, int] = {}
+        for record in self.plans.values():
+            for fact in record["scenario"].facts:
+                if fact.memory_kind:
+                    counts[fact.memory_kind] = counts.get(fact.memory_kind, 0) + 1
+        search = "LIVE" if os.environ.get("TAVILY_API_KEY") else "OFF"
+        return {
+            "monitoring_active": bool(watched),
+            "approved_futures_watched": len(watched),
+            "memory_counts": counts,
+            "skills": [item.name for item in self.skills.list_skills()],
+            "connected_tools": {"calendar": "SANDBOX", "mail": "SANDBOX", "travel": "SANDBOX", "search": search},
+            "privacy": {
+                "personal_world_model": "local",
+                "raw_source_bodies_sent_to_model": False,
+                "structured_facts_sent_to_nemotron": True,
+                "real_actions_enabled": os.environ.get("SHADOW_REAL_ACTIONS_ENABLED", "false").lower() == "true",
+            },
+            "mode": "SANDBOX",
         }
 
     def _stage(self, record: dict[str, Any], name: str) -> None:
@@ -397,6 +419,32 @@ def _reconcile(record: dict[str, Any]) -> dict[str, Any]:
         "message": "Observed state matches approved future" if matched else "Observed state does not match the approved future",
         "violations": names,
     }
+
+
+def _watch(record: dict[str, Any], skills: SkillRegistry) -> dict[str, Any]:
+    contract: FutureContract | None = record.get("contract")
+    monitoring = contract is not None and contract.status in {"ACTIVE", "REAFFIRMED", "COMPLETED"}
+    drift = record.get("last_drift")
+    skill = skills.get(record["skill_id"]) if record.get("skill_id") in {item.id for item in skills.list_skills()} else None
+    return {
+        "monitoring": monitoring,
+        "approved_futures": 1 if monitoring else 0,
+        "last_checked_at": record.get("last_checked_at"),
+        "drift_status": None if drift is None else drift.new_status,
+        "message": None if drift is None else drift.explanation,
+        "skill_name": None if skill is None else skill.name,
+    }
+
+
+def _memory(scenario: Scenario) -> dict[str, str] | None:
+    fact = next((item for item in scenario.facts if item.memory_kind == "COMMITMENT"), None)
+    if fact is None:
+        fact = next((item for item in scenario.facts if item.memory_kind == "PREFERENCE"), None)
+    if fact is None:
+        return None
+    source = "Previous decision / saved commitment" if fact.memory_kind == "COMMITMENT" else "Preference memory"
+    label = "Dinner is protected" if fact.subject == "dinner" else fact.text
+    return {"label": label, "source": source}
 
 
 def _inject_message(holds: bool, invalidated: list[str]) -> str:

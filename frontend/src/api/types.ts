@@ -68,6 +68,15 @@ export type PlanView = {
   observability: { model_calls: number; worlds_simulated: number; repairs_tested: number };
   no_feasible_message: string | null;
   contract: { status: string } | null;
+  watch?: {
+    monitoring: boolean;
+    approved_futures: number;
+    last_checked_at: string | null;
+    drift_status: string | null;
+    message: string | null;
+    skill_name: string | null;
+  };
+  memory?: { label: string; source: string } | null;
 };
 
 export type TraceEvent = { event_id: string; event_type: string; timestamp: string; payload: Record<string, unknown> };

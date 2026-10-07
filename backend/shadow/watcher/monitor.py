@@ -26,10 +26,15 @@ class FutureWatcher:
             drifts = []
             for record in records:
                 contract = record.get("contract")
-                drift = unknown_drift(contract if isinstance(contract, FutureContract) else None)
+                typed = contract if isinstance(contract, FutureContract) else None
+                scenario = record.get("scenario")
+                if typed is None or scenario is None or not depends_on(typed, scenario, event):
+                    drifts.append(unchanged(typed, "The incomplete event does not affect this future."))
+                    continue
+                drift = unknown_drift(typed)
                 record["last_drift"] = drift
                 drifts.append(drift)
-            return drifts or [unknown_drift(None)]
+            return drifts or [unchanged(None, "The incomplete event does not affect a loaded future.")]
         if not records:
             return [unchanged(None, "No approved future is loaded.")]
         drifts = []

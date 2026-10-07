@@ -93,6 +93,7 @@ def test_registry_has_three_skills_and_does_not_authorize():
     assert trip.id == "reschedule_trip"
     assert disruption.id == "handle_trip_disruption"
     assert schedule.id == "coordinate_schedule"
+    assert registry.available_for("hello") is None
     assert trip.grants_authority() is False
     assert trip.required_tools
     assert trip.verification_steps

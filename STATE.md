@@ -46,9 +46,9 @@ P0 depth. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - Adversarial holdout: Shadow 9/10, no-search 7/10, failure recall 6/6, false hazards 0/10, regret 0.1. Miss: non_monotonic selected the larger-radius repair
 
 ## Next 3 tasks
-1. Confirm this commit on the public sandbox, then record the demo
+1. Confirm the red-team commit on the public sandbox, including two-browser isolation
 2. Leave live Calendar, Gmail, and Tavily off until credentials exist
-3. Do not rerun the frozen 30-world pilot
+3. Do not rerun the frozen 30-world pilot, compiler study, or red-team live pass
 
 ## This pass
 - Cross-plan conflicts now cover value, time overlap, explicit shared budget, protected resources, and asset state
@@ -58,6 +58,16 @@ P0 depth. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - Live compile uses Super only when NEBIUS_LIVE=1. The public demo stays deterministic
 - Calendar, Gmail, and Tavily are not configured
 - New Nebius spend this pass: 0.01129200
+
+## Red team
+- Public demo sessions are isolated by an HttpOnly cookie. Reset clears only that browser
+- The hero phrase table moved to `example_world.py`. Generic `compile_bundle` does not license fixture ids
+- Attack set `shadowbench/redteam-compiler/`: rules-only hard recall 0/25, example adapter 0/25, Super plus verifier 18/25, false hard 0, dependencies 3/6, unknowns 3/8, contradictions 0/2, repair proxy 28/40
+- Fair raw-context search benchmark was not built. The compiler emits labels, not executable formulas
+- Unknown events no longer mark unrelated futures unknown. Unmatched skills return none
+- New Nebius spend this red-team pass: 0.00678450
+- recorded repo ledger: 0.04120818
+- recorded known total: 0.06153630
 
 ## Test commands
 - `make test`

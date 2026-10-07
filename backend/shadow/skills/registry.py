@@ -19,7 +19,7 @@ class SkillRegistry:
     def list_skills(self) -> list[Skill]:
         return [self._skills[item.id] for item in SKILLS if item.id in self._skills]
 
-    def available_for(self, text: str = "", event_type: str = "") -> Skill:
+    def available_for(self, text: str = "", event_type: str = "") -> Skill | None:
         blob = f"{text} {event_type}".lower()
         if any(token in blob for token in ("delay", "fare", "cancel", "disruption", "hotel")):
             return HANDLE_DISRUPTION
@@ -27,4 +27,4 @@ class SkillRegistry:
             return COORDINATE_SCHEDULE
         if any(token in blob for token in ("trip", "flight", "travel", "nyc")):
             return RESCHEDULE_TRIP
-        return COORDINATE_SCHEDULE
+        return None

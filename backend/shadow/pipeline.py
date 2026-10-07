@@ -93,7 +93,7 @@ class PlanService:
             "providers": SandboxProviders(),
             "scenario": scenario,
             "compiled_from": None if compiled is None else "calendar, email, reservation, preferences",
-            "skill_id": self.skills.available_for(text).id,
+            "skill_id": None if (skill := self.skills.available_for(text)) is None else skill.id,
         }
         self.plans[plan_id] = record
         self.events.append(plan_id, "PLAN_CREATED", {"scenario_id": scenario_id}, "user")
@@ -235,13 +235,14 @@ class PlanService:
             epistemic_status="VERIFIED",
             provenance="demo-injection",
         )
-        record["skill_id"] = self.skills.available_for(record["text"], event.id).id
+        matched = self.skills.available_for(record["text"], event.id)
+        record["skill_id"] = None if matched is None else matched.id
         drift = self.watcher.process_event(world_event, plan_id=plan_id)[0]
         contract: FutureContract | None = record.get("contract")
         holds = drift.still_feasible is True
         if record.get("naive_id") and record.get("recommended_id"):
             record["diff"] = _diff(record["scenario"], record["naive_id"], record["recommended_id"], record.get("repairs") or [])
-        skill = self.skills.get(record["skill_id"])
+        skill = self.skills.get(record["skill_id"]) if record.get("skill_id") else None
         return {
             "event": event.model_dump(mode="json"),
             "invalidated": drift.affected_assumptions,
@@ -252,7 +253,7 @@ class PlanService:
             "message": _inject_message(holds, drift.affected_assumptions),
             "drift_status": drift.new_status,
             "watch_message": drift.explanation,
-            "skill_name": skill.name,
+            "skill_name": None if skill is None else skill.name,
         }
 
     def relax(self, plan_id: str, constraint_id: str) -> dict[str, Any]:

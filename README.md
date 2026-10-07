@@ -18,7 +18,7 @@ Shadow compiles messy personal context into a typed model of the future around a
 
 ## Why Shadow is Personal AI
 
-Shadow keeps a private model of commitments, preferences, reservations, and approved futures. You can hand it a plan. It builds a Future Graph, finds failures, repairs the plan, and executes only the changes you approve.
+The public demo keeps sandbox state for one browser session. It is not a private store on your device, and it is not connected to your calendar or mail. A live compile, which that demo does not make, would send the relevant record text to Nebius. You can hand the sandbox a plan. It builds a Future Graph, finds failures inside the example model, repairs the plan, and executes only the changes you approve.
 
 After approval, Shadow Watch keeps that future. It does not poll every service. When a connected source emits a world event, Shadow looks up the contracts that depend on the changed fact, rechecks those constraints, and leaves the others alone. If the future still holds, authority stays. If it does not, the contract goes stale, authority is revoked, and a repair is proposed for approval. Shadow does not execute that repair on its own.
 
@@ -114,7 +114,7 @@ One client, `backend/shadow/llm/client.py`.
 
 `NEBIUS_LIVE` must be `1` or the client throws before the request. The ledger's repo soft cap is $0.25 on top of $0.02030592 historical spend, under a $1.00 overall cap. Reservations use a conservative token estimate and the full output cap. Actual usage reconciles the reservation. Cache hits cost $0. A breach never opens the socket.
 
-Super stays off unless `ALLOW_SUPER=true`. Ultra stays off unless `ALLOW_ULTRA=true`. This build did not turn either on. The local failure is found by search, so a larger model was not the bottleneck.
+Ultra stays off unless `ALLOW_ULTRA=true`. Super is not used for ordinary plan or repair calls. A later compiler study may call Super for `compile_world` only when `NEBIUS_LIVE=1`. The public sandbox leaves that flag off, so the demo failure is found by search over the example fixture, not by a live model.
 
 One live smoke call was made after the local gates passed: Lightning, schema-valid `PlanSpec`, 134 input tokens, 59 output tokens, cost `$0.0000222`.
 
@@ -122,7 +122,7 @@ One live smoke call was made after the local gates passed: Lightning, schema-val
 
 Procedural worlds in three families: travel, scheduling, purchase. Each world has a hidden margin, three shocks, and three actions. The oracle probe set is not shown to the evaluator. Metrics are counts against that probe set. No model grades the answers.
 
-The checked-in run is `shadowbench/results/local-gate`, seeds 1000–1029, `$0`.
+The checked-in run is `shadowbench/results/local-gate`, seeds 1000–1029, `$0`. It is a scripted regression on a monotone generator. It is not a comparison of language models.
 
 | System | Task completion | Undetected failures | Repair success | Mean regret |
 | --- | --- | --- | --- | --- |
@@ -138,7 +138,7 @@ Bootstrap intervals on this run are degenerate because every world has the same 
 
 `shadow_no_search` is the same catalog and the same nominal constraint check without failure-directed ranking. It commits to the cheap plan and misses every planted failure. The plot is `shadowbench/results/local-gate/plots/ablation.png`.
 
-Lightning versus Super was not run. The gap above does not depend on model size. Ultra was not enabled.
+The gap in the table above does not depend on model size. Lightning versus Super for compilation is a separate study in `shadowbench/compiler-study/`. Ultra was not enabled.
 
 ## Live Nemotron Pilot
 
@@ -170,7 +170,9 @@ Ordinary LLM baselines received user-facing evidence. Shadow additionally operat
 
 ## World Compiler
 
-`backend/shadow/world/compiler.py` reads `fixtures/travel/context.json` for the hero. Those records are calendar text, an email, reservations, and a preference. The compiler licenses the hero's hard constraints from that text. It does not choose a flight. `street_closure` stays `UNKNOWN`. A confirmed hotel fact can be `VERIFIED`. Causal links stay `INFERRED`. Parsed clock time and the $100 cap are `COMPUTED` from the text.
+The generic compiler in `backend/shadow/world/compiler.py` does not recognize hero phrases and does not license fixture constraint ids. The sandbox NYC example uses `backend/shadow/world/example_world.py`, which is a fixture license table, not a claim that the compiler understood an arbitrary plan. With no model call, that table matches source text to the pre-authored travel constraints. It does not choose a flight. `street_closure` stays `UNKNOWN` in that example. A confirmed hotel fact can be `VERIFIED`. Parsed clock time and the $100 cap are `COMPUTED` from the example text. Live `compile_world`, when enabled, is a separate path and is what the compiler study measured.
+
+A later 40-case attack set, `shadowbench/redteam-compiler/`, was frozen before scoring and was not taken from the travel fixture. The generic compiler recalled 0/25 hard constraints. The example table also recalled 0/25, and it over-licensed `c_friday` on an unrelated sentence that merely contained "Friday." Super plus the citation check, one pass, recalled 18/25 hard constraints, 0 false hard constraints, 3/6 dependencies, and 3/8 unknowns, and detected 0/2 contradictions. Cost `$0.00678450`. The compiler still emits labels, not the expressions the search evaluates, so this is not a fair end-to-end search benchmark.
 
 The frozen holdout is `shadowbench/world_compiler_holdout/` (16 cases). One Lightning compile call per case. Oracle labels were frozen before the run. No LLM judged the labels.
 

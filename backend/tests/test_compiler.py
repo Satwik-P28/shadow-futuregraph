@@ -2,12 +2,22 @@ from shadow.benchmark.adversarial import evaluate_case, load_cases, summarize
 from shadow.pipeline import PlanService
 from shadow.runtime.events import EventLog
 from shadow.world.compiler import compile_bundle, load_bundle
+from shadow.world.example_world import license_example_bundle
+
+
+def test_generic_compiler_does_not_keyword_license_the_hero():
+    bundle = load_bundle("travel")
+    assert bundle is not None
+    compiled = compile_bundle(bundle)
+    assert compiled.licensed_constraint_ids == []
+    assert compiled.hard_constraints == []
+    assert not any("dinner" in item.label for item in compiled.dependencies)
 
 
 def test_hero_context_licenses_constraints_without_naming_a_flight():
     bundle = load_bundle("travel")
     assert bundle is not None
-    compiled = compile_bundle(bundle)
+    compiled = license_example_bundle(bundle)
     labels = " ".join(item.label for item in compiled.items())
     assert "11:20" not in labels
     assert "c_dinner" in compiled.licensed_constraint_ids

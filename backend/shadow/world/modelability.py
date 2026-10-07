@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field
 
 from shadow.skills.registry import SkillRegistry
 from shadow.world.compiler import compile_bundle, load_bundle
+from shadow.world.example_world import license_example_bundle
 
 _LIFE = ("marry", "married", "soulmate", "meaning of life", "be happy", "fall in love")
 _TRIP = ("trip", "flight", "flights", "travel", "nyc")
@@ -103,9 +104,12 @@ def _missing(lowered: str, skill_id: str) -> list[str]:
 
 def _compiled_labels(demo_context_id: str | None, text: str) -> tuple[list[str], list[str]]:
     bundle = load_bundle(demo_context_id) if demo_context_id else None
-    if bundle is None:
-        bundle = {"plan_text": text, "records": [{"id": "user_plan", "kind": "note", "text": text}]}
-    compiled = compile_bundle(bundle)
+    if demo_context_id == "travel" and bundle is not None:
+        compiled = license_example_bundle(bundle)
+    else:
+        if bundle is None:
+            bundle = {"plan_text": text, "records": [{"id": "user_plan", "kind": "note", "text": text}]}
+        compiled = compile_bundle(bundle)
     constraints = [item.label for item in compiled.hard_constraints]
     dependencies = [item.label for item in compiled.dependencies]
     return constraints, dependencies

@@ -1,0 +1,4 @@
+version: propose_repairs.v1
+Propose at most 5 repairs as JSON. Each repair must use action ids from the context.
+Do not claim a repair succeeds. Do not invent actions, shell, or Python.
+Schema: {"repairs": [{"id", "label", "action_ids", "rationale"}]}

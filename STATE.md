@@ -8,7 +8,8 @@ Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - Apartment scenario on the same engine
 - Impossible plan returns NO_FEASIBLE_FUTURE. Unknown venue stays unknown until an event resolves it
 - Budget ledger, cache, FakeNemotron, live client
-- ShadowBench local-gate, 30 worlds, $0, Full Shadow 30/30 vs baselines 0/30
+- ShadowBench local-gate, 30 monotone worlds, $0, scripted stand-in
+- Live Lightning pilot, 30 heterogeneous worlds, recorded spend $0.01838022
 - Frontend production build, Vitest, Playwright hero
 - OpenShell compiler. Prover not installed
 - Public repo, secret scan clean, Apache-2.0
@@ -31,6 +32,7 @@ Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - `backend/shadow/pipeline.py`
 - `frontend/src/App.tsx`
 - `shadowbench/results/local-gate/summary.json`
+- `shadowbench/results/live-pilot-20261007T180515Z/summary.json`
 
 ## Known failures
 - `openshell-prover` is not on PATH. Status is `prover_unavailable`
@@ -49,8 +51,11 @@ Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - `cd frontend && npm run build`
 
 ## Live-token spend
-- repo_actual_spend_usd: 0.0000222
-- paid calls this build: 1
+- recorded repo ledger: 0.01838022
+- earlier repo call, not in this ledger: 0.0000222
+- prior external: 0.02030592
+- recorded known total: 0.03870834
+- one pre-fix call was omitted from the ledger; usage was not stored
 - model: nvidia/Nemotron-3_5-Lightning
-- usage: 134 input, 59 output, schema valid
-- overall cap 1.00, prior external 0.02030592, repo soft cap 0.25
+- official pilot: live-pilot-20261007T180515Z
+- overall cap 1.00, repo soft cap 0.25, this session cap 0.03

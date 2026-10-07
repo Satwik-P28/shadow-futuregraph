@@ -120,6 +120,30 @@ Bootstrap intervals on this run are degenerate because every world has the same 
 
 Lightning versus Super was not run. The gap above does not depend on model size. Ultra was not enabled.
 
+## Live Nemotron Pilot
+
+This is separate from the local scripted gate above. The local gate does not measure Nemotron.
+
+The reported run is `shadowbench/results/live-pilot-20261007T180515Z`. Thirty frozen heterogeneous worlds, seeds 5000–5029, model `nvidia/Nemotron-3_5-Lightning`, temperature 0, thinking disabled. Two earlier folders are kept: the first truncated repair JSON at 256 tokens, and a rerun that mistakenly shortened context after world 5. Prompt text was not edited. `propose_repairs` max tokens was raised from 256 to 512 after that truncation, then the unshrunk pilot was run again. Choice and analyze calls were cache hits.
+
+Direct, planner, and critic see the same compact context: plan, bundle ids, labels, costs, constraint descriptions, unknowns, and facts. They do not see formulas or bounds. Shadow's deterministic engine does. `shadow_no_failure_search` uses that same engine and only the nominal check. The oracle is not sent to any system.
+
+| System | Task completion | Undetected failures | Failure recall | Repair success | Mean regret |
+| --- | --- | --- | --- | --- | --- |
+| direct_nemotron | 6/30 | 22/26 | 9/30 | 6/30 | 0.800 |
+| planner | 8/30 | 22/26 | 8/30 | 8/30 | 0.733 |
+| planner_critic | 5/30 | 8/26 | 22/30 | 5/30 | 0.833 |
+| shadow_no_failure_search | 8/30 | 22/26 | 8/30 | 8/30 | 0.733 |
+| shadow | 30/30 | 0/26 | 30/30 | 30/30 | 0.000 |
+
+Shadow's minimal-cut precision and recall were 1.0 on worlds where the nominal plan was unsafe. Material-edge recall was 1.0 on worlds that had material edges. Planner-critic avoided the nominal plan more often than it selected a safe one: recall 22/30, completion 5/30, false hazards 3/30. The no-search ablation matches the planner, not full Shadow. The gap is the failure search on the typed world, not a better language-model answer.
+
+On the live Alex trip, Nemotron's repair proposals were incomplete and the evaluator marked them infeasible. Search still selected the 11:20 future. The minimal failure set was flight delay and traffic. `street_closure` stayed unknown. Sandbox execution reconciled. Nemotron returned no hazard list on that call.
+
+Recorded session spend is `$0.01838022`. One call before the accounting fix was dropped from the ledger; its usage was not stored. A later debug call with 2,395 input and 256 output tokens cost `$0.00020514` and is inside the recorded total. Prior external spend `$0.02030592` plus the earlier repo call `$0.0000222` puts recorded known spend at `$0.03870834`.
+
+Tavily was not configured. OpenShell prover status remains `prover_unavailable`. Thirty worlds are a pilot, not a conclusive ranking.
+
 ## Security model
 
 `docs/THREAT_MODEL.md`. Fail closed on bad model output, broker denial, verification mismatch, and a stale contract.

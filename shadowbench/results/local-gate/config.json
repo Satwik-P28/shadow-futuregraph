@@ -1,0 +1,18 @@
+{
+  "run_id": "local-gate",
+  "model": "scripted-stand-in",
+  "paid": false,
+  "families": [
+    "travel",
+    "scheduling",
+    "purchase"
+  ],
+  "systems": [
+    "direct",
+    "planner",
+    "planner_critic",
+    "shadow_no_search",
+    "shadow"
+  ],
+  "note": "Local gate. No Token Factory calls. Baselines are scripted, not Nemotron quality claims."
+}

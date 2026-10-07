@@ -1,0 +1,622 @@
+{
+  "id": "travel",
+  "title": "Alex moves the NYC trip to Friday",
+  "domain": "travel",
+  "plan_prompt": "Move my NYC trip to Friday and make sure everything still works.",
+  "metadata": {
+    "persona": "Alex",
+    "provider_mode": "sandbox",
+    "synthetic": true
+  },
+  "variables": [
+    {
+      "id": "trip_day",
+      "label": "Trip day",
+      "role": "controllable",
+      "vtype": "category",
+      "baseline": "thursday",
+      "epistemic_status": "VERIFIED",
+      "show_in_diff": true
+    },
+    {
+      "id": "flight_departure_min",
+      "label": "Flight",
+      "role": "controllable",
+      "vtype": "number",
+      "baseline": 880,
+      "unit": "clock",
+      "epistemic_status": "VERIFIED",
+      "show_in_diff": true
+    },
+    {
+      "id": "ride_pickup_min",
+      "label": "Airport ride",
+      "role": "controllable",
+      "vtype": "number",
+      "baseline": 725,
+      "unit": "clock",
+      "epistemic_status": "VERIFIED",
+      "show_in_diff": true
+    },
+    {
+      "id": "incremental_cost_usd",
+      "label": "Fare change",
+      "role": "controllable",
+      "vtype": "number",
+      "baseline": 0,
+      "unit": "usd",
+      "epistemic_status": "VERIFIED",
+      "show_in_diff": true
+    },
+    {
+      "id": "fare_adjust_usd",
+      "label": "Observed fare adjustment",
+      "role": "exogenous",
+      "vtype": "number",
+      "baseline": 0,
+      "lower": 0,
+      "upper": 0,
+      "scale": 100,
+      "unit": "usd",
+      "distribution": "point",
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "flight_delay_min",
+      "label": "Flight delay",
+      "role": "exogenous",
+      "vtype": "number",
+      "baseline": 0,
+      "lower": 0,
+      "upper": 180,
+      "scale": 180,
+      "unit": "min",
+      "distribution": "uniform",
+      "epistemic_status": "ESTIMATED"
+    },
+    {
+      "id": "traffic_extra_min",
+      "label": "Ground traffic",
+      "role": "exogenous",
+      "vtype": "number",
+      "baseline": 0,
+      "lower": 0,
+      "upper": 150,
+      "scale": 150,
+      "unit": "min",
+      "distribution": "uniform",
+      "epistemic_status": "ESTIMATED"
+    },
+    {
+      "id": "block_min",
+      "label": "Scheduled block",
+      "role": "fixed",
+      "vtype": "number",
+      "baseline": 75,
+      "unit": "min",
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "deplane_min",
+      "label": "Deplane and exit",
+      "role": "fixed",
+      "vtype": "number",
+      "baseline": 20,
+      "unit": "min",
+      "epistemic_status": "VERIFIED",
+      "detail": true
+    },
+    {
+      "id": "ground_min",
+      "label": "Airport to dinner",
+      "role": "fixed",
+      "vtype": "number",
+      "baseline": 50,
+      "unit": "min",
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "dinner_deadline_min",
+      "label": "Dinner deadline",
+      "role": "controllable",
+      "vtype": "number",
+      "baseline": 1140,
+      "unit": "clock",
+      "epistemic_status": "VERIFIED",
+      "show_in_diff": true
+    },
+    {
+      "id": "dinner_fixed",
+      "label": "Dinner stays put",
+      "role": "controllable",
+      "vtype": "bool",
+      "baseline": true,
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "review_end_min",
+      "label": "Design review ends",
+      "role": "fixed",
+      "vtype": "number",
+      "baseline": 540,
+      "unit": "clock",
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "review_changed",
+      "label": "Design review changed",
+      "role": "controllable",
+      "vtype": "bool",
+      "baseline": false,
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "exam_changed",
+      "label": "Algorithms exam changed",
+      "role": "controllable",
+      "vtype": "bool",
+      "baseline": false,
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "hotel_status",
+      "label": "Hotel",
+      "role": "controllable",
+      "vtype": "category",
+      "baseline": "confirmed",
+      "epistemic_status": "VERIFIED",
+      "show_in_diff": true
+    },
+    {
+      "id": "replacement_confirmed",
+      "label": "Replacement booking confirmed",
+      "role": "controllable",
+      "vtype": "bool",
+      "baseline": false,
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "street_closure",
+      "label": "Unconfirmed street closure",
+      "role": "exogenous",
+      "vtype": "bool",
+      "baseline": null,
+      "distribution": "unknown",
+      "epistemic_status": "UNKNOWN"
+    },
+    {
+      "id": "dinner_arrival_min",
+      "label": "Arrival at dinner",
+      "role": "derived",
+      "vtype": "number",
+      "unit": "clock",
+      "epistemic_status": "COMPUTED",
+      "show_in_diff": true,
+      "formula": {
+        "op": "add",
+        "args": [
+          {"op": "var", "ref": "flight_departure_min"},
+          {"op": "var", "ref": "block_min"},
+          {"op": "var", "ref": "deplane_min"},
+          {"op": "var", "ref": "ground_min"},
+          {"op": "var", "ref": "flight_delay_min"},
+          {"op": "var", "ref": "traffic_extra_min"}
+        ]
+      }
+    },
+    {
+      "id": "leave_home_min",
+      "label": "Leave home",
+      "role": "derived",
+      "vtype": "number",
+      "unit": "clock",
+      "epistemic_status": "COMPUTED",
+      "detail": true,
+      "formula": {
+        "op": "sub",
+        "args": [
+          {"op": "var", "ref": "flight_departure_min"},
+          {"op": "const", "value": 100}
+        ]
+      }
+    },
+    {
+      "id": "ride_expected_min",
+      "label": "Ride required by flight",
+      "role": "derived",
+      "vtype": "number",
+      "unit": "clock",
+      "epistemic_status": "COMPUTED",
+      "detail": true,
+      "formula": {
+        "op": "sub",
+        "args": [
+          {"op": "var", "ref": "flight_departure_min"},
+          {"op": "const", "value": 155}
+        ]
+      }
+    },
+    {
+      "id": "total_cost_usd",
+      "label": "Incremental cost",
+      "role": "derived",
+      "vtype": "number",
+      "unit": "usd",
+      "epistemic_status": "COMPUTED",
+      "show_in_diff": true,
+      "formula": {
+        "op": "add",
+        "args": [
+          {"op": "var", "ref": "incremental_cost_usd"},
+          {"op": "var", "ref": "fare_adjust_usd"}
+        ]
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "id": "c_dinner",
+      "label": "Arrive by dinner",
+      "kind": "temporal",
+      "hardness": "hard",
+      "description": "Alex must reach dinner by 19:00.",
+      "relaxable": true,
+      "expr": {
+        "op": "lte",
+        "args": [
+          {"op": "var", "ref": "dinner_arrival_min"},
+          {"op": "var", "ref": "dinner_deadline_min"}
+        ]
+      }
+    },
+    {
+      "id": "c_budget",
+      "label": "Incremental cost within $100",
+      "kind": "resource",
+      "hardness": "hard",
+      "description": "The fare change must stay within the $100 cap.",
+      "relaxable": true,
+      "expr": {
+        "op": "lte",
+        "args": [
+          {"op": "var", "ref": "total_cost_usd"},
+          {"op": "const", "value": 100}
+        ]
+      }
+    },
+    {
+      "id": "c_dinner_fixed",
+      "label": "Dinner does not move",
+      "kind": "boolean",
+      "hardness": "hard",
+      "description": "Dinner is with another person and cannot be moved.",
+      "expr": {"op": "eq", "args": [{"op": "var", "ref": "dinner_fixed"}, {"op": "const", "value": true}]}
+    },
+    {
+      "id": "c_review",
+      "label": "Design review stays",
+      "kind": "equality",
+      "hardness": "hard",
+      "description": "The Friday design review is fixed.",
+      "expr": {"op": "eq", "args": [{"op": "var", "ref": "review_changed"}, {"op": "const", "value": false}]}
+    },
+    {
+      "id": "c_exam",
+      "label": "Algorithms exam stays",
+      "kind": "equality",
+      "hardness": "hard",
+      "description": "The unrelated algorithms exam must not change.",
+      "expr": {"op": "eq", "args": [{"op": "var", "ref": "exam_changed"}, {"op": "const", "value": false}]}
+    },
+    {
+      "id": "c_leave",
+      "label": "Leave after the design review",
+      "kind": "temporal",
+      "hardness": "hard",
+      "description": "Alex cannot leave for the airport before the review ends.",
+      "expr": {
+        "op": "gte",
+        "args": [
+          {"op": "var", "ref": "leave_home_min"},
+          {"op": "var", "ref": "review_end_min"}
+        ]
+      }
+    },
+    {
+      "id": "c_ride",
+      "label": "Ride matches the flight",
+      "kind": "sequence",
+      "hardness": "hard",
+      "description": "The airport ride has to move with the flight.",
+      "expr": {
+        "op": "eq",
+        "args": [
+          {"op": "var", "ref": "ride_pickup_min"},
+          {"op": "var", "ref": "ride_expected_min"}
+        ]
+      }
+    },
+    {
+      "id": "c_friday",
+      "label": "Trip is on Friday",
+      "kind": "equality",
+      "hardness": "hard",
+      "description": "The requested trip day is Friday.",
+      "expr": {"op": "eq", "args": [{"op": "var", "ref": "trip_day"}, {"op": "const", "value": "friday"}]}
+    },
+    {
+      "id": "c_hotel",
+      "label": "Hotel remains confirmed",
+      "kind": "equality",
+      "hardness": "hard",
+      "description": "The hotel booking has to stay confirmed.",
+      "expr": {"op": "eq", "args": [{"op": "var", "ref": "hotel_status"}, {"op": "const", "value": "confirmed"}]}
+    },
+    {
+      "id": "c_replacement",
+      "label": "Old booking held until replacement confirms",
+      "kind": "sequence",
+      "hardness": "hard",
+      "description": "The Thursday booking stays until the Friday replacement is confirmed.",
+      "expr": {
+        "op": "eq",
+        "args": [
+          {"op": "var", "ref": "replacement_confirmed"},
+          {"op": "const", "value": true}
+        ]
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "set_flight_1120",
+      "action_type": "travel.change_flight",
+      "label": "Change flight to Fri 11:20",
+      "resource": "bk_nyc",
+      "cost": 76,
+      "effects": {"flight_departure_min": 680, "incremental_cost_usd": 76}
+    },
+    {
+      "id": "set_flight_1440",
+      "action_type": "travel.change_flight",
+      "label": "Change flight to Fri 14:40",
+      "resource": "bk_nyc",
+      "cost": 0,
+      "effects": {"flight_departure_min": 880, "incremental_cost_usd": 0}
+    },
+    {
+      "id": "set_flight_1710",
+      "action_type": "travel.change_flight",
+      "label": "Change flight to Fri 17:10",
+      "resource": "bk_nyc",
+      "cost": -31,
+      "effects": {"flight_departure_min": 1030, "incremental_cost_usd": -31}
+    },
+    {
+      "id": "set_ride_1120",
+      "action_type": "travel.update_ride",
+      "label": "Move ride to 08:45",
+      "resource": "ride_nyc",
+      "effects": {"ride_pickup_min": 525}
+    },
+    {
+      "id": "set_ride_1440",
+      "action_type": "travel.update_ride",
+      "label": "Move ride to 12:05",
+      "resource": "ride_nyc",
+      "effects": {"ride_pickup_min": 725}
+    },
+    {
+      "id": "set_ride_1710",
+      "action_type": "travel.update_ride",
+      "label": "Move ride to 14:35",
+      "resource": "ride_nyc",
+      "effects": {"ride_pickup_min": 875}
+    },
+    {
+      "id": "confirm_friday",
+      "action_type": "calendar.update_event",
+      "label": "Update the trip event to Friday",
+      "resource": "cal_trip",
+      "effects": {"trip_day": "friday", "replacement_confirmed": true}
+    },
+    {
+      "id": "move_dinner",
+      "action_type": "calendar.update_event",
+      "label": "Push dinner to 23:00",
+      "resource": "cal_dinner",
+      "cost": 0,
+      "reversible": false,
+      "compensatable": false,
+      "irreversible": true,
+      "impacts_others": 2,
+      "effects": {"dinner_fixed": false, "dinner_deadline_min": 1380}
+    },
+    {
+      "id": "update_exam",
+      "action_type": "calendar.update_event",
+      "label": "Move the algorithms exam",
+      "resource": "cal_exam",
+      "effects": {"exam_changed": true}
+    }
+  ],
+  "bundles": [
+    {
+      "id": "b1120",
+      "label": "Earlier Friday flight",
+      "action_ids": ["set_flight_1120", "set_ride_1120", "confirm_friday"],
+      "rationale": "Pays more for a larger margin before dinner."
+    },
+    {
+      "id": "b1440",
+      "label": "Afternoon Friday flight",
+      "action_ids": ["set_flight_1440", "set_ride_1440", "confirm_friday"],
+      "rationale": "Lowest fare that still reaches dinner on the nominal schedule."
+    },
+    {
+      "id": "b1710",
+      "label": "Evening Friday flight",
+      "action_ids": ["set_flight_1710", "set_ride_1710", "confirm_friday"],
+      "rationale": "Cheapest listed fare."
+    },
+    {
+      "id": "b_flight_only",
+      "label": "Change the flight and leave the ride",
+      "action_ids": ["set_flight_1120", "confirm_friday"],
+      "rationale": "Incomplete repair that does not move the ride."
+    },
+    {
+      "id": "b_dinner",
+      "label": "Keep the cheap flight and move dinner",
+      "action_ids": ["set_flight_1710", "set_ride_1710", "confirm_friday", "move_dinner"],
+      "rationale": "Violates the fixed dinner to make a late flight look viable."
+    }
+  ],
+  "facts": [
+    {
+      "id": "f_dinner",
+      "subject": "dinner",
+      "predicate": "scheduled",
+      "value": "19:00 Friday with Jordan",
+      "valid_from": "2026-10-16T19:00:00-04:00",
+      "valid_to": "2026-10-16T21:00:00-04:00",
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "calendar",
+      "source_id": "cal_dinner",
+      "epistemic_status": "VERIFIED",
+      "privacy_label": "personal",
+      "tags": ["attack", "support", "fixed"],
+      "text": "Friday dinner with Jordan at 7:00 PM. The reservation cannot move.",
+      "metadata": {"resource": "cal_dinner"}
+    },
+    {
+      "id": "f_review",
+      "subject": "design_review",
+      "predicate": "scheduled",
+      "value": "Friday 08:30-09:00",
+      "valid_from": "2026-10-16T08:30:00-04:00",
+      "valid_to": "2026-10-16T09:00:00-04:00",
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "calendar",
+      "source_id": "cal_review",
+      "epistemic_status": "VERIFIED",
+      "tags": ["attack", "fixed"],
+      "text": "Friday design review 8:30 to 9:00 is fixed and cannot move.",
+      "metadata": {"resource": "cal_review"}
+    },
+    {
+      "id": "f_exam",
+      "subject": "algorithms_exam",
+      "predicate": "scheduled",
+      "value": "Monday 10:00",
+      "valid_from": "2026-10-19T10:00:00-04:00",
+      "valid_to": "2026-10-19T12:00:00-04:00",
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "calendar",
+      "source_id": "cal_exam",
+      "epistemic_status": "VERIFIED",
+      "tags": ["fixed"],
+      "text": "Algorithms exam Monday at 10:00. Unrelated to the NYC trip. Do not change it.",
+      "metadata": {"resource": "cal_exam", "raw_body": "PRIVATE NOTE should never be sent to a model."}
+    },
+    {
+      "id": "f_budget",
+      "subject": "budget",
+      "predicate": "cap",
+      "value": 100,
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "preference",
+      "source_id": "pref_budget",
+      "epistemic_status": "VERIFIED",
+      "tags": ["support", "attack"],
+      "text": "Incremental trip cost must stay at or below $100."
+    },
+    {
+      "id": "f_booking",
+      "subject": "flight",
+      "predicate": "current_booking",
+      "value": "Thursday 14:40",
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "travel",
+      "source_id": "bk_nyc",
+      "epistemic_status": "VERIFIED",
+      "tags": ["support"],
+      "text": "Current NYC flight is Thursday at 14:40. Friday options are 11:20, 14:40, and 17:10."
+    },
+    {
+      "id": "f_ride",
+      "subject": "ride",
+      "predicate": "pickup",
+      "value": "12:05",
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "travel",
+      "source_id": "ride_nyc",
+      "epistemic_status": "VERIFIED",
+      "tags": ["support", "attack"],
+      "text": "Airport ride is booked for 12:05 and must be moved if the flight moves."
+    },
+    {
+      "id": "f_hotel",
+      "subject": "hotel",
+      "predicate": "status",
+      "value": "confirmed",
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "travel",
+      "source_id": "hotel_nyc",
+      "epistemic_status": "VERIFIED",
+      "tags": ["support"],
+      "text": "Hotel reservation is confirmed and does not need to change."
+    },
+    {
+      "id": "f_closure",
+      "subject": "street_closure",
+      "predicate": "status",
+      "value": null,
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "search",
+      "source_id": "street_closure",
+      "epistemic_status": "UNKNOWN",
+      "confidence": null,
+      "tags": ["uncertainty"],
+      "text": "A possible street closure near the restaurant is unresolved. No probability is available."
+    }
+  ],
+  "events": [
+    {
+      "id": "delay_74",
+      "label": "+74 minute delay",
+      "description": "The booked flight is now expected 74 minutes late.",
+      "set_baseline": {"flight_delay_min": 74},
+      "set_distribution": {"flight_delay_min": "point"}
+    },
+    {
+      "id": "traffic_spike",
+      "label": "Ground traffic +100 minutes",
+      "description": "Observed ground travel is 100 minutes slower than the plan.",
+      "set_baseline": {"traffic_extra_min": 100},
+      "set_distribution": {"traffic_extra_min": "point"}
+    },
+    {
+      "id": "fare_increase",
+      "label": "Fare +$80",
+      "description": "The selected fare increased by $80 before ticketing.",
+      "set_baseline": {"fare_adjust_usd": 80},
+      "set_distribution": {"fare_adjust_usd": "point"}
+    },
+    {
+      "id": "hotel_canceled",
+      "label": "Hotel canceled",
+      "description": "The hotel is no longer confirmed.",
+      "set_baseline": {"hotel_status": "canceled"},
+      "set_distribution": {"hotel_status": "point"}
+    }
+  ],
+  "sensitivities": [
+    {
+      "id": "closure_traffic",
+      "variable": "street_closure",
+      "if_true_effects": {"traffic_extra_min": 40},
+      "description": "If the unresolved street closure is real, ground travel grows by 40 minutes."
+    }
+  ]
+}

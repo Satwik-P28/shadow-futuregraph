@@ -1,0 +1,310 @@
+{
+  "id": "apartment",
+  "title": "Alex considers moving next month",
+  "domain": "housing",
+  "plan_prompt": "I'm thinking about moving apartments next month. Does this plan actually work?",
+  "metadata": {"persona": "Alex", "provider_mode": "sandbox", "synthetic": true},
+  "variables": [
+    {
+      "id": "move_day",
+      "label": "Move day",
+      "role": "controllable",
+      "vtype": "number",
+      "baseline": 14,
+      "unit": "day",
+      "epistemic_status": "VERIFIED",
+      "show_in_diff": true
+    },
+    {
+      "id": "new_lease_start",
+      "label": "New lease start",
+      "role": "controllable",
+      "vtype": "number",
+      "baseline": 10,
+      "unit": "day",
+      "epistemic_status": "VERIFIED",
+      "show_in_diff": true
+    },
+    {
+      "id": "old_lease_end",
+      "label": "Old lease end",
+      "role": "fixed",
+      "vtype": "number",
+      "baseline": 20,
+      "unit": "day",
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "thursday_day",
+      "label": "Onsite Thursday",
+      "role": "fixed",
+      "vtype": "number",
+      "baseline": 16,
+      "unit": "day",
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "deposit_usd",
+      "label": "Deposit",
+      "role": "fixed",
+      "vtype": "number",
+      "baseline": 1500,
+      "unit": "usd",
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "overlap_daily_usd",
+      "label": "Overlap rent per day",
+      "role": "fixed",
+      "vtype": "number",
+      "baseline": 90,
+      "unit": "usd",
+      "epistemic_status": "VERIFIED",
+      "detail": true
+    },
+    {
+      "id": "movers_usd",
+      "label": "Movers",
+      "role": "controllable",
+      "vtype": "number",
+      "baseline": 500,
+      "unit": "usd",
+      "epistemic_status": "VERIFIED",
+      "show_in_diff": true
+    },
+    {
+      "id": "change_fee_usd",
+      "label": "Lease change fee",
+      "role": "controllable",
+      "vtype": "number",
+      "baseline": 0,
+      "unit": "usd",
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "cash_usd",
+      "label": "Cash available",
+      "role": "fixed",
+      "vtype": "number",
+      "baseline": 3600,
+      "unit": "usd",
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "alternate_pickup",
+      "label": "Thursday coverage",
+      "role": "controllable",
+      "vtype": "bool",
+      "baseline": false,
+      "epistemic_status": "VERIFIED"
+    },
+    {
+      "id": "fee_surprise_usd",
+      "label": "Move-out fee",
+      "role": "exogenous",
+      "vtype": "number",
+      "baseline": 0,
+      "lower": 0,
+      "upper": 800,
+      "scale": 800,
+      "unit": "usd",
+      "distribution": "uniform",
+      "epistemic_status": "ESTIMATED"
+    },
+    {
+      "id": "commute_traffic_min",
+      "label": "Commute traffic",
+      "role": "exogenous",
+      "vtype": "number",
+      "baseline": 0,
+      "lower": 0,
+      "upper": 40,
+      "scale": 40,
+      "unit": "min",
+      "distribution": "uniform",
+      "epistemic_status": "ESTIMATED"
+    },
+    {
+      "id": "overlap_days",
+      "label": "Lease overlap",
+      "role": "derived",
+      "vtype": "number",
+      "unit": "day",
+      "epistemic_status": "COMPUTED",
+      "show_in_diff": true,
+      "formula": {
+        "op": "max",
+        "args": [
+          {"op": "const", "value": 0},
+          {"op": "sub", "args": [{"op": "var", "ref": "old_lease_end"}, {"op": "var", "ref": "new_lease_start"}]}
+        ]
+      }
+    },
+    {
+      "id": "commute_min",
+      "label": "Thursday commute",
+      "role": "derived",
+      "vtype": "number",
+      "unit": "min",
+      "epistemic_status": "COMPUTED",
+      "formula": {
+        "op": "if",
+        "args": [
+          {"op": "gt", "args": [{"op": "var", "ref": "move_day"}, {"op": "var", "ref": "thursday_day"}]},
+          {"op": "const", "value": 20},
+          {"op": "add", "args": [{"op": "const", "value": 42}, {"op": "var", "ref": "commute_traffic_min"}]}
+        ]
+      }
+    },
+    {
+      "id": "cash_needed_usd",
+      "label": "Cash required",
+      "role": "derived",
+      "vtype": "number",
+      "unit": "usd",
+      "epistemic_status": "COMPUTED",
+      "show_in_diff": true,
+      "formula": {
+        "op": "add",
+        "args": [
+          {"op": "var", "ref": "deposit_usd"},
+          {"op": "var", "ref": "movers_usd"},
+          {"op": "mul", "args": [{"op": "var", "ref": "overlap_days"}, {"op": "var", "ref": "overlap_daily_usd"}]},
+          {"op": "var", "ref": "fee_surprise_usd"},
+          {"op": "var", "ref": "change_fee_usd"}
+        ]
+      }
+    },
+    {
+      "id": "pickup_ok",
+      "label": "Thursday pickup still works",
+      "role": "derived",
+      "vtype": "bool",
+      "epistemic_status": "COMPUTED",
+      "formula": {
+        "op": "or",
+        "args": [
+          {"op": "eq", "args": [{"op": "var", "ref": "alternate_pickup"}, {"op": "const", "value": true}]},
+          {"op": "lte", "args": [{"op": "var", "ref": "commute_min"}, {"op": "const", "value": 50}]}
+        ]
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "id": "c_cash",
+      "label": "Cash covers deposit, overlap, and fees",
+      "kind": "resource",
+      "hardness": "hard",
+      "description": "Cash has to cover the deposit, overlapping rent, movers, and surprise fees.",
+      "relaxable": true,
+      "expr": {"op": "lte", "args": [{"op": "var", "ref": "cash_needed_usd"}, {"op": "var", "ref": "cash_usd"}]}
+    },
+    {
+      "id": "c_pickup",
+      "label": "Thursday onsite pickup still reachable",
+      "kind": "temporal",
+      "hardness": "hard",
+      "description": "The recurring Thursday pickup cannot be missed.",
+      "expr": {"op": "eq", "args": [{"op": "var", "ref": "pickup_ok"}, {"op": "const", "value": true}]}
+    }
+  ],
+  "actions": [
+    {
+      "id": "move_sat",
+      "action_type": "move.set_date",
+      "label": "Move on the 14th",
+      "resource": "move_plan",
+      "cost": 500,
+      "effects": {"move_day": 14, "movers_usd": 500, "change_fee_usd": 0, "new_lease_start": 10, "alternate_pickup": false}
+    },
+    {
+      "id": "move_20",
+      "action_type": "move.set_date",
+      "label": "Move on the 20th",
+      "resource": "move_plan",
+      "cost": 800,
+      "effects": {"move_day": 20, "movers_usd": 800, "change_fee_usd": 0, "alternate_pickup": false}
+    },
+    {
+      "id": "align_lease",
+      "action_type": "lease.align_start",
+      "label": "Start the new lease on the 20th",
+      "resource": "lease_new",
+      "cost": 250,
+      "effects": {"new_lease_start": 20, "change_fee_usd": 250}
+    }
+  ],
+  "bundles": [
+    {
+      "id": "opt_sat",
+      "label": "Move on the 14th",
+      "action_ids": ["move_sat"],
+      "rationale": "Lowest sticker price. Keeps the signed lease start."
+    },
+    {
+      "id": "opt_20",
+      "label": "Move on the 20th without changing the lease",
+      "action_ids": ["move_20"],
+      "rationale": "Clears Thursday, but the lease overlap remains."
+    },
+    {
+      "id": "opt_align",
+      "label": "Move on the 20th and align the lease",
+      "action_ids": ["move_20", "align_lease"],
+      "rationale": "Pays a change fee to remove the overlap and restore cash margin."
+    }
+  ],
+  "facts": [
+    {
+      "id": "f_lease",
+      "subject": "lease",
+      "predicate": "overlap",
+      "value": "new lease starts on the 10th, old lease ends on the 20th",
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "document",
+      "source_id": "lease_new",
+      "epistemic_status": "VERIFIED",
+      "tags": ["attack", "support"],
+      "text": "New lease starts on the 10th. Old lease ends on the 20th. Overlap rent is $90 per day unless the start date is aligned."
+    },
+    {
+      "id": "f_thursday",
+      "subject": "thursday_pickup",
+      "predicate": "recurring",
+      "value": "day 16, commute limit 50 minutes",
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "calendar",
+      "source_id": "cal_thursday",
+      "epistemic_status": "VERIFIED",
+      "tags": ["attack", "fixed"],
+      "text": "Recurring Thursday onsite commitment on the 16th. Pickup only works if the commute stays within 50 minutes."
+    },
+    {
+      "id": "f_cash",
+      "subject": "cash",
+      "predicate": "available",
+      "value": 3600,
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "ledger",
+      "source_id": "cash",
+      "epistemic_status": "VERIFIED",
+      "tags": ["attack", "support"],
+      "text": "Cash available for the move is $3600, including deposit and movers."
+    },
+    {
+      "id": "f_draft",
+      "subject": "draft_plan",
+      "predicate": "proposed_day",
+      "value": 14,
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "note",
+      "source_id": "note_move",
+      "epistemic_status": "VERIFIED",
+      "tags": ["support"],
+      "text": "Draft plan: move on the 14th because the sticker price is lower."
+    }
+  ],
+  "events": [],
+  "sensitivities": []
+}

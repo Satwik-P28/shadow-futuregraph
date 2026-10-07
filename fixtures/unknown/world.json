@@ -1,0 +1,74 @@
+{
+  "id": "unknown",
+  "title": "Unresolved venue",
+  "domain": "scheduling",
+  "plan_prompt": "Book the workshop if the venue can actually host it.",
+  "metadata": {"persona": "Alex", "provider_mode": "sandbox", "synthetic": true},
+  "variables": [
+    {
+      "id": "venue_open",
+      "label": "Venue confirmation",
+      "role": "exogenous",
+      "vtype": "bool",
+      "baseline": null,
+      "distribution": "unknown",
+      "epistemic_status": "UNKNOWN"
+    },
+    {
+      "id": "booked",
+      "label": "Workshop booked",
+      "role": "controllable",
+      "vtype": "bool",
+      "baseline": false,
+      "epistemic_status": "VERIFIED",
+      "show_in_diff": true
+    }
+  ],
+  "constraints": [
+    {
+      "id": "c_venue",
+      "label": "Venue must be confirmed",
+      "kind": "boolean",
+      "hardness": "hard",
+      "description": "The workshop is impossible to authorize until the venue confirms.",
+      "expr": {"op": "eq", "args": [{"op": "var", "ref": "venue_open"}, {"op": "const", "value": true}]}
+    }
+  ],
+  "actions": [
+    {
+      "id": "book",
+      "action_type": "schedule.book",
+      "label": "Book the workshop",
+      "resource": "workshop",
+      "cost": 40,
+      "effects": {"booked": true}
+    }
+  ],
+  "bundles": [
+    {"id": "book_it", "label": "Book anyway", "action_ids": ["book"], "rationale": "Books without a venue fact."}
+  ],
+  "facts": [
+    {
+      "id": "f_venue",
+      "subject": "venue",
+      "predicate": "confirmation",
+      "value": null,
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "mail",
+      "source_id": "mail_venue",
+      "epistemic_status": "UNKNOWN",
+      "tags": ["uncertainty"],
+      "text": "The venue has not confirmed capacity. The value is unknown."
+    }
+  ],
+  "events": [
+    {
+      "id": "venue_yes",
+      "label": "Venue confirms",
+      "description": "The venue confirms it can host the workshop.",
+      "set_baseline": {"venue_open": true},
+      "set_distribution": {"venue_open": "point"}
+    }
+  ],
+  "sensitivities": []
+}

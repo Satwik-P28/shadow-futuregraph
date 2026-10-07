@@ -1,0 +1,85 @@
+{
+  "id": "impossible",
+  "title": "Mutually incompatible deadlines",
+  "domain": "scheduling",
+  "plan_prompt": "Be across town before 08:20 and also do not arrive before 20:00.",
+  "metadata": {"persona": "Alex", "provider_mode": "sandbox", "synthetic": true},
+  "variables": [
+    {
+      "id": "departure_min",
+      "label": "Departure",
+      "role": "controllable",
+      "vtype": "number",
+      "baseline": 600,
+      "lower": 0,
+      "upper": 1440,
+      "unit": "clock",
+      "epistemic_status": "VERIFIED",
+      "show_in_diff": true
+    },
+    {
+      "id": "arrival_min",
+      "label": "Arrival",
+      "role": "derived",
+      "vtype": "number",
+      "unit": "clock",
+      "epistemic_status": "COMPUTED",
+      "formula": {
+        "op": "add",
+        "args": [
+          {"op": "var", "ref": "departure_min"},
+          {"op": "const", "value": 100}
+        ]
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "id": "c_early",
+      "label": "Arrive by 08:20",
+      "kind": "temporal",
+      "hardness": "hard",
+      "relaxable": true,
+      "description": "Arrival must be at or before 08:20.",
+      "expr": {"op": "lte", "args": [{"op": "var", "ref": "arrival_min"}, {"op": "const", "value": 500}]}
+    },
+    {
+      "id": "c_late",
+      "label": "Do not arrive before 20:00",
+      "kind": "temporal",
+      "hardness": "hard",
+      "relaxable": true,
+      "description": "Arrival must be at or after 20:00.",
+      "expr": {"op": "gte", "args": [{"op": "var", "ref": "arrival_min"}, {"op": "const", "value": 1200}]}
+    }
+  ],
+  "actions": [
+    {
+      "id": "depart_noon",
+      "action_type": "schedule.set",
+      "label": "Depart at noon",
+      "resource": "slot",
+      "cost": 0,
+      "effects": {"departure_min": 720}
+    }
+  ],
+  "bundles": [
+    {"id": "only", "label": "Depart at noon", "action_ids": ["depart_noon"], "rationale": "Only declared action."}
+  ],
+  "facts": [
+    {
+      "id": "f1",
+      "subject": "deadlines",
+      "predicate": "conflict",
+      "value": "08:20 and 20:00",
+      "observed_at": "2026-10-07T12:00:00Z",
+      "source_type": "note",
+      "source_id": "note",
+      "epistemic_status": "VERIFIED",
+      "tags": ["attack"],
+      "text": "The plan requires arrival by 08:20 and also not before 20:00."
+    }
+  ],
+  "events": [],
+  "sensitivities": []
+}

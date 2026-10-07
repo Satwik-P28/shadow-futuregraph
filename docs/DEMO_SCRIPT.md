@@ -2,11 +2,17 @@
 
 Target length 2:40–2:55. The app is the sandbox demo. The badge says SANDBOX. No API key is required.
 
-0:00–0:12 Hook
-Your AI can make a perfectly reasonable plan that still breaks your life.
+0:00–0:10 Hook
+Your plans don't fail one at a time. They collide with the rest of your life.
 
-0:12–0:28 User
-The box is empty. The two chips under it are examples, not the product. Click **NYC trip**. The textarea fills with "Move my NYC trip to Friday and make sure everything still works." Then click **Analyze my future**.
+0:10–0:25 Futures home
+The sandbox already shows two saved futures for Alex: NYC airport window and Gallery opening. Each is feasible on its own.
+
+0:25–0:35 Cross-plan conflict
+Click **1 cross-plan conflict**. The overlap is Alex from 2:00–5:00 PM and the protected gallery opening from 3:00–4:00 PM. Say: this plan works alone, but conflicts with another future.
+
+0:35–0:50 NYC future
+Click **NYC trip**, then **Analyze my future**. The textarea is the plan. Say: Nemotron interprets messy personal context. Shadow turns that into a typed world and deterministically searches for ways the plan can fail.
 
 0:28–0:48 World Compiler
 Show the ordinary records: Friday design review, Friday 7 PM dinner, the algorithms exam, the dinner email, the existing trip, the ride linked to the old flight, and the $100 cap. Say: Nemotron converts messy personal context into candidate goals, constraints, dependencies, and unknowns. The model structures the problem. Shadow does not trust the model to prove the plan is safe.

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import threading
 import uuid
 from datetime import datetime, timezone
 from typing import Any
@@ -47,6 +48,7 @@ class EventLog:
         self.engine = create_engine(url, **kwargs)  # type: ignore[arg-type]
         Base.metadata.create_all(self.engine)
         self.factory = sessionmaker(self.engine, expire_on_commit=False)
+        self._lock = threading.Lock()
 
     def append(self, plan_id: str, event_type: str, payload: dict[str, Any], provenance: str) -> RuntimeEvent:
         encoded = json.dumps(payload, sort_keys=True, default=str)
@@ -59,7 +61,7 @@ class EventLog:
             payload_hash=hashlib.sha256(encoded.encode()).hexdigest(),
             provenance=provenance,
         )
-        with self.factory() as session:
+        with self._lock, self.factory() as session:
             session.add(
                 EventRow(
                     event_id=event.event_id,
@@ -75,7 +77,7 @@ class EventLog:
         return event
 
     def list_for(self, plan_id: str) -> list[RuntimeEvent]:
-        with self.factory() as session:
+        with self._lock, self.factory() as session:
             rows = session.query(EventRow).filter(EventRow.plan_id == plan_id).all()
         return [
             RuntimeEvent(
@@ -105,7 +107,7 @@ class EventLog:
 
     def save_approved(self, contract_id: str, plan_id: str, status: str, payload: dict[str, Any]) -> None:
         encoded = json.dumps(payload, default=str)
-        with self.factory() as session:
+        with self._lock, self.factory() as session:
             row = session.get(ContractRow, contract_id)
             if row is None:
                 session.add(ContractRow(contract_id=contract_id, plan_id=plan_id, status=status, payload=encoded))
@@ -115,8 +117,13 @@ class EventLog:
                 row.payload = encoded
             session.commit()
 
+    def clear_approved(self) -> None:
+        with self._lock, self.factory() as session:
+            session.query(ContractRow).delete()
+            session.commit()
+
     def load_approved(self, statuses: tuple[str, ...] = ("ACTIVE", "REAFFIRMED")) -> list[dict[str, Any]]:
-        with self.factory() as session:
+        with self._lock, self.factory() as session:
             rows = session.query(ContractRow).all()
         found = []
         for row in rows:

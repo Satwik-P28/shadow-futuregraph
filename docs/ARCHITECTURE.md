@@ -20,7 +20,7 @@ flowchart LR
 
 ## Nemotron
 
-Two structured calls on a normal plan, both temperature 0, thinking disabled via `chat_template_kwargs.enable_thinking=false`, output cap 512 tokens.
+Two structured calls on a normal sandbox plan, both temperature 0, thinking disabled via `chat_template_kwargs.enable_thinking=false`, output cap 512 tokens. A live `compile_world` call, when `NEBIUS_LIVE=1`, uses the Super model selected in `shadowbench/compiler-study/decision.json`. Repair and plan calls stay on Lightning. The audit merge does not run by default.
 
 1. `analyze_plan` returns goals, constraints, inferred dependencies, unknowns, and hazard hypotheses.
 2. `propose_repairs` returns at most five repairs whose action ids must already exist.

@@ -194,11 +194,11 @@ def license_scenario(scenario: Scenario, compiled: CompiledWorld) -> Scenario:
     return updated
 
 
-def attach_compiled(scenario: Scenario) -> tuple[Scenario, CompiledWorld | None]:
+def attach_compiled(scenario: Scenario, proposal: SemanticProposal | None = None) -> tuple[Scenario, CompiledWorld | None]:
     bundle = load_bundle(scenario.id)
     if bundle is None:
         return scenario, None
-    compiled = compile_bundle(bundle)
+    compiled = compile_bundle(bundle, proposal)
     return license_scenario(scenario, compiled), compiled
 
 
@@ -430,6 +430,83 @@ def _item(
         validated=validated,
         value=value,
     )
+
+
+class AuditFinding(BaseModel):
+    finding_type: str
+    target_label: str = ""
+    source_ids: list[str] = Field(default_factory=list)
+    evidence: str = ""
+
+
+class AuditReport(BaseModel):
+    findings: list[AuditFinding] = Field(default_factory=list)
+
+
+def merge_audit(world: CompiledWorld, report: AuditReport, records: dict[str, str]) -> CompiledWorld:
+    """Apply an audit only when the cited record actually contains the evidence."""
+    updated = world.model_copy(deep=True)
+    for finding in report.findings:
+        kind = finding.finding_type
+        sources = [item for item in finding.source_ids if item in records]
+        evidence = finding.evidence.strip()
+        supported = bool(sources and evidence) and all(evidence.lower() in records[item].lower() for item in sources)
+        label = finding.target_label.strip() or evidence
+        if kind == "MISSED_CONSTRAINT" and supported and _supported_hard(evidence):
+            _add_item(updated.hard_constraints, label, "hard_constraint", sources, EpistemicStatus.INFERRED)
+        elif kind == "MISSED_DEPENDENCY" and supported:
+            _add_item(updated.dependencies, label, "dependency", sources, EpistemicStatus.INFERRED)
+        elif kind == "UNSUPPORTED_CONSTRAINT":
+            updated.hard_constraints = [item for item in updated.hard_constraints if not _critic_can_remove(item, finding, records)]
+        elif kind == "UNSUPPORTED_DEPENDENCY":
+            updated.dependencies = [item for item in updated.dependencies if not _critic_can_remove(item, finding, records)]
+        elif kind == "CONTRADICTION" and supported:
+            _add_item(updated.unknowns, f"contradiction: {label}", "unknown", sources, EpistemicStatus.UNKNOWN)
+        elif kind == "SHOULD_BE_UNKNOWN" and supported:
+            _downgrade_unknown(updated, label, sources)
+        elif kind == "PROVENANCE_MISSING":
+            _downgrade_missing_provenance(updated, label)
+    return updated
+
+
+def _supported_hard(evidence: str) -> bool:
+    lowered = evidence.lower()
+    return any(marker in lowered for marker in _HARD_MARKERS)
+
+
+def _critic_can_remove(item: CompiledItem, finding: AuditFinding, records: dict[str, str]) -> bool:
+    if finding.target_label.lower() not in item.label.lower():
+        return False
+    if not item.source_ids:
+        return True
+    cited = " ".join(records.get(source, "") for source in item.source_ids).lower()
+    return not any(marker in cited for marker in _HARD_MARKERS)
+
+
+def _add_item(bucket: list[CompiledItem], label: str, kind: str, sources: list[str], status: EpistemicStatus) -> None:
+    if not label or any(label.lower() == item.label.lower() for item in bucket):
+        return
+    bucket.append(_item(f"audit_{kind}_{len(bucket)}", kind, label, status, sources, "audit merge", status == EpistemicStatus.UNKNOWN))
+
+
+def _downgrade_unknown(world: CompiledWorld, label: str, sources: list[str]) -> None:
+    kept = []
+    for item in world.hard_constraints:
+        if label.lower() in item.label.lower():
+            _add_item(world.unknowns, item.label, "unknown", sources or item.source_ids, EpistemicStatus.UNKNOWN)
+        else:
+            kept.append(item)
+    world.hard_constraints = kept
+
+
+def _downgrade_missing_provenance(world: CompiledWorld, label: str) -> None:
+    kept = []
+    for item in world.hard_constraints:
+        if label.lower() in item.label.lower() and not item.source_ids:
+            _add_item(world.unknowns, item.label, "unknown", [], EpistemicStatus.UNKNOWN)
+        else:
+            kept.append(item)
+    world.hard_constraints = kept
 
 
 def proposal_from_payload(payload: dict[str, Any]) -> SemanticProposal:

@@ -27,6 +27,7 @@ PURPOSE_TOKENS = {
     "plan_choice": ("plan_choice.txt", 256),
     "critique_choice": ("critique_choice.txt", 256),
     "compile_world": ("compile_world.txt", 512),
+    "audit_world": ("audit_world.txt", 384),
 }
 
 
@@ -345,7 +346,7 @@ class NebiusClient:
         if os.environ.get("NEBIUS_LIVE") != "1":
             raise LiveDisabled("NEBIUS_LIVE is not 1. Refusing to call Token Factory.")
         model = model or os.environ.get("NEBIUS_MODEL") or DEFAULT_MODEL
-        self._guard_model(model)
+        self._guard_model(model, purpose)
         if purpose not in PURPOSE_TOKENS:
             raise SchemaError(f"unknown purpose {purpose}")
         prompt_name, max_tokens = PURPOSE_TOKENS[purpose]
@@ -413,15 +414,18 @@ class NebiusClient:
         )
         return model_obj
 
-    def _guard_model(self, model: str) -> None:
+    def _guard_model(self, model: str, purpose: str) -> None:
         from shadow.llm.pricing import PRICES
+        from shadow.world.routing import study_compile_model
 
         if model not in PRICES:
             raise LiveDisabled(f"unknown model {model}")
         lowered = model.lower()
         if "ultra" in lowered and os.environ.get("ALLOW_ULTRA", "false").lower() != "true":
             raise LiveDisabled("Ultra is disabled")
-        if "super" in lowered and os.environ.get("ALLOW_SUPER", "false").lower() != "true":
+        allowed_super = os.environ.get("ALLOW_SUPER", "false").lower() == "true"
+        study_super = purpose == "compile_world" and model == study_compile_model()
+        if "super" in lowered and not allowed_super and not study_super:
             raise LiveDisabled("Super is disabled")
 
     def _http(self, model: str, messages: list[dict[str, str]], max_tokens: int) -> tuple[str, dict[str, int]]:

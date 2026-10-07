@@ -1,0 +1,286 @@
+[
+  {
+    "id": "deposition",
+    "plan_text": "Hold the morning.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The deposition cannot be rescheduled."
+      }
+    ]
+  },
+  {
+    "id": "keys_noon",
+    "plan_text": "Return the keys.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "The landlord wrote that you must return the keys before noon."
+      }
+    ]
+  },
+  {
+    "id": "quiet_car",
+    "plan_text": "Choose a carriage.",
+    "records": [
+      {
+        "id": "pref",
+        "kind": "preference",
+        "text": "Alex prefers the quiet car."
+      }
+    ]
+  },
+  {
+    "id": "exit_row",
+    "plan_text": "Sit somewhere.",
+    "records": [
+      {
+        "id": "pref",
+        "kind": "preference",
+        "text": "Perhaps sit near the exit."
+      }
+    ]
+  },
+  {
+    "id": "board_vote",
+    "plan_text": "Prepare the vote.",
+    "records": [
+      {
+        "id": "a",
+        "kind": "email",
+        "text": "The board vote cannot move."
+      },
+      {
+        "id": "b",
+        "kind": "email",
+        "text": "Please move the board vote to Monday."
+      }
+    ]
+  },
+  {
+    "id": "warehouse",
+    "plan_text": "Ship from the live site.",
+    "records": [
+      {
+        "id": "old",
+        "kind": "email",
+        "text": "Old note: the warehouse on 3rd was vacated."
+      },
+      {
+        "id": "new",
+        "kind": "reservation",
+        "text": "Current pickup is confirmed at the dock. This supersedes the old note."
+      }
+    ]
+  },
+  {
+    "id": "photographer",
+    "plan_text": "Book the portraits.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "message",
+        "text": "Nobody has said whether the photographer can make the Saturday slot."
+      }
+    ]
+  },
+  {
+    "id": "recital_mail",
+    "plan_text": "Sort the mail pile.",
+    "records": [
+      {
+        "id": "junk",
+        "kind": "mail",
+        "text": "A seed catalog arrived from the garden store."
+      },
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The spring recital cannot move."
+      }
+    ]
+  },
+  {
+    "id": "two_sets",
+    "plan_text": "Staff the evening.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "Mina must run the sound check. Leo can leave after the opener."
+      }
+    ]
+  },
+  {
+    "id": "bus_lecture",
+    "plan_text": "Make the bus.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The campus bus departs only after the lecture ends."
+      }
+    ]
+  },
+  {
+    "id": "cottage_ferry",
+    "plan_text": "Hold the cottage.",
+    "records": [
+      {
+        "id": "res",
+        "kind": "reservation",
+        "text": "The cottage is confirmed and depends on the afternoon ferry."
+      }
+    ]
+  },
+  {
+    "id": "extra_spend",
+    "plan_text": "Buy the supplies.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "Spend no more than 25 dollars extra."
+      }
+    ]
+  },
+  {
+    "id": "appeal_stamp",
+    "plan_text": "File the appeal.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "File the appeal after the clerk stamps it."
+      }
+    ]
+  },
+  {
+    "id": "baptism",
+    "plan_text": "Keep Sunday morning.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The baptism is fixed and cannot move."
+      }
+    ]
+  },
+  {
+    "id": "brainstorm",
+    "plan_text": "Nudge the workshop.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The brainstorm can move to the following week."
+      }
+    ]
+  },
+  {
+    "id": "kiln_power",
+    "plan_text": "Schedule the firing.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "A power cut would stop the kiln, so the firing depends on the power staying up."
+      }
+    ]
+  },
+  {
+    "id": "watered_plant",
+    "plan_text": "Note the plant.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "The plant was watered this morning."
+      }
+    ]
+  },
+  {
+    "id": "noon_clash",
+    "plan_text": "Make both noon commitments.",
+    "records": [
+      {
+        "id": "a",
+        "kind": "calendar",
+        "text": "Meet the client at noon."
+      },
+      {
+        "id": "b",
+        "kind": "reservation",
+        "text": "Be on the noon train out of the city."
+      }
+    ]
+  },
+  {
+    "id": "something_due",
+    "plan_text": "What should I finish?",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "Something important is due, but the note never says what."
+      }
+    ]
+  },
+  {
+    "id": "friday_busy",
+    "plan_text": "Read the text.",
+    "records": [
+      {
+        "id": "msg",
+        "kind": "message",
+        "text": "Friday could be busy, or it could be nothing."
+      }
+    ]
+  },
+  {
+    "id": "tickets_done",
+    "plan_text": "Leave the tickets.",
+    "records": [
+      {
+        "id": "res",
+        "kind": "reservation",
+        "text": "The tickets are already confirmed. Leave them as they are."
+      }
+    ]
+  },
+  {
+    "id": "oath",
+    "plan_text": "Be there for the oath.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "Do not miss the oath at the courthouse."
+      }
+    ]
+  },
+  {
+    "id": "caterer",
+    "plan_text": "Time the trays.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "The caterer said the trays must be there before guests sit."
+      }
+    ]
+  },
+  {
+    "id": "lab_badge",
+    "plan_text": "Keep the badge slot.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The lab badge appointment is fixed and cannot move."
+      }
+    ]
+  }
+]

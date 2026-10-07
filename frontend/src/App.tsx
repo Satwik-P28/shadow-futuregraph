@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { analyzeFreeform, approveRepair, attemptAction, executePlan, injectEvent, loadBenchmark, loadEvents, loadFutures, loadPersonalStatus, loadPlan, type CrossPlanConflict, type FutureCard } from "./api/client";
+import { analyzeFreeform, approveRepair, attemptAction, executePlan, injectEvent, loadBenchmark, loadEvents, loadFutures, loadPersonalStatus, loadPlan, resetDemo, type CrossPlanConflict, type FutureCard } from "./api/client";
 import type { ConnectedTools, GraphNode, ModelabilityResult, PlanView, TraceEvent } from "./api/types";
 import { DecisionTrace } from "./components/DecisionTrace";
 import { EvaluationPanel, formatBenchmark } from "./components/EvaluationPanel";
@@ -59,6 +59,27 @@ export function App() {
   function editPlan(next: string) {
     setText(next);
     if (exampleId && next !== EXAMPLES[exampleId]) setExampleId(null);
+  }
+
+  async function restoreDemo() {
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const view = await resetDemo();
+      setPlan(view);
+      setText(view.text);
+      setRepairId(view.recommended_repair_id);
+      setWorkspace(Boolean(view.graph));
+      setExampleId("travel");
+      const body = await loadFutures();
+      setFutures(body.futures);
+      setConflicts(body.conflicts);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Reset failed");
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function analyzeCurrentPlan() {
@@ -174,6 +195,9 @@ export function App() {
         <p className="text-[11px] uppercase tracking-[0.22em] text-tide">Shadow</p>
         <div className="flex flex-wrap items-center justify-end gap-2">
           {exampleId ? <p className="rounded-full border border-white/10 px-3 py-1 text-[11px] tracking-[0.12em] text-clay">EXAMPLE CONTEXT</p> : null}
+          <button type="button" className="text-[11px] tracking-[0.12em] text-mute" onClick={() => void restoreDemo()}>
+            Reset demo
+          </button>
           <p className="rounded-full border border-white/10 px-3 py-1 text-[11px] tracking-[0.12em] text-clay">{plan?.provider_mode ?? "SANDBOX"}</p>
         </div>
       </header>
@@ -181,6 +205,7 @@ export function App() {
         futures={futures}
         conflicts={conflicts}
         onOpen={(id) => {
+          if (!id || id.startsWith("demo-")) return;
           void loadPlan(id).then((view) => {
             setPlan(view);
             setText(view.text);

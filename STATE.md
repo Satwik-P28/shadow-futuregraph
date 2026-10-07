@@ -20,7 +20,8 @@ P0 depth. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - Recommendation = violations, unresolved, failure radius, changes, cost, reversibility
 - Nemotron proposes. It does not rank or authorize
 - Model `nvidia/Nemotron-3_5-Lightning`. Ultra off
-- Frozen compile route: compiler_verifier (Lightning proposal plus deterministic verifier). Super lost on the development set
+- Earlier frozen route remains `shadowbench/routing/decision.json`: compiler_verifier
+- New compiler study `shadowbench/compiler-study/` selected Super for live `compile_world` only. Ordinary calls stay on Lightning. Ultra off. The audit did not improve the measured rates, so it is not the default path
 - Shadow Watch reacts to world events. Three typed skills do not grant authority. Approved contracts persist in the event database
 - Prices only in `backend/shadow/llm/pricing.py`, checked_at 2026-10-07
 
@@ -45,17 +46,18 @@ P0 depth. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - Adversarial holdout: Shadow 9/10, no-search 7/10, failure recall 6/6, false hazards 0/10, regret 0.1. Miss: non_monotonic selected the larger-radius repair
 
 ## Next 3 tasks
-1. Record the demo, including Future Lab and Shadow Watch
-2. Cross-plan combined graph when two saved futures disagree
-3. Leave live Calendar, Gmail, and Tavily off until credentials exist
+1. Confirm this commit on the public sandbox, then record the demo
+2. Leave live Calendar, Gmail, and Tavily off until credentials exist
+3. Do not rerun the frozen 30-world pilot
 
 ## This pass
-- Future Lab simulates material exogenous variables locally. Nearest failure reuses the stored search
-- Life graph is projected from scenario facts. Links stay INFERRED
-- Each analyzed plan is a Future. Status is FRAGILE when a failure was discovered
-- Cross-plan conflict fires only when two futures set the same resource differently
-- Outcome receipt reads the existing event ledger
-- No new Nebius spend. Frozen benchmarks were not rerun
+- Cross-plan conflicts now cover value, time overlap, explicit shared budget, protected resources, and asset state
+- The sandbox home shows Alex's airport window against a protected gallery opening
+- Reset demo restores that pair and clears in-memory plans and approved contracts
+- Compiler study: 32 development cases, 24 frozen test cases, four architectures. Super won. Test hard recall 10/13, false hard 0/18, repair 19/24
+- Live compile uses Super only when NEBIUS_LIVE=1. The public demo stays deterministic
+- Calendar, Gmail, and Tavily are not configured
+- New Nebius spend this pass: 0.01129200
 
 ## Test commands
 - `make test`
@@ -70,8 +72,11 @@ P0 depth. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - World Compiler holdout, 16 Lightning calls: 0.00059778
 - recorded known total before the route study: 0.03930612
 - route study, development plus one holdout: 0.00415368
-- recorded repo ledger: 0.02313168
-- recorded known total: 0.04345980
+- recorded repo ledger before this pass: 0.02313168
+- recorded known total before this pass: 0.04345980
+- compiler study this pass, probe plus development plus one test: 0.01129200
+- recorded repo ledger: 0.03442368
+- recorded known total: 0.05475180
 - one pre-fix call was omitted from the ledger; usage was not stored
 - model: nvidia/Nemotron-3_5-Lightning
 - official pilot: live-pilot-20261007T180515Z

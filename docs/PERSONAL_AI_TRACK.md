@@ -10,5 +10,5 @@ Shadow is event-driven. It watches approved futures when a connected source emit
 | Reusable skills | Reschedule Trip, Handle Trip Disruption, and Coordinate Schedule are typed manifests with preconditions, effects, verification, and compensation. They do not choose a flight and they do not authorize an action. |
 | Chosen tools | Connected-tool status reports calendar, mail, and travel as SANDBOX in this demo, and search as OFF unless Tavily is configured. |
 | Cross-workflow execution | Travel, calendar, mail, and search adapters share one future engine. The semantic broker limits execution to the approved contract. |
-| NVIDIA model | Nemotron 3.5 Lightning through Nebius Token Factory. Thinking is disabled. Super is not the default route. Ultra is off. |
+| NVIDIA model | Ordinary plan and repair calls use Nemotron 3.5 Lightning. A measured compiler study selected Super for live `compile_world` only. The public sandbox does not make that call. Ultra is off. |
 | Secure runtime | Future Contracts plus the semantic broker. OpenShell is the system boundary when `openshell-prover` is installed. It is not installed here, so the status stays `prover_unavailable`. OpenShell does not prove which calendar event may change. |

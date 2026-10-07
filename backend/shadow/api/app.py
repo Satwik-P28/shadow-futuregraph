@@ -181,12 +181,7 @@ def create_app(service: PlanService | None = None) -> FastAPI:
 
     @app.post("/api/demo/reset")
     def demo_reset() -> dict:
-        created = app.state.service.create(
-            "Move my NYC trip to Friday and make sure everything still works.",
-            "travel",
-            7,
-        )
-        return app.state.service.analyze(created["id"])
+        return app.state.service.reset_demo()
 
     @app.get("/api/benchmarks/latest")
     def benchmarks() -> dict:

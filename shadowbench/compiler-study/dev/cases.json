@@ -1,0 +1,384 @@
+[
+  {
+    "id": "visa_interview",
+    "plan_text": "Keep Thursday morning.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The visa interview cannot move."
+      }
+    ]
+  },
+  {
+    "id": "sitter_email",
+    "plan_text": "Get home for the handoff.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "You must be home before the sitter arrives."
+      }
+    ]
+  },
+  {
+    "id": "window_seat",
+    "plan_text": "Pick a seat.",
+    "records": [
+      {
+        "id": "pref",
+        "kind": "preference",
+        "text": "Alex likes a window seat when one is free."
+      }
+    ]
+  },
+  {
+    "id": "outside_table",
+    "plan_text": "Book dinner.",
+    "records": [
+      {
+        "id": "pref",
+        "kind": "preference",
+        "text": "Ideally the table is outside."
+      }
+    ]
+  },
+  {
+    "id": "closing_fight",
+    "plan_text": "Sort the closing.",
+    "records": [
+      {
+        "id": "a",
+        "kind": "email",
+        "text": "The closing cannot move."
+      },
+      {
+        "id": "b",
+        "kind": "email",
+        "text": "Please move the closing to Tuesday."
+      }
+    ]
+  },
+  {
+    "id": "clinic_stale",
+    "plan_text": "Go to the right clinic.",
+    "records": [
+      {
+        "id": "old",
+        "kind": "email",
+        "text": "Old note: the clinic on Pine was closed."
+      },
+      {
+        "id": "new",
+        "kind": "reservation",
+        "text": "Current appointment is confirmed at the Oak clinic. This supersedes the old note."
+      }
+    ]
+  },
+  {
+    "id": "backup_singer",
+    "plan_text": "Check the quartet.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "message",
+        "text": "Nobody has said whether the backup singer is available."
+      }
+    ]
+  },
+  {
+    "id": "ferry_hold",
+    "plan_text": "Pack for the coast.",
+    "records": [
+      {
+        "id": "junk",
+        "kind": "mail",
+        "text": "The bicycle shop sent a spring catalog."
+      },
+      {
+        "id": "ferry",
+        "kind": "reservation",
+        "text": "The ferry booking cannot be changed."
+      }
+    ]
+  },
+  {
+    "id": "rehearsal_pair",
+    "plan_text": "Cover the afternoon.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "Jordan is speaking at 4. Sam must stay for the rehearsal."
+      }
+    ]
+  },
+  {
+    "id": "shuttle_keynote",
+    "plan_text": "Catch the shuttle.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The shuttle leaves only after the keynote ends."
+      }
+    ]
+  },
+  {
+    "id": "cabin_train",
+    "plan_text": "Keep the weekend hold.",
+    "records": [
+      {
+        "id": "res",
+        "kind": "reservation",
+        "text": "The cabin hold is confirmed and is tied to the Friday train."
+      }
+    ]
+  },
+  {
+    "id": "repair_cap",
+    "plan_text": "Approve the repair bill.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "Additional spending must stay at most 40 dollars."
+      }
+    ]
+  },
+  {
+    "id": "notary_order",
+    "plan_text": "Send the packet.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "Sign the form only after the notary finishes."
+      }
+    ]
+  },
+  {
+    "id": "recital_fixed",
+    "plan_text": "Protect Friday night.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The recital is fixed and cannot move."
+      }
+    ]
+  },
+  {
+    "id": "office_hours",
+    "plan_text": "Shift the drop-in block.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The office hours can move if the client agrees."
+      }
+    ]
+  },
+  {
+    "id": "rain_portrait",
+    "plan_text": "Plan the outdoor portrait.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "If the rain delay hits, the outdoor portrait cannot happen."
+      }
+    ]
+  },
+  {
+    "id": "coffee_note",
+    "plan_text": "Remember the coffee.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "Alex bought coffee on the way in."
+      }
+    ]
+  },
+  {
+    "id": "studio_airport",
+    "plan_text": "Be in both places.",
+    "records": [
+      {
+        "id": "a",
+        "kind": "calendar",
+        "text": "Be in the studio at 9."
+      },
+      {
+        "id": "b",
+        "kind": "calendar",
+        "text": "Be at the airport at 9."
+      }
+    ]
+  },
+  {
+    "id": "vague_deadline",
+    "plan_text": "What is due?",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "A deadline exists somewhere in the thread."
+      }
+    ]
+  },
+  {
+    "id": "friday_maybe",
+    "plan_text": "Look at Friday.",
+    "records": [
+      {
+        "id": "msg",
+        "kind": "message",
+        "text": "The thing on Friday might need to happen."
+      }
+    ]
+  },
+  {
+    "id": "already_held",
+    "plan_text": "Leave the booking alone.",
+    "records": [
+      {
+        "id": "res",
+        "kind": "reservation",
+        "text": "The reservation is already confirmed. No change is needed."
+      }
+    ]
+  },
+  {
+    "id": "kindergarten",
+    "plan_text": "Guard the morning tour.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "Do not cancel the kindergarten tour."
+      }
+    ]
+  },
+  {
+    "id": "cake_doors",
+    "plan_text": "Time the delivery.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "Mom wrote that the cake has to arrive before the doors open."
+      }
+    ]
+  },
+  {
+    "id": "later_train",
+    "plan_text": "Think about the ride home.",
+    "records": [
+      {
+        "id": "pref",
+        "kind": "preference",
+        "text": "Maybe a later train would be nicer."
+      }
+    ]
+  },
+  {
+    "id": "pet_lease",
+    "plan_text": "Decide about the dog.",
+    "records": [
+      {
+        "id": "lease",
+        "kind": "email",
+        "text": "The lease says pets are banned."
+      },
+      {
+        "id": "room",
+        "kind": "message",
+        "text": "The roommate says the dog can stay."
+      }
+    ]
+  },
+  {
+    "id": "gate_notice",
+    "plan_text": "Find the gate.",
+    "records": [
+      {
+        "id": "old",
+        "kind": "message",
+        "text": "Yesterday's text said the gate was B12."
+      },
+      {
+        "id": "new",
+        "kind": "email",
+        "text": "The airline notice says this supersedes that text: the gate is not confirmed."
+      }
+    ]
+  },
+  {
+    "id": "fare_gap",
+    "plan_text": "Check the change fee.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "The fare change amount is not confirmed."
+      }
+    ]
+  },
+  {
+    "id": "review_pair",
+    "plan_text": "Set the review.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "Priya's review cannot move. Chris can skip the review."
+      }
+    ]
+  },
+  {
+    "id": "hotel_flight",
+    "plan_text": "Keep the room.",
+    "records": [
+      {
+        "id": "res",
+        "kind": "reservation",
+        "text": "The hotel room is held only if the flight stays on Thursday."
+      }
+    ]
+  },
+  {
+    "id": "shared_cap",
+    "plan_text": "Stay inside the cap.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "The shared repair cap is a maximum additional 75 dollars."
+      }
+    ]
+  },
+  {
+    "id": "signature_mail",
+    "plan_text": "Send it in order.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "Mail the contract after the signature, not before."
+      }
+    ]
+  },
+  {
+    "id": "anniversary",
+    "plan_text": "Protect the evening.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The anniversary dinner is fixed."
+      }
+    ]
+  }
+]

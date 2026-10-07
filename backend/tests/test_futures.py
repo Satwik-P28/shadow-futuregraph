@@ -52,9 +52,8 @@ def test_nearest_failure_uses_the_stored_search() -> None:
 def test_futures_list_and_cross_plan_disagreement() -> None:
     client, plan_id = _analyzed()
     listed = client.get("/api/futures").json()
-    assert listed["futures"][0]["plan_id"] == plan_id
-    assert listed["futures"][0]["status"] == "FRAGILE"
-    assert listed["conflicts"] == []
+    assert any(item["plan_id"] == plan_id and item["status"] == "FRAGILE" for item in listed["futures"])
+    assert any(item["conflict_type"] == "PROTECTED_RESOURCE" for item in listed["conflicts"])
     found = cross_plan_conflicts(
         [
             {"future_id": "a", "effects": {"flight_departure_min": 680}},
@@ -63,6 +62,73 @@ def test_futures_list_and_cross_plan_disagreement() -> None:
     )
     assert found[0]["shared_resource"] == "flight_departure_min"
     assert found[0]["repairable"] is True
+
+
+def test_cross_plan_rules_cover_time_budget_protection_and_assets() -> None:
+    opening = {
+        "future_id": "opening",
+        "name": "Gallery opening",
+        "effects": {},
+        "claims": [{"resource_id": "alex", "resource_type": "person", "start": 900, "end": 960, "protected": True, "label": "Gallery opening"}],
+    }
+    airport = {
+        "future_id": "airport",
+        "name": "NYC airport window",
+        "effects": {},
+        "claims": [{"resource_id": "alex", "resource_type": "person", "start": 840, "end": 1020, "protected": False, "label": "Airport travel"}],
+    }
+    later = {
+        "future_id": "later",
+        "name": "Evening dinner",
+        "effects": {},
+        "claims": [{"resource_id": "alex", "resource_type": "person", "start": 1140, "end": 1260, "protected": False, "label": "Dinner"}],
+    }
+    assert cross_plan_conflicts([airport, opening])[0]["conflict_type"] == "PROTECTED_RESOURCE"
+    movable = {
+        "future_id": "movable",
+        "name": "Movable review",
+        "effects": {},
+        "claims": [{"resource_id": "alex", "resource_type": "person", "start": 900, "end": 960, "protected": False, "label": "Review"}],
+    }
+    assert cross_plan_conflicts([airport, movable])[0]["conflict_type"] == "TIME_OVERLAP"
+    assert cross_plan_conflicts([later, opening]) == []
+    budget = cross_plan_conflicts(
+        [
+            {"future_id": "a", "name": "A", "effects": {}, "claims": [{"resource_id": "cash", "resource_type": "budget", "cost": 60, "cap": 100}]},
+            {"future_id": "b", "name": "B", "effects": {}, "claims": [{"resource_id": "cash", "resource_type": "budget", "cost": 50, "cap": 100}]},
+        ]
+    )
+    assert budget[0]["conflict_type"] == "BUDGET_CONFLICT"
+    protected = cross_plan_conflicts(
+        [
+            {"future_id": "trip", "name": "Trip", "effects": {"review_changed": True}, "claims": []},
+            {"future_id": "review", "name": "Review", "effects": {}, "claims": [{"resource_id": "review_changed", "resource_type": "commitment", "protected": True, "state": False, "label": "Design review"}]},
+        ]
+    )
+    assert protected[0]["conflict_type"] == "PROTECTED_RESOURCE"
+    asset = cross_plan_conflicts(
+        [
+            {"future_id": "a", "name": "A", "effects": {}, "claims": [{"resource_id": "bk_nyc", "resource_type": "reservation", "state": "friday"}]},
+            {"future_id": "b", "name": "B", "effects": {}, "claims": [{"resource_id": "bk_nyc", "resource_type": "reservation", "state": "thursday"}]},
+        ]
+    )
+    assert asset[0]["conflict_type"] == "ASSET_STATE_CONFLICT"
+
+
+def test_reset_demo_restores_the_cross_plan_pair() -> None:
+    client = TestClient(create_app())
+    first = client.post("/api/plans/freeform", json={"text": TRIP, "demo_context_id": "travel", "seed": 7})
+    assert first.status_code == 200
+    reset = client.post("/api/demo/reset")
+    assert reset.status_code == 200
+    listed = client.get("/api/futures")
+    assert listed.status_code == 200
+    body = listed.json()
+    names = {item["name"] for item in body["futures"]}
+    assert "NYC airport window" in names
+    assert "Gallery opening" in names
+    assert any(item["conflict_type"] == "PROTECTED_RESOURCE" for item in body["conflicts"])
+    assert body["conflicts"][0]["description"]
 
 
 def test_receipt_before_execution_is_honest() -> None:

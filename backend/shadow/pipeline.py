@@ -21,7 +21,7 @@ from shadow.core.models import (
 )
 from shadow.failures.search import describe_failure
 from shadow.future_graph.build import build_graph
-from shadow.futures.conflicts import cross_plan_conflicts
+from shadow.futures.conflicts import cross_plan_conflicts, demo_pair
 from shadow.futures.lab import material_controls, nearest_failure, simulate
 from shadow.integrations.sandbox import SandboxProviders
 from shadow.life.graph import project_life
@@ -35,7 +35,7 @@ from shadow.simulation.engine import bind, evaluate_constraints, hard_status
 from shadow.skills.registry import SkillRegistry
 from shadow.watcher.models import WorldEvent
 from shadow.watcher.monitor import FutureWatcher
-from shadow.world.compiler import attach_compiled
+from shadow.world.compiler import SemanticProposal, attach_compiled, load_bundle
 from shadow.world.loader import action_map, effects_for, load_scenario
 from shadow.world.modelability import assess_freeform
 
@@ -49,13 +49,39 @@ class PlanService:
         self.events = events
         self.client = client or FakeNemotronClient()
         self.plans: dict[str, dict[str, Any]] = {}
+        self.demo_futures = demo_pair()
         self.skills = SkillRegistry()
         self.watcher = FutureWatcher(self)
         self.watcher.restore()
 
+    def _live_proposal(self, bundle: dict[str, Any] | None) -> SemanticProposal | None:
+        import os
+
+        from shadow.life.retrieve import relevant_records
+        from shadow.world.routing import study_compile_model
+
+        if bundle is None or os.environ.get("NEBIUS_LIVE") != "1":
+            return None
+        model = study_compile_model()
+        if model is None:
+            return None
+        context = {
+            "plan_text": bundle.get("plan_text") or "",
+            "records": relevant_records(str(bundle.get("plan_text") or ""), list(bundle.get("records") or [])),
+        }
+        try:
+            try:
+                proposal = self.client.complete_json("compile_world", context, SemanticProposal, model=model)
+            except TypeError:
+                proposal = self.client.complete_json("compile_world", context, SemanticProposal)
+        except Exception:
+            return None
+        return proposal if isinstance(proposal, SemanticProposal) else None
+
     def create(self, text: str, scenario_id: str = "travel", seed: int = 7) -> dict[str, Any]:
         plan_id = uuid.uuid4().hex[:12]
-        scenario, compiled = attach_compiled(load_scenario(scenario_id))
+        bundle = load_bundle(scenario_id)
+        scenario, compiled = attach_compiled(load_scenario(scenario_id), self._live_proposal(bundle))
         record = {
             "id": plan_id,
             "text": text,
@@ -312,8 +338,21 @@ class PlanService:
         return nearest_failure(record["scenario"], repair)
 
     def list_futures(self) -> dict[str, Any]:
-        futures = [_public_future(record["future_summary"]) for record in self.plans.values() if record.get("future_summary")]
-        return {"futures": futures, "conflicts": cross_plan_conflicts([record["future_summary"] for record in self.plans.values() if record.get("future_summary")])}
+        summaries = [record["future_summary"] for record in self.plans.values() if record.get("future_summary")]
+        summaries.extend(self.demo_futures)
+        futures = [_public_future(item) for item in summaries]
+        return {"futures": futures, "conflicts": cross_plan_conflicts(summaries)}
+
+    def reset_demo(self) -> dict[str, Any]:
+        self.plans.clear()
+        self.events.clear_approved()
+        self.demo_futures = demo_pair()
+        created = self.create(
+            "Move my NYC trip to Friday and make sure everything still works.",
+            "travel",
+            7,
+        )
+        return self.analyze(created["id"])
 
     def receipt(self, plan_id: str) -> dict[str, Any]:
         record = self.plans[plan_id]
@@ -448,7 +487,7 @@ def _future_summary(record: dict[str, Any]) -> dict[str, Any]:
 
 
 def _public_future(summary: dict[str, Any]) -> dict[str, Any]:
-    hidden = {"effects", "linked_entities"}
+    hidden = {"effects", "linked_entities", "claims", "life"}
     return {key: value for key, value in summary.items() if key not in hidden}
 
 

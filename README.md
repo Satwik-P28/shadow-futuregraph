@@ -200,6 +200,21 @@ The compiler-verifier is the Lightning proposal plus a deterministic check. It d
 
 It was then scored once on a new 12-case holdout: repair 10/12, hard recall 6/8, false hard 0/7, dependency recall 1/2, unknowns 1/1, provenance 15/15. That holdout was not used to pick the winner and was not run again.
 
+A later study, `shadowbench/compiler-study/`, compared four architectures on 32 new development cases: Lightning, Lightning plus a Lightning audit, Super, and Super plus a Lightning audit. The audit cannot overwrite the world. A deterministic merge adds a candidate only when the cited record contains the quoted evidence. The test split, 24 cases, was hashed before scoring and scored once.
+
+Selection preferred a low false-hard rate, then hard-constraint recall, then unknown preservation, then repair success, then lower cost. Ultra was not used.
+
+| Architecture | Hard recall | False hard | Unknowns | Repair | Fair cost |
+| --- | --- | --- | --- | --- | --- |
+| Lightning | 10/17 | 0/18 | 1/6 | 21/32 | $0.00092208 |
+| Lightning + Lightning audit | 10/17 | 0/28 | 1/6 | 21/32 | $0.00166506 |
+| Super | 14/17 | 0/22 | 0/6 | 23/32 | $0.00410550 |
+| Super + Lightning audit | 14/17 | 0/37 | 0/6 | 23/32 | $0.00477840 |
+
+Super won. The audit did not raise recall, unknown preservation, or repair, and it proposed more hard constraints, so it is not the default compile path. Ordinary plan and repair calls stay on Lightning. Live compilation uses Super only for `compile_world`, and only when `NEBIUS_LIVE=1`. The public sandbox stays on the deterministic compiler.
+
+The frozen test split, scored once: hard recall 10/13, false hard 0/18, dependency recall 3/4, unknowns 1/4, provenance 23/23, contradiction detection 0/2, repair 19/24. Test spend `$0.00373350`. Compiler-study spend for this pass, including the five-case probe, was `$0.01129200`.
+
 ## Adversarial Holdout
 
 `shadowbench/adversarial_holdout/` has 10 hand-authored scenarios, written before the run and not edited afterward. Same repair engine. No model tokens.

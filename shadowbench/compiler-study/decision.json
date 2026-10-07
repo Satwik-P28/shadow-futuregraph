@@ -1,0 +1,8 @@
+{
+  "architecture": "super",
+  "compile_model": "nvidia/nemotron-3-super-120b-a12b",
+  "audit_model": null,
+  "ordinary_model": "nvidia/Nemotron-3_5-Lightning",
+  "dev_results": "shadowbench/compiler-study/dev/results.json",
+  "rationale": "super won because its false hard-constraint rate stayed at 0.00 while hard recall was 0.82, above Lightning's 0.59. Unknown preservation and repair did not improve when a Lightning audit was added, and the audit cost more, so the audit is not the default compile path."
+}

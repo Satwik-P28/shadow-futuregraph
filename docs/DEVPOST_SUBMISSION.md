@@ -58,6 +58,8 @@ World state is local SQLite and fixture files. The model context is a compact ty
 
 Cost of this run: $0. Model calls in the table are scripted counts, not billed tokens. The generator is monotone; do not read the interval as a general accuracy rate. Details are in `docs/KNOWN_LIMITATIONS.md`.
 
+A separate compiler study on messy records, `shadowbench/compiler-study/`, selected Super for live compilation. Development hard recall was 14/17 with 0 false hard constraints. The frozen 24-case test split, scored once, had hard recall 10/13 and 0 false hard constraints. That study did not rerun the 30-world pilot.
+
 ## Known limitations
 
 See `docs/KNOWN_LIMITATIONS.md`.

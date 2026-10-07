@@ -1,0 +1,275 @@
+{
+  "deposition": {
+    "hard": [
+      "cannot be rescheduled"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "keys_noon": {
+    "hard": [
+      "must return"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "quiet_car": {
+    "hard": [],
+    "not_hard": [
+      "prefers",
+      "quiet car"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "exit_row": {
+    "hard": [],
+    "not_hard": [
+      "perhaps"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "board_vote": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": true
+  },
+  "warehouse": {
+    "hard": [
+      "confirmed"
+    ],
+    "not_hard": [
+      "vacated"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "photographer": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "whether"
+    ],
+    "repair": "abstain",
+    "contradiction": false
+  },
+  "recital_mail": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [
+      "seed catalog"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "two_sets": {
+    "hard": [
+      "must run"
+    ],
+    "not_hard": [
+      "can leave"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "bus_lecture": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [
+      "lecture"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "cottage_ferry": {
+    "hard": [
+      "confirmed"
+    ],
+    "not_hard": [],
+    "dependencies": [
+      "ferry"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "extra_spend": {
+    "hard": [
+      "no more than 25"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "appeal_stamp": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [
+      "clerk"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "baptism": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "brainstorm": {
+    "hard": [],
+    "not_hard": [
+      "can move"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "kiln_power": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [
+      "power"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "watered_plant": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "noon_clash": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "noon"
+    ],
+    "repair": "abstain",
+    "contradiction": true
+  },
+  "something_due": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "something important"
+    ],
+    "repair": "abstain",
+    "contradiction": false
+  },
+  "friday_busy": {
+    "hard": [],
+    "not_hard": [
+      "could"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "could"
+    ],
+    "repair": "abstain",
+    "contradiction": false
+  },
+  "tickets_done": {
+    "hard": [
+      "confirmed"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "oath": {
+    "hard": [
+      "do not miss"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "caterer": {
+    "hard": [
+      "must be there"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "lab_badge": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  }
+}

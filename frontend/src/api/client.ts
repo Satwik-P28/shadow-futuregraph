@@ -44,11 +44,21 @@ export type FutureCard = {
   nearest_failure: string;
 };
 export type CrossPlanConflict = {
+  conflict_id?: string;
   future_ids: string[];
-  shared_resource: string;
-  constraint: string;
+  future_names?: string[];
+  conflict_type?: string;
+  resource_id?: string;
+  resource_type?: string;
+  description?: string;
+  violated_constraint?: string;
+  causal_path?: string[];
+  shared_resource?: string;
+  constraint?: string;
   severity: string;
+  epistemic_status?: string;
   repairable: boolean;
+  provenance?: string;
 };
 
 export async function loadFutures(): Promise<{ futures: FutureCard[]; conflicts: CrossPlanConflict[] }> {
@@ -140,6 +150,10 @@ export async function attemptAction(id: string, actionId: string): Promise<{ aut
 export async function loadEvents(id: string): Promise<TraceEvent[]> {
   const body = await json<{ events: TraceEvent[] }>(await fetch(`/api/plans/${id}/events`));
   return body.events;
+}
+
+export async function resetDemo(): Promise<PlanView> {
+  return json(await fetch("/api/demo/reset", { method: "POST" }));
 }
 
 export async function loadBenchmark(): Promise<{ available: boolean; summary: unknown }> {

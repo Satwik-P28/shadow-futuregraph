@@ -1,0 +1,369 @@
+{
+  "visa_interview": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "sitter_email": {
+    "hard": [
+      "must be home"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "window_seat": {
+    "hard": [],
+    "not_hard": [
+      "window seat",
+      "likes"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "outside_table": {
+    "hard": [],
+    "not_hard": [
+      "ideally",
+      "outside"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "closing_fight": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": true
+  },
+  "clinic_stale": {
+    "hard": [
+      "confirmed"
+    ],
+    "not_hard": [
+      "closed"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "backup_singer": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "whether"
+    ],
+    "repair": "abstain",
+    "contradiction": false
+  },
+  "ferry_hold": {
+    "hard": [
+      "cannot be changed"
+    ],
+    "not_hard": [
+      "bicycle"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "rehearsal_pair": {
+    "hard": [
+      "must stay"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "shuttle_keynote": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [
+      "shuttle"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "cabin_train": {
+    "hard": [
+      "confirmed"
+    ],
+    "not_hard": [],
+    "dependencies": [
+      "train"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "repair_cap": {
+    "hard": [
+      "at most 40"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "notary_order": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [
+      "notary"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "recital_fixed": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "office_hours": {
+    "hard": [],
+    "not_hard": [
+      "can move"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "rain_portrait": {
+    "hard": [
+      "cannot happen"
+    ],
+    "not_hard": [],
+    "dependencies": [
+      "rain"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "coffee_note": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "studio_airport": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "studio"
+    ],
+    "repair": "abstain",
+    "contradiction": true
+  },
+  "vague_deadline": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "deadline"
+    ],
+    "repair": "abstain",
+    "contradiction": false
+  },
+  "friday_maybe": {
+    "hard": [],
+    "not_hard": [
+      "might"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "might"
+    ],
+    "repair": "abstain",
+    "contradiction": false
+  },
+  "already_held": {
+    "hard": [
+      "confirmed"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "kindergarten": {
+    "hard": [
+      "do not cancel"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "cake_doors": {
+    "hard": [
+      "before the doors"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "later_train": {
+    "hard": [],
+    "not_hard": [
+      "maybe",
+      "later train"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "pet_lease": {
+    "hard": [
+      "banned"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": true
+  },
+  "gate_notice": {
+    "hard": [],
+    "not_hard": [
+      "B12"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "not confirmed"
+    ],
+    "repair": "abstain",
+    "contradiction": false
+  },
+  "fare_gap": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "not confirmed"
+    ],
+    "repair": "abstain",
+    "contradiction": false
+  },
+  "review_pair": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [
+      "can skip"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "hotel_flight": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [
+      "flight"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "shared_cap": {
+    "hard": [
+      "maximum additional 75"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "signature_mail": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [
+      "signature"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  },
+  "anniversary": {
+    "hard": [
+      "fixed"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep",
+    "contradiction": false
+  }
+}

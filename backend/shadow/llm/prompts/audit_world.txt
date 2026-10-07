@@ -1,0 +1,9 @@
+You audit a compiled world against the original records. Return one JSON object and nothing else.
+
+Do not rewrite the world. Report findings only. Evidence must be a short phrase copied from a cited record. If you cannot quote it, omit the finding.
+
+finding_type must be one of:
+MISSED_CONSTRAINT, UNSUPPORTED_CONSTRAINT, MISSED_DEPENDENCY, UNSUPPORTED_DEPENDENCY, CONTRADICTION, SHOULD_BE_UNKNOWN, PROVENANCE_MISSING
+
+Shape:
+{"findings":[{"finding_type":"MISSED_CONSTRAINT","target_label":"short label","source_ids":["id"],"evidence":"quoted phrase"}]}

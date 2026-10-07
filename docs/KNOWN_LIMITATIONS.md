@@ -10,7 +10,11 @@ Nemotron can propose a dependency or a repair that is wrong. The dinner-moving r
 
 OpenShell prover coverage is limited to the domains the prover reports. This environment has no `openshell-prover` binary, so the status is `prover_unavailable`. Structural containment is a local check, not a formal proof.
 
-External APIs fail. The hero path does not need them. Duffel, Google Calendar, and Tavily are implemented and stay dark until credentials exist. Real calendar writes also require `SHADOW_REAL_ACTIONS_ENABLED=true`. No real ticket is purchased.
+External APIs fail. The hero path does not need them. Duffel, Google Calendar, Gmail, and Tavily are not configured in this environment, so the public demo stays on sandbox records. Real calendar writes also require `SHADOW_REAL_ACTIONS_ENABLED=true`. No real ticket is purchased. The public deployment is not connected to a personal inbox or calendar.
+
+Cross-plan conflicts are deterministic overlaps of typed claims. They are not a combined planner. The gallery example is synthetic data consumed by that analyzer.
+
+The compiler study selected Super for live `compile_world` calls. The sandbox demo does not make that call. Unknown preservation on the development split was weaker for Super than for Lightning. That tradeoff is recorded, not hidden.
 
 The local ShadowBench generator is monotone and low-dimensional. Full Shadow scores perfectly on it because the robust repair is the unique plan with no discovered failure inside the box. That is a test of the search, not a claim about arbitrary personal plans. The scripted baselines are not Nemotron. No live 100-world Token Factory run was spent, because the architectural gap shows up without it and Ultra/Super stay off.
 

@@ -45,7 +45,7 @@ def execute_bundle(
     results = []
     for action in ordered:
         try:
-            authorize(contract, action, providers.state)
+            authorize(contract, action, {"scenario": scenario})
         except AuthorizationDenied as exc:
             events.append(plan_id, "ACTION_BLOCKED", {"action_id": action.id, "reason": exc.reason}, "broker")
             return {"status": "blocked", "reason": exc.reason, "results": results}

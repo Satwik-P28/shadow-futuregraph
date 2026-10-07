@@ -159,7 +159,7 @@ class PlanService:
             self.events.append(plan_id, "ACTION_BLOCKED", {"action_id": action_id, "reason": "no contract"}, "broker")
             return {"authorized": False, "message": "Blocked: action is outside the approved future."}
         try:
-            authorize(contract, action, record["providers"].state)
+            authorize(contract, action, {"scenario": record["scenario"]})
         except AuthorizationDenied as exc:
             self.events.append(plan_id, "ACTION_BLOCKED", {"action_id": action_id, "reason": exc.reason}, "broker")
             return {"authorized": False, "message": "Blocked: action is outside the approved future."}
@@ -207,6 +207,11 @@ class PlanService:
         elif contract and invalidated:
             contract.status = "REAFFIRMED"
             record["status"] = "REAFFIRMED"
+            current = {var.id: var.baseline for var in updated.variables}
+            for assumption in contract.assumptions:
+                if assumption.variable in current and assumption.status == "invalidated":
+                    assumption.expected = current[assumption.variable]
+                    assumption.status = "updated"
         recommended = next((item for item in repairs if item.recommended), None)
         record["repairs"] = repairs
         record["naive_id"] = select_naive(updated)

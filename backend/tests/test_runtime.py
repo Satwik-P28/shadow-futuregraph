@@ -1,4 +1,4 @@
-from shadow.core.models import ActionDef, ContractAction, FutureContract
+from shadow.core.models import ActionDef, Assumption, ContractAction, FutureContract
 from shadow.integrations.sandbox import SandboxProviders
 from shadow.runtime.broker import AuthorizationDenied, authorize
 from shadow.runtime.events import EventLog
@@ -125,3 +125,51 @@ def test_provider_lie_halts():
     )
     assert result["status"] == "halted"
     assert result["decision"] == "verify_mismatch"
+
+
+def _flight(scenario, action_id: str):
+    return next(item for item in scenario.actions if item.id == action_id)
+
+
+def _world(scenario, when: str = "2026-10-07T18:00:00Z"):
+    from datetime import datetime, timezone
+
+    return {
+        "scenario": scenario,
+        "now": datetime.strptime(when, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc),
+    }
+
+
+def test_broker_blocks_expired_stale_unrelated_cost_and_missing_state():
+    scenario = load_scenario("travel")
+    flight = _flight(scenario, "set_flight_1120")
+    later = _flight(scenario, "set_flight_1440")
+    contract = _contract(["set_flight_1120"])
+    contract.invariants = ["c_dinner"]
+    authorize(contract, flight, _world(scenario))
+    with __import__("pytest").raises(AuthorizationDenied, match="expired"):
+        authorize(contract, flight, _world(scenario, "2026-10-09T00:00:00Z"))
+    stale = contract.model_copy(deep=True)
+    stale.assumptions = [
+        Assumption(id="asm-delay", description="delay", variable="flight_delay_min", expected=0)
+    ]
+    shifted = scenario.model_copy(deep=True)
+    for var in shifted.variables:
+        if var.id == "flight_delay_min":
+            var.baseline = 74
+    with __import__("pytest").raises(AuthorizationDenied, match="stale assumption"):
+        authorize(stale, flight, _world(shifted))
+    exam = next(item for item in scenario.actions if item.id == "update_exam")
+    with __import__("pytest").raises(AuthorizationDenied, match="outside the approved future"):
+        authorize(contract, exam, _world(scenario))
+    with __import__("pytest").raises(AuthorizationDenied, match="outside the approved future"):
+        authorize(contract, later, _world(scenario))
+    pricey = flight.model_copy(update={"cost": 500})
+    with __import__("pytest").raises(AuthorizationDenied, match="cost"):
+        authorize(contract, pricey, _world(scenario))
+    with __import__("pytest").raises(AuthorizationDenied, match="missing material state"):
+        authorize(contract, flight, None)
+    missing = contract.model_copy(deep=True)
+    missing.assumptions = [Assumption(id="asm-x", description="missing", variable="not_a_var", expected=1)]
+    with __import__("pytest").raises(AuthorizationDenied, match="missing material state"):
+        authorize(missing, flight, _world(scenario))

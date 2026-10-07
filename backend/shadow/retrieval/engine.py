@@ -26,6 +26,13 @@ def retrieve(scenario: Scenario, query: str) -> dict[str, list[dict[str, Any]]]:
 def compact_context(scenario: Scenario, query: str) -> dict[str, Any]:
     """Typed context safe to send to a model. Raw source bodies are stripped."""
     found = retrieve(scenario, query)
+    facts: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for item in found["support"] + found["attack"] + found["uncertainty"] + found["counterevidence"]:
+        if item["id"] in seen:
+            continue
+        seen.add(item["id"])
+        facts.append(item)
     return {
         "scenario_id": scenario.id,
         "plan": query,
@@ -42,7 +49,7 @@ def compact_context(scenario: Scenario, query: str) -> dict[str, Any]:
             for item in scenario.constraints
         ],
         "unknowns": [var.id for var in scenario.variables if var.epistemic_status == EpistemicStatus.UNKNOWN],
-        "facts": found["support"] + found["attack"] + found["uncertainty"],
+        "facts": facts,
     }
 
 

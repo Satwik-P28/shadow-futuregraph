@@ -161,7 +161,7 @@ describe("freeform planning", () => {
     fireEvent.click(screen.getByRole("button", { name: "NYC trip" }));
     fireEvent.click(screen.getByRole("button", { name: "Analyze my future" }));
     expect(await screen.findByText("Future Graph")).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Approve repaired future" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Approve future" })).toBeTruthy();
     expect(screen.getByLabelText("Connected context").textContent).toContain("Search: OFF");
     expect(screen.getByLabelText("Shadow Watch").textContent).toContain("No approved future being monitored");
   });

@@ -92,7 +92,12 @@ export type PlanView = {
   reconciliation: { matched: boolean; message: string } | null;
   observability: { model_calls: number; worlds_simulated: number; repairs_tested: number };
   no_feasible_message: string | null;
-  contract: { status: string } | null;
+  contract: {
+    status: string;
+    spending_limit?: number;
+    allowed_actions?: { action_id: string; action_type: string; resource: string; max_cost: number }[];
+    forbidden_actions?: string[];
+  } | null;
   watch?: {
     monitoring: boolean;
     approved_futures: number;

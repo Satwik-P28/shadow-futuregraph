@@ -9,16 +9,127 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: #101114;
-  color: #ece8e1;
-  font-family: Outfit, sans-serif;
+  background: #0b0d10;
+  color: #f4f1ea;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(880px 420px at -8% -12%, rgba(143, 180, 200, 0.07), transparent 58%),
+    radial-gradient(640px 320px at 110% 0%, rgba(142, 134, 168, 0.05), transparent 55%);
+  z-index: 0;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
 }
 
 button:focus-visible,
 a:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid #9bb8c9;
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid #8fb4c8;
   outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(143, 180, 200, 0.28);
+}
+
+.react-flow__attribution {
+  display: none;
+}
+
+.react-flow__controls {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.react-flow__controls-button {
+  background: #161a22;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  fill: #f4f1ea;
+}
+
+.shadow-node {
+  height: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #161a22;
+  padding: 8px 10px 9px;
+  animation: node-in 220ms ease both;
+}
+
+.shadow-node .kicker {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9aa3b2;
+}
+
+.shadow-node .label {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #f4f1ea;
+}
+
+.kind-CURRENT_STATE { box-shadow: inset 2px 0 0 #8fb4c8; }
+.kind-ACTION { box-shadow: inset 2px 0 0 #7ea4c4; }
+.kind-EXOGENOUS_EVENT,
+.kind-UNKNOWN { box-shadow: inset 2px 0 0 #8e86a8; }
+.kind-CONSTRAINT,
+.kind-DERIVED_STATE,
+.kind-EVIDENCE { box-shadow: inset 2px 0 0 #8fb4c8; }
+.kind-FAILURE { box-shadow: inset 2px 0 0 #d37b6e; background: #1c1516; }
+.kind-REPAIR { box-shadow: inset 2px 0 0 #7eae96; }
+.kind-OUTCOME { box-shadow: inset 2px 0 0 #d9d3c7; }
+
+.shadow-node.is-dim {
+  opacity: 0.38;
+}
+
+.shadow-node.is-hot {
+  border-color: rgba(211, 123, 110, 0.7);
+}
+
+.shadow-node.is-approved {
+  border-color: rgba(126, 174, 150, 0.8);
+  box-shadow: inset 2px 0 0 #7eae96;
+}
+
+.breathe {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: breathe 3.6s ease-in-out infinite;
+}
+
+.watch-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #7eae96;
+  animation: breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes node-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -28,8 +139,4 @@ textarea:focus-visible {
     animation: none !important;
     transition: none !important;
   }
-}
-
-.react-flow__attribution {
-  display: none;
 }

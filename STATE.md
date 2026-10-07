@@ -21,6 +21,7 @@ Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - Nemotron proposes. It does not rank or authorize
 - Model `nvidia/Nemotron-3_5-Lightning`. Ultra off
 - Frozen compile route: compiler_verifier (Lightning proposal plus deterministic verifier). Super lost on the development set
+- Shadow Watch reacts to world events. Three typed skills do not grant authority. Approved contracts persist in the event database
 - Prices only in `backend/shadow/llm/pricing.py`, checked_at 2026-10-07
 
 ## Important paths
@@ -44,9 +45,9 @@ Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - Adversarial holdout: Shadow 9/10, no-search 7/10, failure recall 6/6, false hazards 0/10, regret 0.1. Miss: non_monotonic selected the larger-radius repair
 
 ## Next 3 tasks
-1. Record the demo video outside this build
-2. `render login`, then deploy the Docker image and paste the URL
-3. Submit the Devpost form
+1. Record the demo video, including Shadow Watch after approval
+2. Submit the Devpost form
+3. Leave Tavily, Duffel, and Google Calendar unconfigured unless a key already exists
 
 ## Test commands
 - `make test`

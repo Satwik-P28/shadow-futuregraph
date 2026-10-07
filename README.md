@@ -16,6 +16,16 @@ Shadow compiles messy personal context into a typed model of the future around a
 6. Approval: a future contract, not a general tool grant.
 7. Safe execution: sandbox actions inside that contract, then a reconciliation check.
 
+## Why Shadow is Personal AI
+
+Shadow keeps a private model of commitments, preferences, reservations, and approved futures. You can hand it a plan. It builds a Future Graph, finds failures, repairs the plan, and executes only the changes you approve.
+
+After approval, Shadow Watch keeps that future. It does not poll every service. When a connected source emits a world event, Shadow looks up the contracts that depend on the changed fact, rechecks those constraints, and leaves the others alone. If the future still holds, authority stays. If it does not, the contract goes stale, authority is revoked, and a repair is proposed for approval. Shadow does not execute that repair on its own.
+
+Three typed skills reuse the same engine: Reschedule Trip, Handle Trip Disruption, and Coordinate Schedule. A skill lists what it can read, change, verify, and compensate. It does not grant authority. The Future Contract does. The broker enforces that contract.
+
+`GET /api/personal-ai/status` reports watched futures, memory counts, skills, connected tools, and the privacy mode. See `docs/PERSONAL_AI_TRACK.md`.
+
 ## Why Shadow
 
 A planner that checks the happy path will book the cheaper flight that arrives at 17:05 and still miss a 19:00 dinner once a delay stacks with traffic. Shadow treats that as a bug in the future, not as a chat to continue. You approve the repaired future. The semantic broker will not move an unrelated calendar event just because a calendar API is available.

@@ -29,8 +29,8 @@ Execute the sandbox flight, ride, and calendar updates.
 2:10–2:22 Attack
 Click **Try unrelated change**. The algorithms exam is blocked. The line is "Blocked: action is outside the approved future."
 
-2:22–2:35 World change
-Tavily is not configured, so use the deterministic inject. **+74 min delay** updates the assumption and the approved future still holds. **Fare +$80** breaks the cap: the contract goes stale and authority is revoked.
+2:22–2:40 Always-on
+Do not retype the plan. Point at Shadow Watch: it is monitoring the approved future, and dinner is protected from saved commitment memory. **+74 min delay** is a world event. The future still holds. **Fare +$80** is another world event. Shadow Watch reports drift, the contract goes stale, and authority is revoked. The repair waits for approval. This is event-driven, not a background poll of every service.
 
 2:35–2:42 Reconciliation
 "Observed state matches approved future."

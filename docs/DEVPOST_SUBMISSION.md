@@ -2,7 +2,7 @@
 
 ## What Shadow is
 
-Shadow is a Personal AI that compiles a user's messy personal context into a typed model of the future around a plan, searches that model for nearby failure states, repairs the plan, asks the user to approve the repaired future, executes only those state transitions, and verifies the result.
+Shadow is an always-on private Personal AI that maintains a persistent model of the user's commitments, preferences, plans, and tools. When the user makes a plan, Shadow builds a Future Graph around it, searches for hidden failure states, repairs the plan, and executes only the future the user approves. After approval, Shadow keeps watching that future; if calendar, travel, reservations, or external conditions change, it detects drift, revokes stale authority, and proposes a new repair. Reusable typed skills let the same runtime coordinate travel, disruptions, and scheduling without granting broad tool access. Connected providers in this demo are sandbox stand-ins. Tavily, Duffel, and Google Calendar are not live unless a key is configured.
 
 Tagline: Find bugs in your future before you commit to it.
 

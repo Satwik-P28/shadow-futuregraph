@@ -2,9 +2,17 @@
 
 **Find bugs in your future before you commit to it.**
 
-Shadow turns a personal plan into a bounded graph of the futures that can actually break it, finds a minimal way each future fails, and will only execute the future you approve.
+Public demo: not hosted yet. The Render CLI token is expired (`render login` is required). Until that login exists, run the sandbox locally with `make dev`. No API key is required. Demo video: not recorded. Script: `docs/DEMO_SCRIPT.md` (2:40–2:55).
 
-Demo video: record `docs/DEMO_SCRIPT.md` (2:40–2:50). The sandbox path needs no API keys.
+Shadow compiles messy personal context into a typed model of the future around a plan, searches that model for nearby failures, repairs the plan, asks you to approve the repaired future, executes only those state transitions, and checks the result.
+
+1. Messy personal context: calendar, email, reservations, and preferences.
+2. World Compiler: candidate goals, constraints, dependencies, and unknowns, each with provenance.
+3. Future Graph: the typed world the deterministic engine actually searches.
+4. Failure search: the nearest modeled way the nominal plan breaks.
+5. Repair: a counterfactual bundle the evaluator scores. The model does not score it.
+6. Approval: a future contract, not a general tool grant.
+7. Safe execution: sandbox actions inside that contract, then a reconciliation check.
 
 ## Why Shadow
 
@@ -143,6 +151,41 @@ On the live Alex trip, Nemotron's repair proposals were incomplete and the evalu
 Recorded session spend is `$0.01838022`. One call before the accounting fix was dropped from the ledger; its usage was not stored. A later debug call with 2,395 input and 256 output tokens cost `$0.00020514` and is inside the recorded total. Prior external spend `$0.02030592` plus the earlier repo call `$0.0000222` puts recorded known spend at `$0.03870834`.
 
 Tavily was not configured. OpenShell prover status remains `prover_unavailable`. Thirty worlds are a pilot, not a conclusive ranking.
+
+In a frozen 30-world synthetic live pilot using Nemotron 3.5 Lightning, full Shadow completed 30/30 tasks and left 0/26 planted unsafe nominal plans undetected. Direct planning, planner, and planner-critic baselines performed substantially worse. The benchmark measures the architectural advantage of an explicit typed world model plus failure-directed search; it is not a field-accuracy estimate.
+
+Ordinary LLM baselines received user-facing evidence. Shadow additionally operates on the typed world representation produced and maintained by its architecture. The no-search ablation uses that same typed world and only the nominal check, and it scored 8/30.
+
+## World Compiler
+
+`backend/shadow/world/compiler.py` reads `fixtures/travel/context.json` for the hero. Those records are calendar text, an email, reservations, and a preference. The compiler licenses the hero's hard constraints from that text. It does not choose a flight. `street_closure` stays `UNKNOWN`. A confirmed hotel fact can be `VERIFIED`. Causal links stay `INFERRED`. Parsed clock time and the $100 cap are `COMPUTED` from the text.
+
+The frozen holdout is `shadowbench/world_compiler_holdout/` (16 cases). One Lightning compile call per case. Oracle labels were frozen before the run. No LLM judged the labels.
+
+| Metric | Result |
+| --- | --- |
+| HardConstraintRecall | 5/10 |
+| FalseHardConstraintRate | 0/8 |
+| MaterialDependencyRecall | 1/2 |
+| FalseDependencyRate | 0/1 |
+| UnknownPreservationRate | 1/2 |
+| ProvenanceCoverage | 21/21 |
+| EndToEndRepairSuccess | 10/16 |
+
+Additional Token Factory spend for those 16 calls: `$0.00059778`.
+
+## Adversarial Holdout
+
+`shadowbench/adversarial_holdout/` has 10 hand-authored scenarios, written before the run and not edited afterward. Same repair engine. No model tokens.
+
+| System | Task completion | Repair success | Mean regret |
+| --- | --- | --- | --- |
+| shadow | 9/10 | 9/10 | 0.100 |
+| shadow_no_failure_search | 7/10 | 7/10 | 0.300 |
+
+Failure recall on the cases with a planted cut: 6/6. False hazards: 0/10. Unknown handling: 10/10. The miss is `non_monotonic`: Shadow selected the larger-radius repair, and the frozen oracle had named the cheaper medium repair. That ranking order is the engine's documented order. The holdout was not changed to match it.
+
+These four numbers answer different questions: the local scripted gate, the live Lightning pilot, this compiler holdout, and this hand-authored holdout.
 
 ## Security model
 

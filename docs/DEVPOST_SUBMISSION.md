@@ -2,9 +2,11 @@
 
 ## What Shadow is
 
-Shadow is a private personal AI that turns a plan into a bounded graph of material futures, finds minimal ways that future can fail, repairs it, and executes only the approved future under a semantic contract.
+Shadow is a Personal AI that compiles a user's messy personal context into a typed model of the future around a plan, searches that model for nearby failure states, repairs the plan, asks the user to approve the repaired future, executes only those state transitions, and verifies the result.
 
 Tagline: Find bugs in your future before you commit to it.
+
+Public demo: not hosted. The local Render CLI token is expired, so `render login` is the remaining manual step. The sandbox demo needs no login and no API key. Video: not recorded (`docs/DEMO_SCRIPT.md`).
 
 ## Problem
 
@@ -16,7 +18,9 @@ A planner that checks the happy path will take the cheaper Friday flight that ar
 
 ## What is novel
 
-The user approves a repaired future. Authority is the contract for that future, not a general calendar or travel scope. Failure search returns a minimal perturbation set and a nearest discovered radius. The model may propose repairs. It cannot declare one successful.
+Most agents optimize "How do I execute this plan?" Shadow also asks "What nearby future makes this plan fail?"
+
+The user approves a repaired future. Authority is the contract for that future, not a general calendar or travel scope. Failure search returns a minimal perturbation set and a nearest discovered radius. The model may propose repairs. It cannot declare one successful. Shadow does not claim perfect prediction, coverage of every possible future, guaranteed safety, a world-first runtime assurance, or formal semantic verification. OpenShell does not prove which calendar event may change. The broker owns that decision.
 
 This is not a claim that no other system searches counterfactual plans. It is a claim about this loop: material graph, minimal failure sets, counterfactual evaluation, future-scoped execution, and an event ledger that can revoke authority when an assumption breaks.
 

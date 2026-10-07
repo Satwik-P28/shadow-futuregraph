@@ -1,41 +1,41 @@
 # Demo script
 
-Target length 2:40–2:50. The app is the sandbox demo. Say "sandbox" when the badge says sandbox.
+Target length 2:40–2:55. The app is the sandbox demo. The badge says SANDBOX. No API key is required.
 
-0:00–0:10
-Plans fail because of consequences you did not think to check.
+0:00–0:12 Hook
+Your AI can make a perfectly reasonable plan that still breaks your life.
 
-0:10–0:25
-Type, or leave, "Move my NYC trip to Friday and make sure everything still works." Alex is synthetic. Hit **Check the Friday trip**.
+0:12–0:28 User
+Leave the request: "Move my NYC trip to Friday and make sure everything still works." Hit **Check the Friday trip**.
 
-0:25–0:50
-The future graph is the current trip, the Friday dinner at 19:00, the fixed design review, the ride, and the cost cap. One material unknown stays unresolved. No probability is shown for it.
+0:28–0:48 World Compiler
+Show the ordinary records: Friday design review, Friday 7 PM dinner, the algorithms exam, the dinner email, the existing trip, the ride linked to the old flight, and the $100 cap. Say: Nemotron converts messy personal context into candidate goals, constraints, dependencies, and unknowns. The model structures the problem. Shadow does not trust the model to prove the plan is safe.
 
-0:50–1:10
-The afternoon flight is the cheapest plan that still reaches dinner if nothing goes wrong. Shadow marks it as a future bug. Trace delay and ground traffic into the dinner constraint.
+0:48–1:05 Future Graph
+The afternoon flight is nominally valid. It is the cheapest plan that still reaches dinner if nothing goes wrong.
 
-1:10–1:30
-The minimal failure is the pair. Either perturbation alone, at that size, still makes dinner. Together they miss it. The 17:10 flight misses dinner with no perturbation at all. Moving dinner is proposed and rejected.
+1:05–1:25 Failure search
+Show flight delay plus traffic. Together they violate the dinner constraint. Say: Nemotron itself missed this hazard in our live run. Shadow still found it.
 
-1:30–1:45
-The evaluator reruns the search on each repair. The 11:20 flight has a much larger failure radius. It costs more. The ranking prefers the radius.
+1:25–1:45 Repair
+The search selects the 11:20 flight. Show the Future Diff: flight 14:40 to 11:20, ride 12:05 to 8:45, incremental cost +$76. Hotel, dinner, review, and exam stay put.
 
-1:45–2:00
-Future diff: flight 14:40 → 11:20, ride 12:05 → 8:45, hotel unchanged, dinner unchanged, design review unchanged, exam unchanged, incremental cost +$76. Click **Approve repaired future**.
+1:45–1:55 Approve
+Click **Approve repaired future**.
 
-2:00–2:15
-Sandbox execution changes the flight, the ride, and the trip event. Then click **Try unrelated change**. The broker blocks the algorithms exam. The line is "Blocked: action is outside the approved future."
+1:55–2:10 Execution
+Execute the sandbox flight, ride, and calendar updates.
 
-2:15–2:25
-Inject **+74 min delay**. The assumption is invalidated and the graph is recomputed. The approved future still holds, so authority stays. Then, if you want the revoke, inject **Fare +$80**. The cost cap breaks, the contract goes stale, and execution halts.
+2:10–2:22 Attack
+Click **Try unrelated change**. The algorithms exam is blocked. The line is "Blocked: action is outside the approved future."
 
-2:25–2:35
-Before the breaking inject, the final line is "Observed state matches approved future."
+2:22–2:35 World change
+Tavily is not configured, so use the deterministic inject. **+74 min delay** updates the assumption and the approved future still holds. **Fare +$80** breaks the cap: the contract goes stale and authority is revoked.
 
-2:35–2:45
-Open ShadowBench. Thirty local worlds. Full Shadow completes 30/30 with 0 undetected failures. The same architecture without failure-directed search completes 0/30. Say that this run did not spend model tokens.
+2:35–2:42 Reconciliation
+"Observed state matches approved future."
 
-2:45–2:50
-Nemotron proposes structure. The deterministic core searches and ranks. The broker scopes the future. OpenShell is the system boundary when the prover is present. Tavily is the live evidence adapter when a key is present.
+2:42–2:55 Benchmark
+In a 30-world Lightning pilot, ordinary model planning repeatedly selected nominally valid but fragile plans. Full Shadow completed 30/30 with no planted failures left undetected. This is a synthetic pilot, not a field-accuracy claim. If there is time, flash the World Compiler holdout and the 10-world adversarial holdout. Shadow was 9/10 on that holdout.
 
-End line: Your AI shouldn't just execute your plan. It should find the bugs in your future first.
+End on: Your AI shouldn't just execute your plan. It should find the bugs in your future first.

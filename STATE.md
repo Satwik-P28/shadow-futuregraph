@@ -37,13 +37,15 @@ Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 ## Known failures
 - `openshell-prover` is not on PATH. Status is `prover_unavailable`
 - Duffel, Google Calendar, and Tavily are implemented and unconfigured
-- No hosted deploy
+- No hosted deploy. Render CLI token is expired. Run `render login`, then deploy the Dockerfile. Judges need no API key
 - Demo video not recorded
+- World Compiler holdout: HardConstraintRecall 5/10, FalseHardConstraintRate 0/8, MaterialDependencyRecall 1/2, FalseDependencyRate 0/1, UnknownPreservationRate 1/2, ProvenanceCoverage 21/21, EndToEndRepairSuccess 10/16
+- Adversarial holdout: Shadow 9/10, no-search 7/10, failure recall 6/6, false hazards 0/10, regret 0.1. Miss: non_monotonic selected the larger-radius repair
 
 ## Next 3 tasks
 1. Record the demo video outside this build
-2. Submit the Devpost form and judge feedback
-3. Optional: install openshell-prover, or host the Docker image
+2. `render login`, then deploy the Docker image and paste the URL
+3. Submit the Devpost form
 
 ## Test commands
 - `make test`
@@ -54,7 +56,9 @@ Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - recorded repo ledger: 0.01838022
 - earlier repo call, not in this ledger: 0.0000222
 - prior external: 0.02030592
-- recorded known total: 0.03870834
+- recorded known total before this pass: 0.03870834
+- World Compiler holdout, 16 Lightning calls: 0.00059778
+- recorded known total: 0.03930612
 - one pre-fix call was omitted from the ledger; usage was not stored
 - model: nvidia/Nemotron-3_5-Lightning
 - official pilot: live-pilot-20261007T180515Z

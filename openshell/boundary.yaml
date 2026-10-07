@@ -1,0 +1,13 @@
+filesystem:
+  read:
+    - /tmp/shadow-data
+  write:
+    - /tmp/shadow-data
+process:
+  exec: []
+network:
+  allow:
+    - api.tokenfactory.nebius.com
+    - api.tavily.com
+    - api.duffel.com
+    - www.googleapis.com

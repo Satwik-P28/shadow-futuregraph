@@ -248,14 +248,16 @@ Copy `.env.example`. Names only. The sandbox demo ignores empty values.
 
 Leave the defaults. The badge reads `SANDBOX`.
 
-1. **Check the Friday trip.**
+The primary box is freeform. Type a plan and press **Analyze my future**. Shadow sends that text through the World Compiler. It builds an executable Future Graph only when the request has grounded records and an executable structure. If a plan looks modelable but the records are missing, Shadow lists the missing information. If it cannot be modeled with the connected tools, Shadow says so. It does not invent a graph, a probability, or a tool action.
+
+**NYC trip** and **Apartment move** are deterministic examples. Each chip fills the textarea and attaches its synthetic context. Press **Analyze my future** after the chip. The apartment example uses the same engine: a lease overlap, a Thursday commitment, and cash.
+
+1. Click **NYC trip**, then **Analyze my future**.
 2. Read the future bugs, the minimal failure, and the future diff.
 3. **Approve repaired future.**
 4. **Execute sandbox actions.** The final line is `Observed state matches approved future`.
 5. **Try unrelated change.** The broker blocks it.
 6. **+74 min delay** recomputes and keeps authority. **Fare +$80** or **Hotel canceled** revokes it.
-
-**Check the apartment move** runs the same engine on a lease overlap, a Thursday commitment, and cash. There is no second reasoning stack.
 
 ## Run tests
 

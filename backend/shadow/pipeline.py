@@ -34,6 +34,7 @@ from shadow.watcher.models import WorldEvent
 from shadow.watcher.monitor import FutureWatcher
 from shadow.world.compiler import attach_compiled
 from shadow.world.loader import action_map, effects_for, load_scenario
+from shadow.world.modelability import assess_freeform
 
 
 def _now() -> str:
@@ -68,6 +69,20 @@ class PlanService:
         self.plans[plan_id] = record
         self.events.append(plan_id, "PLAN_CREATED", {"scenario_id": scenario_id}, "user")
         return {"id": plan_id, "status": "CREATED"}
+
+    def analyze_freeform(self, text: str, demo_context_id: str | None = None, seed: int = 7) -> dict[str, Any]:
+        cleaned = text.strip()
+        if not cleaned:
+            raise ValueError("Enter what you are planning.")
+        if demo_context_id not in {None, "travel", "apartment"}:
+            raise ValueError("Unknown example context.")
+        result = assess_freeform(cleaned, demo_context_id)
+        if result.status != "SUPPORTED" or demo_context_id is None:
+            return {"modelability": result.model_dump(mode="json"), "plan": None}
+        created = self.create(text, demo_context_id, seed)
+        view = self.analyze(created["id"])
+        view["modelability"] = result.model_dump(mode="json")
+        return {"modelability": result.model_dump(mode="json"), "plan": view}
 
     def analyze(self, plan_id: str) -> dict[str, Any]:
         record = self.plans[plan_id]

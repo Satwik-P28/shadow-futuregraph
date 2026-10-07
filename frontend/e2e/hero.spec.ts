@@ -2,7 +2,11 @@ import { expect, test } from "@playwright/test";
 
 test("sandbox hero finds a failure, approves, executes, and reacts to an injection", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Check the Friday trip" }).click();
+  await page.getByRole("button", { name: "NYC trip" }).click();
+  await expect(page.getByLabel("What are you planning?")).toHaveValue(
+    "Move my NYC trip to Friday and make sure everything still works.",
+  );
+  await page.getByRole("button", { name: "Analyze my future" }).click();
   await expect(page.getByRole("heading", { name: /future bug/ })).toBeVisible({ timeout: 30000 });
   await page.getByRole("button", { name: "Approve repaired future" }).click();
   await expect(page.getByText("Repaired future approved.")).toBeVisible();

@@ -6,7 +6,7 @@ Target length 2:40–2:55. The app is the sandbox demo. The badge says SANDBOX. 
 Your AI can make a perfectly reasonable plan that still breaks your life.
 
 0:12–0:28 User
-Leave the request: "Move my NYC trip to Friday and make sure everything still works." Hit **Check the Friday trip**.
+The box is empty. The two chips under it are examples, not the product. Click **NYC trip**. The textarea fills with "Move my NYC trip to Friday and make sure everything still works." Then click **Analyze my future**.
 
 0:28–0:48 World Compiler
 Show the ordinary records: Friday design review, Friday 7 PM dinner, the algorithms exam, the dinner email, the existing trip, the ride linked to the old flight, and the $100 cap. Say: Nemotron converts messy personal context into candidate goals, constraints, dependencies, and unknowns. The model structures the problem. Shadow does not trust the model to prove the plan is safe.

@@ -42,6 +42,31 @@ export type Repair = {
   failures: Failure[];
 };
 
+export type ModelabilityStatus = "SUPPORTED" | "NEEDS_INFORMATION" | "UNSUPPORTED";
+
+export type ModelabilityResult = {
+  status: ModelabilityStatus;
+  reason: string;
+  missing_information: string[];
+  compiled_constraints: string[];
+  compiled_dependencies: string[];
+  available_actions: string[];
+  selected_skill: string | null;
+  provenance: string;
+};
+
+export type FreeformResponse = {
+  modelability: ModelabilityResult;
+  plan: PlanView | null;
+};
+
+export type ConnectedTools = {
+  calendar: string;
+  mail: string;
+  travel: string;
+  search: string;
+};
+
 export type PlanView = {
   id: string;
   text: string;

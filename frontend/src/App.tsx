@@ -1,14 +1,30 @@
-import { useState } from "react";
-import { analyzePlan, approveRepair, attemptAction, createPlan, executePlan, injectEvent, loadBenchmark, loadEvents, loadPlan } from "./api/client";
-import type { GraphNode, PlanView, TraceEvent } from "./api/types";
+import { useEffect, useState } from "react";
+import { analyzeFreeform, approveRepair, attemptAction, executePlan, injectEvent, loadBenchmark, loadEvents, loadPersonalStatus, loadPlan } from "./api/client";
+import type { ConnectedTools, GraphNode, ModelabilityResult, PlanView, TraceEvent } from "./api/types";
 import { Issues } from "./features/Issues";
 import { FutureCanvas } from "./graph/FutureCanvas";
 
 const TRIP = "Move my NYC trip to Friday and make sure everything still works.";
 const MOVE = "I'm thinking about moving apartments next month. Does this plan actually work?";
+const EXAMPLES = { travel: TRIP, apartment: MOVE } as const;
+const SANDBOX_TOOLS: ConnectedTools = { calendar: "SANDBOX", mail: "SANDBOX", travel: "SANDBOX", search: "OFF" };
+
+function watchLine(plan: PlanView | null): string {
+  if (plan?.contract?.status === "STALE" || plan?.watch?.drift_status === "INVALID") {
+    return "1 future needs attention";
+  }
+  if (plan?.watch?.monitoring) {
+    const count = plan.watch.approved_futures;
+    return count === 1 ? "Monitoring 1 approved future" : `Monitoring ${count} approved futures`;
+  }
+  return "No approved future being monitored";
+}
 
 export function App() {
-  const [text, setText] = useState(TRIP);
+  const [text, setText] = useState("");
+  const [exampleId, setExampleId] = useState<"travel" | "apartment" | null>(null);
+  const [tools, setTools] = useState<ConnectedTools>(SANDBOX_TOOLS);
+  const [modelability, setModelability] = useState<ModelabilityResult | null>(null);
   const [plan, setPlan] = useState<PlanView | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -22,20 +38,51 @@ export function App() {
   const [showTrace, setShowTrace] = useState(false);
   const [bench, setBench] = useState<string>("");
 
-  async function run(scenarioId: string, prompt: string) {
+  useEffect(() => {
+    void loadPersonalStatus()
+      .then((status) => setTools(status.connected_tools))
+      .catch(() => undefined);
+  }, []);
+
+  function loadExample(next: "travel" | "apartment") {
+    setExampleId(next);
+    setText(EXAMPLES[next]);
+    setError("");
+  }
+
+  function editPlan(next: string) {
+    setText(next);
+    if (exampleId && next !== EXAMPLES[exampleId]) setExampleId(null);
+  }
+
+  async function analyzeCurrentPlan() {
+    const current = text;
+    if (!current.trim()) {
+      setError("Enter what you are planning.");
+      setPlan(null);
+      setModelability(null);
+      return;
+    }
     setBusy(true);
     setError("");
     setNotice("");
-    setText(prompt);
     try {
-      const created = await createPlan(prompt, scenarioId);
-      const view = await analyzePlan(created.id);
-      setPlan(view);
-      setRepairId(view.recommended_repair_id);
-      setApproved(false);
-      setHighlight([]);
+      const result = await analyzeFreeform(current, exampleId);
+      setModelability(result.modelability);
+      if (result.plan) {
+        setPlan(result.plan);
+        setRepairId(result.plan.recommended_repair_id);
+        setApproved(false);
+        setHighlight([]);
+      } else {
+        setPlan(null);
+        setRepairId(null);
+        setApproved(false);
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "analysis failed");
+      setPlan(null);
+      setModelability(null);
+      setError(err instanceof Error ? err.message : "The request failed.");
     } finally {
       setBusy(false);
     }
@@ -94,7 +141,10 @@ export function App() {
           <p className="text-xs uppercase tracking-[0.22em] text-tide">Shadow</p>
           <h1 className="font-serif text-4xl text-paper">Find bugs in your future before you commit to it.</h1>
         </div>
-        <p className="rounded-full border border-line px-3 py-1 text-xs text-clay">{plan?.provider_mode ?? "SANDBOX"}</p>
+        <div className="flex flex-wrap items-center gap-2">
+          {exampleId ? <p className="rounded-full border border-line px-3 py-1 text-xs text-clay">EXAMPLE CONTEXT</p> : null}
+          <p className="rounded-full border border-line px-3 py-1 text-xs text-clay">{plan?.provider_mode ?? "SANDBOX"}</p>
+        </div>
       </header>
 
       <section className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
@@ -103,19 +153,50 @@ export function App() {
           <textarea
             id="plan"
             value={text}
-            onChange={(event) => setText(event.target.value)}
-            className="mt-2 h-28 w-full rounded-lg border border-line bg-panel p-3 text-paper"
+            onChange={(event) => editPlan(event.target.value)}
+            placeholder="Describe the plan you want checked."
+            className="mt-2 h-36 w-full rounded-lg border border-line bg-panel p-3 text-paper"
           />
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button type="button" className="rounded-md bg-tide px-3 py-2 text-sm text-ink" onClick={() => run("travel", TRIP)} disabled={busy}>
-              Check the Friday trip
-            </button>
-            <button type="button" className="rounded-md border border-line px-3 py-2 text-sm" onClick={() => run("apartment", MOVE)} disabled={busy}>
-              Check the apartment move
-            </button>
+          <button type="button" className="mt-3 rounded-md bg-tide px-4 py-2 text-sm text-ink" onClick={() => void analyzeCurrentPlan()} disabled={busy}>
+            Analyze my future
+          </button>
+          <div className="mt-4">
+            <p className="text-xs uppercase tracking-[0.16em] text-mute">Try an example</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button type="button" className="rounded-full border border-line px-3 py-1 text-xs" onClick={() => loadExample("travel")}>
+                NYC trip
+              </button>
+              <button type="button" className="rounded-full border border-line px-3 py-1 text-xs" onClick={() => loadExample("apartment")}>
+                Apartment move
+              </button>
+            </div>
+            {exampleId ? <p className="mt-2 text-xs text-mute">Example loaded. This uses a synthetic context, not a live account.</p> : null}
+          </div>
+          <div className="mt-4 text-xs text-mute" aria-label="Connected context">
+            <p className="uppercase tracking-[0.16em]">Connected context</p>
+            <p className="mt-1">Calendar: {tools.calendar} · Mail: {tools.mail} · Travel: {tools.travel} · Search: {tools.search}</p>
+          </div>
+          <div className="mt-3 text-xs" aria-label="Shadow Watch">
+            <p className="uppercase tracking-[0.16em] text-mute">Shadow Watch</p>
+            <p className="mt-1 text-paper">{watchLine(plan)}</p>
           </div>
           {busy ? <p className="mt-3 text-sm text-mute">Checking the future…</p> : null}
           {error ? <p className="mt-3 text-sm text-fault">{error}</p> : null}
+          {modelability?.status === "NEEDS_INFORMATION" ? (
+            <div className="mt-3" aria-label="Missing information">
+              <p className="text-sm text-clay">I can model this plan, but I need {modelability.missing_information.length} things first:</p>
+              <ul className="mt-2 list-disc pl-5 text-sm">
+                {modelability.missing_information.map((item) => <li key={item}>{item}</li>)}
+              </ul>
+              <p className="mt-2 text-xs uppercase tracking-[0.16em] text-mute">Missing information</p>
+            </div>
+          ) : null}
+          {modelability?.status === "UNSUPPORTED" ? (
+            <div className="mt-3 text-sm text-clay">
+              <p>{modelability.reason}</p>
+              <p className="mt-2 text-mute">I can still help identify considerations, but I won't pretend to simulate it.</p>
+            </div>
+          ) : null}
           {plan?.compiled_from ? (
             <p className="mt-3 text-sm text-mute">Compiled from {plan.compiled_from}. The model may structure the problem. Shadow does not treat that structure as proof.</p>
           ) : null}
@@ -127,7 +208,7 @@ export function App() {
         </div>
         <aside className="rounded-lg border border-line bg-panel p-4">
           <p className="text-sm text-mute">Modeled future coverage</p>
-          <p className="mt-2 font-serif text-2xl">{plan?.coverage?.summary ?? "Run a plan to see what is still unknown."}</p>
+          <p className="mt-2 font-serif text-2xl">{plan?.coverage?.summary ?? "Run a plan to see what could break, what is still unknown, and what Shadow can repair."}</p>
           {plan?.no_feasible_message ? <p className="mt-3 text-sm text-fault">{plan.no_feasible_message}</p> : null}
           {plan?.reconciliation ? (
             <p className={`mt-3 text-sm ${plan.reconciliation.matched ? "text-moss" : "text-fault"}`}>{plan.reconciliation.message}</p>
@@ -135,15 +216,8 @@ export function App() {
           {plan?.memory ? (
             <p className="mt-3 text-sm text-paper">{plan.memory.label} <span className="text-mute">· {plan.memory.source}</span></p>
           ) : null}
-          <div className="mt-4 border-t border-line pt-3" aria-label="Shadow Watch">
-            <p className="text-xs uppercase tracking-[0.18em] text-tide">Shadow Watch</p>
-            <p className="mt-1 text-sm">
-              {plan?.watch?.monitoring ? `Monitoring ${plan.watch.approved_futures} approved future` : "No approved future is being monitored yet."}
-            </p>
-            {plan?.watch?.last_checked_at ? <p className="mt-1 text-xs text-mute">Last checked after world event: {plan.watch.last_checked_at}</p> : null}
-            {plan?.watch?.message ? <p className="mt-2 text-sm text-clay">{plan.watch.message}</p> : null}
-            {plan?.watch?.skill_name ? <p className="mt-1 text-xs text-mute">Reusable skill: {plan.watch.skill_name}</p> : null}
-          </div>
+          {plan?.watch?.message ? <p className="mt-3 text-sm text-clay">{plan.watch.message}</p> : null}
+          {plan?.watch?.skill_name ? <p className="mt-1 text-xs text-mute">Reusable skill: {plan.watch.skill_name}</p> : null}
           {notice ? <p className="mt-3 text-sm text-clay">{notice}</p> : null}
         </aside>
       </section>

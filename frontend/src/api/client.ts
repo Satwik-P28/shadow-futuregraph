@@ -1,10 +1,33 @@
-import type { PlanView, TraceEvent } from "./types";
+import type { ConnectedTools, FreeformResponse, PlanView, TraceEvent } from "./types";
 
 async function json<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    throw new Error(await response.text());
+    const raw = await response.text();
+    let detail = raw;
+    try {
+      const body = JSON.parse(raw) as { detail?: unknown };
+      if (typeof body.detail === "string" && body.detail) detail = body.detail;
+    } catch {
+      detail = raw;
+    }
+    throw new Error(detail || "Request failed");
   }
   return response.json() as Promise<T>;
+}
+
+export async function analyzeFreeform(
+  text: string,
+  demoContextId: "travel" | "apartment" | null,
+): Promise<FreeformResponse> {
+  return json(await fetch("/api/plans/freeform", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, demo_context_id: demoContextId, seed: 7 }),
+  }));
+}
+
+export async function loadPersonalStatus(): Promise<{ connected_tools: ConnectedTools }> {
+  return json(await fetch("/api/personal-ai/status"));
 }
 
 export async function createPlan(text: string, scenarioId: string): Promise<{ id: string }> {

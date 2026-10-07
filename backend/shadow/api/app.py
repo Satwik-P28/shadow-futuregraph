@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from typing import Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
@@ -21,6 +22,12 @@ DIST = ROOT / "frontend" / "dist"
 class PlanIn(BaseModel):
     text: str
     scenario_id: str = "travel"
+    seed: int = 7
+
+
+class FreeformIn(BaseModel):
+    text: str
+    demo_context_id: Literal["travel", "apartment"] | None = None
     seed: int = 7
 
 
@@ -47,6 +54,13 @@ def create_app(service: PlanService | None = None) -> FastAPI:
     @app.get("/api/personal-ai/status")
     def personal_ai() -> dict:
         return app.state.service.personal_status()
+
+    @app.post("/api/plans/freeform")
+    def freeform(body: FreeformIn) -> dict:
+        try:
+            return app.state.service.analyze_freeform(body.text, body.demo_context_id, body.seed)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     @app.post("/api/plans")
     def create_plan(body: PlanIn) -> dict[str, str]:

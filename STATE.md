@@ -38,7 +38,7 @@ Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 ## Known failures
 - `openshell-prover` is not on PATH. Status is `prover_unavailable`
 - Duffel, Google Calendar, and Tavily are implemented and unconfigured
-- No hosted deploy. Render CLI token is expired. Run `render login`, then deploy the Dockerfile. Judges need no API key
+- Public demo: https://shadow-futuregraph.onrender.com (Render, sandbox, no API key)
 - Demo video not recorded
 - World Compiler holdout: HardConstraintRecall 5/10, FalseHardConstraintRate 0/8, MaterialDependencyRecall 1/2, FalseDependencyRate 0/1, UnknownPreservationRate 1/2, ProvenanceCoverage 21/21, EndToEndRepairSuccess 10/16
 - Adversarial holdout: Shadow 9/10, no-search 7/10, failure recall 6/6, false hazards 0/10, regret 0.1. Miss: non_monotonic selected the larger-radius repair

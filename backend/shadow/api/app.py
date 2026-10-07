@@ -3,18 +3,18 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
+from shadow.paths import repo_root
 from shadow.pipeline import PlanService, build_client
 from shadow.policy.openshell import candidate_policy, compare_policy
 from shadow.runtime.events import EventLog
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = repo_root()
 DIST = ROOT / "frontend" / "dist"
 
 

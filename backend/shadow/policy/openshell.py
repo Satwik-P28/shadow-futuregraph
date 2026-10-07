@@ -9,10 +9,11 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
-from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[3]
+from shadow.paths import repo_root
+
+ROOT = repo_root()
 BOUNDARY_PATH = ROOT / "openshell" / "boundary.yaml"
 
 

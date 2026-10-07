@@ -6,7 +6,9 @@ Shadow is a Personal AI that compiles a user's messy personal context into a typ
 
 Tagline: Find bugs in your future before you commit to it.
 
-Public demo: not hosted. The local Render CLI token is expired, so `render login` is the remaining manual step. The sandbox demo needs no login and no API key. Video: not recorded (`docs/DEMO_SCRIPT.md`).
+Public demo: https://shadow-futuregraph.onrender.com
+
+No login and no API key. Video: not recorded (`docs/DEMO_SCRIPT.md`).
 
 ## Problem
 

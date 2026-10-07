@@ -7,8 +7,9 @@ from functools import lru_cache
 from pathlib import Path
 
 from shadow.core.models import ActionDef, Bundle, Scenario
+from shadow.paths import repo_root
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = repo_root()
 FIXTURES = ROOT / "fixtures"
 
 

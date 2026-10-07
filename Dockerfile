@@ -17,5 +17,6 @@ COPY shadowbench ./shadowbench
 RUN pip install --no-cache-dir .
 COPY --from=frontend /src/frontend/dist ./frontend/dist
 ENV PORT=8000
+ENV SHADOW_ROOT=/app
 EXPOSE 8000
 CMD ["sh", "-c", "uvicorn shadow.api.app:app --host 0.0.0.0 --port ${PORT}"]

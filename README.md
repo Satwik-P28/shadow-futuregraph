@@ -2,7 +2,9 @@
 
 **Find bugs in your future before you commit to it.**
 
-Public demo: not hosted yet. The Render CLI token is expired (`render login` is required). Until that login exists, run the sandbox locally with `make dev`. No API key is required. Demo video: not recorded. Script: `docs/DEMO_SCRIPT.md` (2:40–2:55).
+Public demo: https://shadow-futuregraph.onrender.com
+
+No login and no API key. The badge stays SANDBOX. Demo video: not recorded. Script: `docs/DEMO_SCRIPT.md` (2:40–2:55).
 
 Shadow compiles messy personal context into a typed model of the future around a plan, searches that model for nearby failures, repairs the plan, asks you to approve the repaired future, executes only those state transitions, and checks the result.
 

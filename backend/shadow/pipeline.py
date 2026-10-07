@@ -408,12 +408,11 @@ def _inject_message(holds: bool, invalidated: list[str]) -> str:
 
 
 def build_client():
-    from pathlib import Path
-
     from shadow.llm.budget import BudgetLedger
     from shadow.llm.client import ResponseCache, model_client
+    from shadow.paths import repo_root
 
-    root = Path(__file__).resolve().parents[2]
+    root = repo_root()
     data = root / "data"
     return model_client(BudgetLedger(data / "budget.json"), ResponseCache(data / "cache.sqlite"))
 

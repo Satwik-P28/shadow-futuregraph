@@ -8,14 +8,14 @@ from __future__ import annotations
 
 import json
 import re
-from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel, Field
 
 from shadow.core.models import EpistemicStatus, Scenario
+from shadow.paths import repo_root
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = repo_root()
 
 # Constraint ids licensed only when a source record supports them.
 _LICENSES: list[tuple[str, tuple[str, ...], tuple[str, ...]]] = [

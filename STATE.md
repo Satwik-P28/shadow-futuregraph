@@ -1,7 +1,7 @@
 # STATE
 
 ## Phase
-20 — local gates passed, one Lightning smoke call done, publishing next.
+Published. https://github.com/Satwik-P28/shadow-futuregraph @ 11364a9fd09ab2277e6e0827c2bb612785a5bb01
 
 ## Completed
 - Hero loop on synthetic Alex data: graph, minimal failure, repair, diff, contract, broker, sandbox execute, inject
@@ -9,8 +9,9 @@
 - Impossible plan returns NO_FEASIBLE_FUTURE. Unknown venue stays unknown until an event resolves it
 - Budget ledger, cache, FakeNemotron, live client
 - ShadowBench local-gate, 30 worlds, $0, Full Shadow 30/30 vs baselines 0/30
-- Frontend production build
+- Frontend production build, Vitest, Playwright hero
 - OpenShell compiler. Prover not installed
+- Public repo, secret scan clean, Apache-2.0
 
 ## Architecture decisions
 - Domain data is JSON. Search, repair, broker do not branch on scenario id
@@ -38,9 +39,9 @@
 - Demo video not recorded
 
 ## Next 3 tasks
-1. Secret scan and full test/build
-2. Create the public GitHub repository and push
-3. Record the demo video outside this build
+1. Record the demo video outside this build
+2. Submit the Devpost form and judge feedback
+3. Optional: install openshell-prover, or host the Docker image
 
 ## Test commands
 - `make test`

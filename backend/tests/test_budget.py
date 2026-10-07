@@ -97,3 +97,55 @@ def test_cache_hit_costs_zero_and_breach_skips_http(tmp_path: Path, monkeypatch:
         blocked.complete_json("analyze_plan", context, PlanSpec)
     parsed = parse_json_content("```json\n{\"repairs\": []}\n```")
     assert parsed == {"repairs": []}
+
+
+def test_session_cap_blocks_before_http(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    from shadow.core.models import PlanSpec
+    from shadow.llm.client import LiveDisabled
+
+    monkeypatch.setenv("NEBIUS_LIVE", "1")
+    monkeypatch.setenv("NEBIUS_API_KEY", "not-a-real-key")
+    monkeypatch.setenv("SHADOW_SESSION_CAP_USD", "0")
+    monkeypatch.setenv("SHADOW_SESSION_BASELINE_USD", "0")
+    client = NebiusClient(BudgetLedger(tmp_path / "budget.json"), ResponseCache(tmp_path / "cache.sqlite"))
+
+    def explode(model: str, messages: list[dict[str, str]], max_tokens: int) -> tuple[str, dict[str, int]]:
+        del model, messages, max_tokens
+        raise AssertionError("http should not run")
+
+    client._http = explode  # type: ignore[method-assign]
+    with pytest.raises(BudgetError, match="session cap"):
+        client.complete_json("analyze_plan", {"plan": "x", "constraints": [], "unknowns": []}, PlanSpec)
+    monkeypatch.setenv("NEBIUS_LIVE", "0")
+    with pytest.raises(LiveDisabled):
+        client.complete_json("analyze_plan", {"plan": "x"}, PlanSpec)
+    monkeypatch.setenv("NEBIUS_LIVE", "1")
+    monkeypatch.delenv("SHADOW_SESSION_CAP_USD")
+    monkeypatch.setenv("NEBIUS_MODEL", "nvidia/Nemotron-3_5-Super")
+    with pytest.raises(LiveDisabled, match="Super"):
+        client.complete_json("analyze_plan", {"plan": "x"}, PlanSpec)
+    monkeypatch.setenv("NEBIUS_MODEL", "nvidia/Nemotron-3_5-Ultra")
+    with pytest.raises(LiveDisabled, match="Ultra"):
+        client.complete_json("analyze_plan", {"plan": "x"}, PlanSpec)
+
+
+def test_overage_is_recorded_before_refusal(tmp_path: Path):
+    ledger = BudgetLedger(tmp_path / "budget.json")
+    reservation = ledger.reserve(0.01, "call")
+    with pytest.raises(BudgetError, match="exceeds reservation"):
+        ledger.reconcile(reservation, 0.02)
+    assert ledger.snapshot()["repo_actual_spend_usd"] == 0.02
+    assert ledger.snapshot()["committed_usd"] == 0
+
+
+def test_plan_strings_are_coerced_locally():
+    from shadow.core.models import PlanSpec
+    from shadow.llm.client import coerce_payload
+
+    payload = coerce_payload(
+        PlanSpec,
+        {"goals": ["keep dinner"], "hard_constraints": ["dinner stays"], "intended_bundle_id": None},
+    )
+    spec = PlanSpec.model_validate(payload)
+    assert spec.goals[0].description == "keep dinner"
+    assert spec.hard_constraints[0].epistemic_status.value == "INFERRED"

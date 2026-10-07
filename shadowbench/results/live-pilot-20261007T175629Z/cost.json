@@ -1,0 +1,17 @@
+{
+  "prior_external_spend_usd": 0.02030592,
+  "previous_repo_live_spend_usd": 2.22e-05,
+  "session_baseline_repo_actual_usd": 0.0,
+  "new_live_validation_spend_usd": 0.00849066,
+  "total_known_spend_usd": 0.02881878,
+  "session_cap_usd": 0.03,
+  "smoke_cost_usd": 0.0,
+  "input_tokens": 68562,
+  "output_tokens": 12014,
+  "model_calls_recorded": 184,
+  "tavily": {
+    "status": "skipped",
+    "result_count": 0
+  },
+  "openshell": "prover_unavailable"
+}

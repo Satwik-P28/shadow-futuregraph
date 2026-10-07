@@ -1,0 +1,395 @@
+{
+  "systems": {
+    "direct_nemotron": {
+      "TaskCompletionRate": {
+        "count": 6,
+        "n": 30,
+        "rate": 0.2,
+        "ci95": [
+          0.0667,
+          0.3333
+        ]
+      },
+      "UndetectedFailureRate": {
+        "count": 22,
+        "n": 26,
+        "rate": 0.8461538461538461,
+        "ci95": [
+          0.5667,
+          0.8667
+        ]
+      },
+      "FailureRecall": {
+        "count": 9.0,
+        "n": 30,
+        "rate": 0.3,
+        "ci95": [
+          0.1667,
+          0.4667
+        ]
+      },
+      "FalseHazardRate": {
+        "count": 2,
+        "n": 30,
+        "rate": 0.06666666666666667,
+        "ci95": [
+          0.0,
+          0.1667
+        ]
+      },
+      "RepairSuccessRate": {
+        "count": 6,
+        "n": 30,
+        "rate": 0.2,
+        "ci95": [
+          0.0667,
+          0.3333
+        ]
+      },
+      "RepairRegret": {
+        "mean": 0.8,
+        "n": 30
+      },
+      "MinimalCutSetPrecision": 0.0,
+      "MinimalCutSetRecall": 0.0,
+      "UnknownCalibration": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "GraphMaterialEdgeRecall": 0.0,
+      "ExecutionConvergenceRate": {
+        "count": 6,
+        "n": 30,
+        "rate": 0.2,
+        "ci95": [
+          0.0667,
+          0.3333
+        ]
+      },
+      "AverageModelCalls": 1.0,
+      "InputTokens": 13018,
+      "OutputTokens": 1064,
+      "CostUSD": 0.00103644,
+      "LatencyMs": 1005.6934444757644
+    },
+    "planner": {
+      "TaskCompletionRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "UndetectedFailureRate": {
+        "count": 22,
+        "n": 26,
+        "rate": 0.8461538461538461,
+        "ci95": [
+          0.5667,
+          0.8667
+        ]
+      },
+      "FailureRecall": {
+        "count": 8.0,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "FalseHazardRate": {
+        "count": 0,
+        "n": 30,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "RepairSuccessRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "RepairRegret": {
+        "mean": 0.7333333333333333,
+        "n": 30
+      },
+      "MinimalCutSetPrecision": 0.0,
+      "MinimalCutSetRecall": 0.0,
+      "UnknownCalibration": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "GraphMaterialEdgeRecall": 0.0,
+      "ExecutionConvergenceRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "AverageModelCalls": 1.0,
+      "InputTokens": 13048,
+      "OutputTokens": 2350,
+      "CostUSD": 0.00134688,
+      "LatencyMs": 1048.291776534946
+    },
+    "planner_critic": {
+      "TaskCompletionRate": {
+        "count": 5,
+        "n": 30,
+        "rate": 0.16666666666666666,
+        "ci95": [
+          0.0333,
+          0.3
+        ]
+      },
+      "UndetectedFailureRate": {
+        "count": 8,
+        "n": 26,
+        "rate": 0.3076923076923077,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "FailureRecall": {
+        "count": 22.0,
+        "n": 30,
+        "rate": 0.7333333333333333,
+        "ci95": [
+          0.5667,
+          0.8667
+        ]
+      },
+      "FalseHazardRate": {
+        "count": 3,
+        "n": 30,
+        "rate": 0.1,
+        "ci95": [
+          0.0,
+          0.2
+        ]
+      },
+      "RepairSuccessRate": {
+        "count": 5,
+        "n": 30,
+        "rate": 0.16666666666666666,
+        "ci95": [
+          0.0333,
+          0.3
+        ]
+      },
+      "RepairRegret": {
+        "mean": 0.8333333333333334,
+        "n": 30
+      },
+      "MinimalCutSetPrecision": 0.0,
+      "MinimalCutSetRecall": 0.0,
+      "UnknownCalibration": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "GraphMaterialEdgeRecall": 0.0,
+      "ExecutionConvergenceRate": {
+        "count": 5,
+        "n": 30,
+        "rate": 0.16666666666666666,
+        "ci95": [
+          0.0333,
+          0.3
+        ]
+      },
+      "AverageModelCalls": 2.0,
+      "InputTokens": 28645,
+      "OutputTokens": 4818,
+      "CostUSD": 0.00287502,
+      "LatencyMs": 2034.0933820058126
+    },
+    "shadow": {
+      "TaskCompletionRate": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "UndetectedFailureRate": {
+        "count": 0,
+        "n": 26,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "FailureRecall": {
+        "count": 30.0,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "FalseHazardRate": {
+        "count": 0,
+        "n": 30,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "RepairSuccessRate": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "RepairRegret": {
+        "mean": 0.0,
+        "n": 30
+      },
+      "MinimalCutSetPrecision": 1.0,
+      "MinimalCutSetRecall": 1.0,
+      "UnknownCalibration": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "GraphMaterialEdgeRecall": 0.9333333333333333,
+      "ExecutionConvergenceRate": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "AverageModelCalls": 2.0,
+      "InputTokens": 13851,
+      "OutputTokens": 3782,
+      "CostUSD": 0.00173874,
+      "LatencyMs": 3027.875995831952
+    },
+    "shadow_no_failure_search": {
+      "TaskCompletionRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "UndetectedFailureRate": {
+        "count": 22,
+        "n": 26,
+        "rate": 0.8461538461538461,
+        "ci95": [
+          0.5667,
+          0.8667
+        ]
+      },
+      "FailureRecall": {
+        "count": 8.0,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "FalseHazardRate": {
+        "count": 0,
+        "n": 30,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "RepairSuccessRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "RepairRegret": {
+        "mean": 0.7333333333333333,
+        "n": 30
+      },
+      "MinimalCutSetPrecision": 0.0,
+      "MinimalCutSetRecall": 0.0,
+      "UnknownCalibration": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "GraphMaterialEdgeRecall": 0.0,
+      "ExecutionConvergenceRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "AverageModelCalls": 0.0,
+      "InputTokens": 0,
+      "OutputTokens": 0,
+      "CostUSD": 0.0,
+      "LatencyMs": 0.0
+    }
+  },
+  "n": 30,
+  "label": "LIVE PILOT",
+  "worlds_completed": 30,
+  "stopped_early": false,
+  "stop_reason": "",
+  "context_reduced_after_world": null
+}

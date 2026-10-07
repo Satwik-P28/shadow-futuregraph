@@ -72,6 +72,7 @@ class BudgetLedger:
                 raise BudgetError("repo soft cap would be exceeded")
             if worst_case_usd > self.remaining_overall(data) + 1e-12:
                 raise BudgetError("overall cap would be exceeded")
+            self._reject_session(data, worst_case_usd)
             reservation_id = uuid.uuid4().hex
             data["committed_usd"] = round(float(data["committed_usd"]) + worst_case_usd, 10)
             data["reservations"][reservation_id] = {
@@ -101,14 +102,26 @@ class BudgetLedger:
             item = data["reservations"].get(reservation_id)
             if not item or not item["open"]:
                 raise BudgetError("reservation is not open")
-            if actual_usd - float(item["worst_case_usd"]) > 1e-9:
-                raise BudgetError("actual cost exceeds reservation")
+            over = actual_usd - float(item["worst_case_usd"]) > 1e-9
             item["open"] = False
             item["actual_usd"] = actual_usd
             data["committed_usd"] = round(float(data["committed_usd"]) - float(item["worst_case_usd"]), 10)
             data["repo_actual_spend_usd"] = round(float(data["repo_actual_spend_usd"]) + actual_usd, 10)
             self._write(data)
+            if over:
+                raise BudgetError("actual cost exceeds reservation")
             return data
+
+    def _reject_session(self, data: dict[str, Any], worst_case_usd: float) -> None:
+        """Optional per-session ceiling. Checked before a reservation is stored."""
+        raw = os.environ.get("SHADOW_SESSION_CAP_USD")
+        if raw is None or raw == "":
+            return
+        cap = float(raw)
+        baseline = float(os.environ.get("SHADOW_SESSION_BASELINE_USD") or "0")
+        spent = float(data["repo_actual_spend_usd"]) + float(data["committed_usd"]) - baseline
+        if spent + worst_case_usd > cap + 1e-12:
+            raise BudgetError("session cap would be exceeded")
 
     def _read(self) -> dict[str, Any]:
         return json.loads(self.path.read_text())

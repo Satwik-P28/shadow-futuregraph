@@ -1,0 +1,6 @@
+version: plan_choice.v1
+Propose one bundle id from the context, or null if none is safe.
+Return one JSON object and nothing else:
+{"bundle_id": string or null, "hazards": [string], "unknowns": [string], "confidence": number or null}
+Use only bundle ids present in the context. Do not invent numbers, probabilities, or actions.
+If a material value is unknown or two facts conflict, set bundle_id to null and list the unknown or conflict.

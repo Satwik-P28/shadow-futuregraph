@@ -1,0 +1,7 @@
+version: critique_choice.v1
+Review the proposed bundle in the context under "proposal".
+Return one JSON object and nothing else:
+{"bundle_id": string or null, "hazards": [string], "unknowns": [string], "confidence": number or null}
+Keep the proposal only if the evidence shows it is safe. Otherwise choose another listed bundle id, or null.
+Use only bundle ids present in the context. Do not invent numbers, probabilities, or actions.
+If a material value is unknown or two facts conflict, set bundle_id to null.

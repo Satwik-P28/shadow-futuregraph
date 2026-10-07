@@ -1,0 +1,71 @@
+{
+  "plan": "Move my NYC trip to Friday and make sure everything still works.",
+  "schema_valid": true,
+  "recommended": "b1120",
+  "naive": "b1440",
+  "failure_variables": [
+    "flight_delay_min",
+    "traffic_extra_min"
+  ],
+  "rejected_model_repairs": [
+    {
+      "id": "r1",
+      "status": "infeasible",
+      "source": "model"
+    },
+    {
+      "id": "r2",
+      "status": "infeasible",
+      "source": "model"
+    },
+    {
+      "id": "r3",
+      "status": "infeasible",
+      "source": "model"
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "d0",
+      "source": "plan",
+      "target": "goal",
+      "relation": "DEPENDS_ON",
+      "rationale": "",
+      "epistemic_status": "INFERRED"
+    },
+    {
+      "id": "d1",
+      "source": "plan",
+      "target": "goal",
+      "relation": "DEPENDS_ON",
+      "rationale": "",
+      "epistemic_status": "INFERRED"
+    },
+    {
+      "id": "d2",
+      "source": "plan",
+      "target": "goal",
+      "relation": "DEPENDS_ON",
+      "rationale": "",
+      "epistemic_status": "INFERRED"
+    }
+  ],
+  "hazards": [],
+  "unknowns": [
+    "street_closure"
+  ],
+  "contract_status": "ACTIVE",
+  "allowed_actions": [
+    "set_flight_1120",
+    "set_ride_1120",
+    "confirm_friday"
+  ],
+  "execute_status": "verified",
+  "reconciliation": {
+    "matched": true,
+    "message": "Observed state matches approved future",
+    "violations": []
+  },
+  "second_run_cache_hits": 2,
+  "second_run_recommended": "b1120"
+}

@@ -1,0 +1,6 @@
+{
+  "status": "skipped",
+  "result_count": 0,
+  "sources": [],
+  "reason": "TAVILY_API_KEY is not set"
+}

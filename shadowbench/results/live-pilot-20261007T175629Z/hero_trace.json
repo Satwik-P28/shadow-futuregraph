@@ -1,0 +1,17 @@
+{
+  "plan": "Move my NYC trip to Friday and make sure everything still works.",
+  "schema_valid": false,
+  "recommended": null,
+  "naive": null,
+  "failure_variables": null,
+  "rejected_model_repairs": null,
+  "dependencies": null,
+  "hazards": null,
+  "unknowns": null,
+  "contract_status": null,
+  "allowed_actions": null,
+  "execute_status": null,
+  "reconciliation": null,
+  "second_run_cache_hits": 0,
+  "second_run_recommended": null
+}

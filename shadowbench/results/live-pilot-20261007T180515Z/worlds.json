@@ -1,0 +1,7252 @@
+[
+  {
+    "id": "live-00",
+    "title": "travel pilot 00",
+    "domain": "travel",
+    "plan_prompt": "Book the trip so the fixed commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 12.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.27
+        },
+        "cost": 28.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.3
+        },
+        "cost": 46.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "travel",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The travel options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 0,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-01",
+    "title": "scheduling pilot 01",
+    "domain": "scheduling",
+    "plan_prompt": "Schedule the commitment so it still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.18
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.7
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "scheduling",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The scheduling options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 1,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-02",
+    "title": "purchase pilot 02",
+    "domain": "purchase",
+    "plan_prompt": "Place the order so the commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x1",
+        "label": "x1",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "max",
+              "ref": null,
+              "value": null,
+              "args": [
+                {
+                  "op": "const",
+                  "ref": null,
+                  "value": 0,
+                  "args": []
+                },
+                {
+                  "op": "sub",
+                  "ref": null,
+                  "value": null,
+                  "args": [
+                    {
+                      "op": "add",
+                      "ref": null,
+                      "value": null,
+                      "args": [
+                        {
+                          "op": "var",
+                          "ref": "x0",
+                          "value": null,
+                          "args": []
+                        },
+                        {
+                          "op": "var",
+                          "ref": "x1",
+                          "value": null,
+                          "args": []
+                        }
+                      ]
+                    },
+                    {
+                      "op": "const",
+                      "ref": null,
+                      "value": 1,
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.18
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.7
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "purchase",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The purchase options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 2,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-03",
+    "title": "travel pilot 03",
+    "domain": "travel",
+    "plan_prompt": "Book the trip so the fixed commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x1",
+        "label": "x1",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x2",
+        "label": "x2",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "max",
+              "ref": null,
+              "value": null,
+              "args": [
+                {
+                  "op": "const",
+                  "ref": null,
+                  "value": 0,
+                  "args": []
+                },
+                {
+                  "op": "sub",
+                  "ref": null,
+                  "value": null,
+                  "args": [
+                    {
+                      "op": "add",
+                      "ref": null,
+                      "value": null,
+                      "args": [
+                        {
+                          "op": "var",
+                          "ref": "x0",
+                          "value": null,
+                          "args": []
+                        },
+                        {
+                          "op": "var",
+                          "ref": "x1",
+                          "value": null,
+                          "args": []
+                        },
+                        {
+                          "op": "var",
+                          "ref": "x2",
+                          "value": null,
+                          "args": []
+                        }
+                      ]
+                    },
+                    {
+                      "op": "const",
+                      "ref": null,
+                      "value": 2,
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.18
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.7
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "travel",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The travel options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 3,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-04",
+    "title": "scheduling pilot 04",
+    "domain": "scheduling",
+    "plan_prompt": "Schedule the commitment so it still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "noise_a",
+        "label": "noise_a",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "noise_b",
+        "label": "noise_b",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.18
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.7
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "scheduling",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The scheduling options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 4,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-05",
+    "title": "purchase pilot 05",
+    "domain": "purchase",
+    "plan_prompt": "Place the order so the commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.18
+        },
+        "cost": 11.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 34.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.3
+        },
+        "cost": 61.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "purchase",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The purchase options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 5,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-06",
+    "title": "travel pilot 06",
+    "domain": "travel",
+    "plan_prompt": "Book the trip so the fixed commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 9.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.26
+        },
+        "cost": 39.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.18
+        },
+        "cost": 22.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "travel",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The travel options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 6,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-07",
+    "title": "scheduling pilot 07",
+    "domain": "scheduling",
+    "plan_prompt": "Schedule the commitment so it still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.18
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.7
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "scheduling",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The scheduling options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 7,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-08",
+    "title": "purchase pilot 08",
+    "domain": "purchase",
+    "plan_prompt": "Place the order so the commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_high",
+        "label": "High floor",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 5,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment level must be at least 5.",
+        "relaxable": false
+      },
+      {
+        "id": "c_low",
+        "label": "Low ceiling",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "lte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 1,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment level must be at most 1.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 1
+        },
+        "cost": 20.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 3
+        },
+        "cost": 30.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "purchase",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The purchase options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 8,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-09",
+    "title": "travel pilot 09",
+    "domain": "travel",
+    "plan_prompt": "Book the trip so the fixed commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 1.3,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "vendor_confirm",
+        "label": "Vendor confirmation",
+        "role": "exogenous",
+        "vtype": "category",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "UNKNOWN",
+        "distribution": "unknown",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_vendor",
+        "label": "Vendor confirmation",
+        "kind": "equality",
+        "hardness": "hard",
+        "expr": {
+          "op": "eq",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "vendor_confirm",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": "yes",
+              "args": []
+            }
+          ]
+        },
+        "description": "The vendor confirmation is unresolved, so the commitment cannot be treated as closed.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.3
+        },
+        "cost": 12.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.3
+        },
+        "cost": 30.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "travel",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The travel options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_unknown",
+        "subject": "vendor",
+        "predicate": "confirmation",
+        "value": null,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_unknown",
+        "epistemic_status": "UNKNOWN",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Vendor confirmation has not arrived.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-10",
+    "title": "scheduling pilot 10",
+    "domain": "scheduling",
+    "plan_prompt": "Schedule the commitment so it still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.18
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.7
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "scheduling",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The scheduling options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_stale",
+        "subject": "commitment",
+        "predicate": "status",
+        "value": "safe",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_stale",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The cheaper option still clears the commitment.",
+        "metadata": {}
+      },
+      {
+        "id": "f_current",
+        "subject": "commitment",
+        "predicate": "status",
+        "value": "exposed",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_current",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "A movement inside the declared range can miss the commitment.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 10,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-11",
+    "title": "purchase pilot 11",
+    "domain": "purchase",
+    "plan_prompt": "Place the order so the commitment still holds.",
+    "variables": [
+      {
+        "id": "a_level",
+        "label": "a_level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "b_level",
+        "label": "b_level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack_a",
+        "label": "First slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "a_level",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack_b",
+        "label": "Second slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "b_level",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_first",
+        "label": "First commitment",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack_a",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The first downstream commitment stays non-negative inside the declared range.",
+        "relaxable": false
+      },
+      {
+        "id": "c_second",
+        "label": "Second commitment",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack_b",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The second downstream commitment stays non-negative inside the declared range.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_patch",
+        "action_type": "plan.commit",
+        "label": "Patch the first commitment",
+        "resource": "plan",
+        "effects": {
+          "a_level": 1.22,
+          "b_level": 0.2
+        },
+        "cost": 16.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_align",
+        "action_type": "plan.commit",
+        "label": "Align both commitments",
+        "resource": "plan",
+        "effects": {
+          "a_level": 1.22,
+          "b_level": 1.22
+        },
+        "cost": 48.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_cheap",
+        "action_type": "plan.commit",
+        "label": "Take the cheaper commitment",
+        "resource": "plan",
+        "effects": {
+          "a_level": 0.2,
+          "b_level": 0.2
+        },
+        "cost": 9.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_patch",
+        "label": "Patch the first commitment",
+        "action_ids": [
+          "set_opt_patch"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_align",
+        "label": "Align both commitments",
+        "action_ids": [
+          "set_opt_align"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_cheap",
+        "label": "Take the cheaper commitment",
+        "action_ids": [
+          "set_opt_cheap"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "purchase",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The purchase options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 11,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-12",
+    "title": "travel pilot 12",
+    "domain": "travel",
+    "plan_prompt": "Pick the lowest fare for the trip.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.18
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.7
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "travel",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The travel options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 12,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-13",
+    "title": "scheduling pilot 13",
+    "domain": "scheduling",
+    "plan_prompt": "Schedule the commitment so it still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 1.22,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_keep",
+        "action_type": "plan.commit",
+        "label": "Keep the current commitment",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 20.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_cheaper",
+        "action_type": "plan.commit",
+        "label": "Switch to the cheaper commitment",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.18
+        },
+        "cost": 6.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_keep",
+        "label": "Keep the current commitment",
+        "action_ids": [
+          "set_opt_keep"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_cheaper",
+        "label": "Switch to the cheaper commitment",
+        "action_ids": [
+          "set_opt_cheaper"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "scheduling",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The scheduling options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 13,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-14",
+    "title": "purchase pilot 14",
+    "domain": "purchase",
+    "plan_prompt": "Place the order so the commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.18
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.7
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.22
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "purchase",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The purchase options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_noise_0",
+        "subject": "noise_0",
+        "predicate": "note",
+        "value": "The office snack order is unrelated.",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_noise_0",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The office snack order is unrelated.",
+        "metadata": {}
+      },
+      {
+        "id": "f_noise_1",
+        "subject": "noise_1",
+        "predicate": "note",
+        "value": "A newsletter draft is waiting and does not affect this commitment.",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_noise_1",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "A newsletter draft is waiting and does not affect this commitment.",
+        "metadata": {}
+      },
+      {
+        "id": "f_noise_2",
+        "subject": "noise_2",
+        "predicate": "note",
+        "value": "Parking on a different day is not part of this plan.",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_noise_2",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Parking on a different day is not part of this plan.",
+        "metadata": {}
+      },
+      {
+        "id": "f_noise_3",
+        "subject": "noise_3",
+        "predicate": "note",
+        "value": "A closed museum exhibit is irrelevant to the commitment.",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_noise_3",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "A closed museum exhibit is irrelevant to the commitment.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 14,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-15",
+    "title": "scheduling pilot 15",
+    "domain": "scheduling",
+    "plan_prompt": "Schedule the commitment so it still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 12.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.29
+        },
+        "cost": 28.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.32
+        },
+        "cost": 46.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "scheduling",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The scheduling options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 15,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-16",
+    "title": "purchase pilot 16",
+    "domain": "purchase",
+    "plan_prompt": "Place the order so the commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.2
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.72
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "purchase",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The purchase options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 16,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-17",
+    "title": "travel pilot 17",
+    "domain": "travel",
+    "plan_prompt": "Book the trip so the fixed commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x1",
+        "label": "x1",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "max",
+              "ref": null,
+              "value": null,
+              "args": [
+                {
+                  "op": "const",
+                  "ref": null,
+                  "value": 0,
+                  "args": []
+                },
+                {
+                  "op": "sub",
+                  "ref": null,
+                  "value": null,
+                  "args": [
+                    {
+                      "op": "add",
+                      "ref": null,
+                      "value": null,
+                      "args": [
+                        {
+                          "op": "var",
+                          "ref": "x0",
+                          "value": null,
+                          "args": []
+                        },
+                        {
+                          "op": "var",
+                          "ref": "x1",
+                          "value": null,
+                          "args": []
+                        }
+                      ]
+                    },
+                    {
+                      "op": "const",
+                      "ref": null,
+                      "value": 1,
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.2
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.72
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "travel",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The travel options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 17,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-18",
+    "title": "scheduling pilot 18",
+    "domain": "scheduling",
+    "plan_prompt": "Schedule the commitment so it still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x1",
+        "label": "x1",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x2",
+        "label": "x2",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "max",
+              "ref": null,
+              "value": null,
+              "args": [
+                {
+                  "op": "const",
+                  "ref": null,
+                  "value": 0,
+                  "args": []
+                },
+                {
+                  "op": "sub",
+                  "ref": null,
+                  "value": null,
+                  "args": [
+                    {
+                      "op": "add",
+                      "ref": null,
+                      "value": null,
+                      "args": [
+                        {
+                          "op": "var",
+                          "ref": "x0",
+                          "value": null,
+                          "args": []
+                        },
+                        {
+                          "op": "var",
+                          "ref": "x1",
+                          "value": null,
+                          "args": []
+                        },
+                        {
+                          "op": "var",
+                          "ref": "x2",
+                          "value": null,
+                          "args": []
+                        }
+                      ]
+                    },
+                    {
+                      "op": "const",
+                      "ref": null,
+                      "value": 2,
+                      "args": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.2
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.72
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "scheduling",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The scheduling options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 18,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-19",
+    "title": "purchase pilot 19",
+    "domain": "purchase",
+    "plan_prompt": "Place the order so the commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "noise_a",
+        "label": "noise_a",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "noise_b",
+        "label": "noise_b",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.2
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.72
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "purchase",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The purchase options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 19,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-20",
+    "title": "travel pilot 20",
+    "domain": "travel",
+    "plan_prompt": "Book the trip so the fixed commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.2
+        },
+        "cost": 11.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 34.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.32
+        },
+        "cost": 61.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "travel",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The travel options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 20,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-21",
+    "title": "scheduling pilot 21",
+    "domain": "scheduling",
+    "plan_prompt": "Schedule the commitment so it still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 9.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.28
+        },
+        "cost": 39.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.2
+        },
+        "cost": 22.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "scheduling",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The scheduling options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 21,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-22",
+    "title": "purchase pilot 22",
+    "domain": "purchase",
+    "plan_prompt": "Place the order so the commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.2
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.72
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "purchase",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The purchase options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 22,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-23",
+    "title": "travel pilot 23",
+    "domain": "travel",
+    "plan_prompt": "Book the trip so the fixed commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_high",
+        "label": "High floor",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 5,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment level must be at least 5.",
+        "relaxable": false
+      },
+      {
+        "id": "c_low",
+        "label": "Low ceiling",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "lte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 1,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment level must be at most 1.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 1
+        },
+        "cost": 20.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 3
+        },
+        "cost": 30.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "travel",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The travel options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 23,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-24",
+    "title": "scheduling pilot 24",
+    "domain": "scheduling",
+    "plan_prompt": "Schedule the commitment so it still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 1.3,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "vendor_confirm",
+        "label": "Vendor confirmation",
+        "role": "exogenous",
+        "vtype": "category",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "UNKNOWN",
+        "distribution": "unknown",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_vendor",
+        "label": "Vendor confirmation",
+        "kind": "equality",
+        "hardness": "hard",
+        "expr": {
+          "op": "eq",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "vendor_confirm",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": "yes",
+              "args": []
+            }
+          ]
+        },
+        "description": "The vendor confirmation is unresolved, so the commitment cannot be treated as closed.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.3
+        },
+        "cost": 12.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.3
+        },
+        "cost": 30.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "scheduling",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The scheduling options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_unknown",
+        "subject": "vendor",
+        "predicate": "confirmation",
+        "value": null,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_unknown",
+        "epistemic_status": "UNKNOWN",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Vendor confirmation has not arrived.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-25",
+    "title": "purchase pilot 25",
+    "domain": "purchase",
+    "plan_prompt": "Place the order so the commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.2
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.72
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "purchase",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The purchase options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_stale",
+        "subject": "commitment",
+        "predicate": "status",
+        "value": "safe",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_stale",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The cheaper option still clears the commitment.",
+        "metadata": {}
+      },
+      {
+        "id": "f_current",
+        "subject": "commitment",
+        "predicate": "status",
+        "value": "exposed",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_current",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "A movement inside the declared range can miss the commitment.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 25,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-26",
+    "title": "travel pilot 26",
+    "domain": "travel",
+    "plan_prompt": "Book the trip so the fixed commitment still holds.",
+    "variables": [
+      {
+        "id": "a_level",
+        "label": "a_level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "b_level",
+        "label": "b_level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack_a",
+        "label": "First slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "a_level",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack_b",
+        "label": "Second slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "b_level",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_first",
+        "label": "First commitment",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack_a",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The first downstream commitment stays non-negative inside the declared range.",
+        "relaxable": false
+      },
+      {
+        "id": "c_second",
+        "label": "Second commitment",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack_b",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The second downstream commitment stays non-negative inside the declared range.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_patch",
+        "action_type": "plan.commit",
+        "label": "Patch the first commitment",
+        "resource": "plan",
+        "effects": {
+          "a_level": 1.24,
+          "b_level": 0.2
+        },
+        "cost": 16.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_align",
+        "action_type": "plan.commit",
+        "label": "Align both commitments",
+        "resource": "plan",
+        "effects": {
+          "a_level": 1.24,
+          "b_level": 1.24
+        },
+        "cost": 48.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_cheap",
+        "action_type": "plan.commit",
+        "label": "Take the cheaper commitment",
+        "resource": "plan",
+        "effects": {
+          "a_level": 0.2,
+          "b_level": 0.2
+        },
+        "cost": 9.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_patch",
+        "label": "Patch the first commitment",
+        "action_ids": [
+          "set_opt_patch"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_align",
+        "label": "Align both commitments",
+        "action_ids": [
+          "set_opt_align"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_cheap",
+        "label": "Take the cheaper commitment",
+        "action_ids": [
+          "set_opt_cheap"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "travel",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The travel options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 26,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-27",
+    "title": "scheduling pilot 27",
+    "domain": "scheduling",
+    "plan_prompt": "Pick the cheapest open slot.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.2
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.72
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "scheduling",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The scheduling options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 27,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-28",
+    "title": "purchase pilot 28",
+    "domain": "purchase",
+    "plan_prompt": "Place the order so the commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 1.24,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_keep",
+        "action_type": "plan.commit",
+        "label": "Keep the current commitment",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 20.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_cheaper",
+        "action_type": "plan.commit",
+        "label": "Switch to the cheaper commitment",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.2
+        },
+        "cost": 6.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_keep",
+        "label": "Keep the current commitment",
+        "action_ids": [
+          "set_opt_keep"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_cheaper",
+        "label": "Switch to the cheaper commitment",
+        "action_ids": [
+          "set_opt_cheaper"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "purchase",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The purchase options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 28,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  },
+  {
+    "id": "live-29",
+    "title": "travel pilot 29",
+    "domain": "travel",
+    "plan_prompt": "Book the trip so the fixed commitment still holds.",
+    "variables": [
+      {
+        "id": "margin",
+        "label": "Commitment level",
+        "role": "controllable",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "VERIFIED",
+        "distribution": "point",
+        "formula": null,
+        "show_in_diff": true,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "x0",
+        "label": "x0",
+        "role": "exogenous",
+        "vtype": "number",
+        "baseline": 0,
+        "lower": 0.0,
+        "upper": 1.0,
+        "scale": 1.0,
+        "unit": "",
+        "epistemic_status": "ESTIMATED",
+        "distribution": "uniform",
+        "formula": null,
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      },
+      {
+        "id": "slack",
+        "label": "Slack",
+        "role": "derived",
+        "vtype": "number",
+        "baseline": null,
+        "lower": null,
+        "upper": null,
+        "scale": null,
+        "unit": "",
+        "epistemic_status": "COMPUTED",
+        "distribution": "point",
+        "formula": {
+          "op": "sub",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "margin",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "var",
+              "ref": "x0",
+              "value": null,
+              "args": []
+            }
+          ]
+        },
+        "show_in_diff": false,
+        "detail": false,
+        "privacy_label": "personal"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "c_slack",
+        "label": "Commitment slack",
+        "kind": "numeric",
+        "hardness": "hard",
+        "expr": {
+          "op": "gte",
+          "ref": null,
+          "value": null,
+          "args": [
+            {
+              "op": "var",
+              "ref": "slack",
+              "value": null,
+              "args": []
+            },
+            {
+              "op": "const",
+              "ref": null,
+              "value": 0,
+              "args": []
+            }
+          ]
+        },
+        "description": "The commitment stays non-negative when the declared exogenous inputs move inside their ranges.",
+        "relaxable": false
+      }
+    ],
+    "actions": [
+      {
+        "id": "set_opt_a",
+        "action_type": "plan.commit",
+        "label": "Option A",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.2
+        },
+        "cost": 10.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_b",
+        "action_type": "plan.commit",
+        "label": "Option B",
+        "resource": "plan",
+        "effects": {
+          "margin": 0.72
+        },
+        "cost": 27.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      },
+      {
+        "id": "set_opt_c",
+        "action_type": "plan.commit",
+        "label": "Option C",
+        "resource": "plan",
+        "effects": {
+          "margin": 1.24
+        },
+        "cost": 58.0,
+        "reversible": true,
+        "compensatable": true,
+        "irreversible": false,
+        "impacts_others": 0,
+        "retryable": true
+      }
+    ],
+    "bundles": [
+      {
+        "id": "opt_a",
+        "label": "Option A",
+        "action_ids": [
+          "set_opt_a"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_b",
+        "label": "Option B",
+        "action_ids": [
+          "set_opt_b"
+        ],
+        "rationale": ""
+      },
+      {
+        "id": "opt_c",
+        "label": "Option C",
+        "action_ids": [
+          "set_opt_c"
+        ],
+        "rationale": ""
+      }
+    ],
+    "facts": [
+      {
+        "id": "f_price",
+        "subject": "offer",
+        "predicate": "note",
+        "value": "travel",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_price",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The travel options differ in sticker price.",
+        "metadata": {}
+      },
+      {
+        "id": "f_noise_0",
+        "subject": "noise_0",
+        "predicate": "note",
+        "value": "The office snack order is unrelated.",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_noise_0",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "The office snack order is unrelated.",
+        "metadata": {}
+      },
+      {
+        "id": "f_noise_1",
+        "subject": "noise_1",
+        "predicate": "note",
+        "value": "A newsletter draft is waiting and does not affect this commitment.",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_noise_1",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "A newsletter draft is waiting and does not affect this commitment.",
+        "metadata": {}
+      },
+      {
+        "id": "f_noise_2",
+        "subject": "noise_2",
+        "predicate": "note",
+        "value": "Parking on a different day is not part of this plan.",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_noise_2",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Parking on a different day is not part of this plan.",
+        "metadata": {}
+      },
+      {
+        "id": "f_noise_3",
+        "subject": "noise_3",
+        "predicate": "note",
+        "value": "A closed museum exhibit is irrelevant to the commitment.",
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_noise_3",
+        "epistemic_status": "VERIFIED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "A closed museum exhibit is irrelevant to the commitment.",
+        "metadata": {}
+      },
+      {
+        "id": "f_range",
+        "subject": "range",
+        "predicate": "declared",
+        "value": 29,
+        "valid_from": null,
+        "valid_to": null,
+        "observed_at": "2026-10-07T12:00:00Z",
+        "source_type": "pilot",
+        "source_id": "f_range",
+        "epistemic_status": "ESTIMATED",
+        "confidence": null,
+        "privacy_label": "personal",
+        "supersedes": null,
+        "tags": [
+          "support"
+        ],
+        "text": "Exogenous inputs are declared as ranges. No probability is given.",
+        "metadata": {}
+      }
+    ],
+    "events": [],
+    "sensitivities": [],
+    "metadata": {}
+  }
+]

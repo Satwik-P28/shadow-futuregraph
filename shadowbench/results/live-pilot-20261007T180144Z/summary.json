@@ -1,0 +1,395 @@
+{
+  "systems": {
+    "direct_nemotron": {
+      "TaskCompletionRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "UndetectedFailureRate": {
+        "count": 22,
+        "n": 26,
+        "rate": 0.8461538461538461,
+        "ci95": [
+          0.5667,
+          0.8667
+        ]
+      },
+      "FailureRecall": {
+        "count": 8.0,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "FalseHazardRate": {
+        "count": 0,
+        "n": 30,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "RepairSuccessRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "RepairRegret": {
+        "mean": 0.7333333333333333,
+        "n": 30
+      },
+      "MinimalCutSetPrecision": 0.0,
+      "MinimalCutSetRecall": 0.0,
+      "UnknownCalibration": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "GraphMaterialEdgeRecall": 0.0,
+      "ExecutionConvergenceRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "AverageModelCalls": 1.0,
+      "InputTokens": 8437,
+      "OutputTokens": 838,
+      "CostUSD": 0.00070734,
+      "LatencyMs": 509.4805181278692
+    },
+    "planner": {
+      "TaskCompletionRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "UndetectedFailureRate": {
+        "count": 22,
+        "n": 26,
+        "rate": 0.8461538461538461,
+        "ci95": [
+          0.5667,
+          0.8667
+        ]
+      },
+      "FailureRecall": {
+        "count": 8.0,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "FalseHazardRate": {
+        "count": 0,
+        "n": 30,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "RepairSuccessRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "RepairRegret": {
+        "mean": 0.7333333333333333,
+        "n": 30
+      },
+      "MinimalCutSetPrecision": 0.0,
+      "MinimalCutSetRecall": 0.0,
+      "UnknownCalibration": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "GraphMaterialEdgeRecall": 0.0,
+      "ExecutionConvergenceRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "AverageModelCalls": 1.0,
+      "InputTokens": 8458,
+      "OutputTokens": 1674,
+      "CostUSD": 0.00090924,
+      "LatencyMs": 642.8646958995765
+    },
+    "planner_critic": {
+      "TaskCompletionRate": {
+        "count": 3,
+        "n": 30,
+        "rate": 0.1,
+        "ci95": [
+          0.0,
+          0.2333
+        ]
+      },
+      "UndetectedFailureRate": {
+        "count": 5,
+        "n": 26,
+        "rate": 0.19230769230769232,
+        "ci95": [
+          0.0333,
+          0.3
+        ]
+      },
+      "FailureRecall": {
+        "count": 25.0,
+        "n": 30,
+        "rate": 0.8333333333333334,
+        "ci95": [
+          0.7,
+          0.9667
+        ]
+      },
+      "FalseHazardRate": {
+        "count": 4,
+        "n": 30,
+        "rate": 0.13333333333333333,
+        "ci95": [
+          0.0333,
+          0.2667
+        ]
+      },
+      "RepairSuccessRate": {
+        "count": 3,
+        "n": 30,
+        "rate": 0.1,
+        "ci95": [
+          0.0,
+          0.2333
+        ]
+      },
+      "RepairRegret": {
+        "mean": 0.9,
+        "n": 30
+      },
+      "MinimalCutSetPrecision": 0.0,
+      "MinimalCutSetRecall": 0.0,
+      "UnknownCalibration": {
+        "count": 29,
+        "n": 30,
+        "rate": 0.9666666666666667,
+        "ci95": [
+          0.9,
+          1.0
+        ]
+      },
+      "GraphMaterialEdgeRecall": 0.0,
+      "ExecutionConvergenceRate": {
+        "count": 3,
+        "n": 30,
+        "rate": 0.1,
+        "ci95": [
+          0.0,
+          0.2333
+        ]
+      },
+      "AverageModelCalls": 2.0,
+      "InputTokens": 18735,
+      "OutputTokens": 3436,
+      "CostUSD": 0.0019487399999999998,
+      "LatencyMs": 1249.3719570028286
+    },
+    "shadow": {
+      "TaskCompletionRate": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "UndetectedFailureRate": {
+        "count": 0,
+        "n": 26,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "FailureRecall": {
+        "count": 30.0,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "FalseHazardRate": {
+        "count": 0,
+        "n": 30,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "RepairSuccessRate": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "RepairRegret": {
+        "mean": 0.0,
+        "n": 30
+      },
+      "MinimalCutSetPrecision": 1.0,
+      "MinimalCutSetRecall": 1.0,
+      "UnknownCalibration": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "GraphMaterialEdgeRecall": 1.0,
+      "ExecutionConvergenceRate": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "AverageModelCalls": 2.0,
+      "InputTokens": 19460,
+      "OutputTokens": 12752,
+      "CostUSD": 0.0042280799999999995,
+      "LatencyMs": 2655.6168277709126
+    },
+    "shadow_no_failure_search": {
+      "TaskCompletionRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "UndetectedFailureRate": {
+        "count": 22,
+        "n": 26,
+        "rate": 0.8461538461538461,
+        "ci95": [
+          0.5667,
+          0.8667
+        ]
+      },
+      "FailureRecall": {
+        "count": 8.0,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "FalseHazardRate": {
+        "count": 0,
+        "n": 30,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "RepairSuccessRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "RepairRegret": {
+        "mean": 0.7333333333333333,
+        "n": 30
+      },
+      "MinimalCutSetPrecision": 0.0,
+      "MinimalCutSetRecall": 0.0,
+      "UnknownCalibration": {
+        "count": 30,
+        "n": 30,
+        "rate": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ]
+      },
+      "GraphMaterialEdgeRecall": 0.0,
+      "ExecutionConvergenceRate": {
+        "count": 8,
+        "n": 30,
+        "rate": 0.26666666666666666,
+        "ci95": [
+          0.1333,
+          0.4333
+        ]
+      },
+      "AverageModelCalls": 0.0,
+      "InputTokens": 0,
+      "OutputTokens": 0,
+      "CostUSD": 0.0,
+      "LatencyMs": 0.0
+    }
+  },
+  "n": 30,
+  "label": "LIVE PILOT",
+  "worlds_completed": 30,
+  "stopped_early": false,
+  "stop_reason": "",
+  "context_reduced_after_world": 5
+}

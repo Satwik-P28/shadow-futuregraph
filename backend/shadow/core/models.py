@@ -196,6 +196,13 @@ class RepairProposal(BaseModel):
     repairs: list[ProposedRepair]
 
 
+class ChoiceSpec(BaseModel):
+    bundle_id: str | None = None
+    hazards: list[str] = Field(default_factory=list)
+    unknowns: list[str] = Field(default_factory=list)
+    confidence: float | None = None
+
+
 class GraphNode(BaseModel):
     id: str
     label: str

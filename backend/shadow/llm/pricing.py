@@ -22,4 +22,5 @@ def cost_usd(model: str, input_tokens: int, output_tokens: int) -> float:
 
 def estimate_tokens(text: str) -> int:
     """Conservative character estimate with at least a 20% margin."""
-    return max(1, int((len(text) / 4) * 1.2) + 1)
+    # JSON tokenizers are often denser than 4 characters per token.
+    return max(1, int((len(text) / 2) * 1.2) + 1)

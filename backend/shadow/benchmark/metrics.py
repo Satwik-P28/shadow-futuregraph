@@ -48,7 +48,7 @@ def _one(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "MinimalCutSetPrecision": _mean([row["cut_precision"] for row in rows if row["cut_precision"] is not None]),
         "MinimalCutSetRecall": _mean([row["cut_recall"] for row in rows if row["cut_recall"] is not None]),
         "UnknownCalibration": rate("unknown_calibrated"),
-        "GraphMaterialEdgeRecall": _mean([row["edge_recall"] for row in rows]),
+        "GraphMaterialEdgeRecall": _mean([row["edge_recall"] for row in rows if row.get("edge_recall") is not None]),
         "ExecutionConvergenceRate": rate("converged"),
         "AverageModelCalls": _mean([row["model_calls"] for row in rows]),
         "InputTokens": sum(row["input_tokens"] for row in rows),

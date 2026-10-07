@@ -1,0 +1,34 @@
+{
+  "label": "LIVE PILOT",
+  "model": "nvidia/Nemotron-3_5-Lightning",
+  "temperature": 0,
+  "thinking": false,
+  "n_frozen": 30,
+  "systems": [
+    "direct_nemotron",
+    "planner",
+    "planner_critic",
+    "shadow",
+    "shadow_no_failure_search"
+  ],
+  "seeds": "5000:5030",
+  "session_cap_usd": 0.03,
+  "session_baseline_usd": 0.0,
+  "prompts": {
+    "analyze_plan": "db3856566e315158",
+    "propose_repairs": "d1ea39ac85144f01",
+    "direct_choice": "f1d252b3e9cc080a",
+    "plan_choice": "d4cd033a58f6d596",
+    "critique_choice": "6c96d4a657286465"
+  },
+  "max_tokens": {
+    "analyze_plan": 512,
+    "propose_repairs": 256,
+    "direct_choice": 256,
+    "plan_choice": 256,
+    "critique_choice": 256
+  },
+  "context_reduced_after_world": null,
+  "stopped_early": false,
+  "evidence_note": "Every system receives the same pilot context: plan, bundle ids, labels, costs, constraint descriptions, unknowns, and facts. Shadow's deterministic engine also reads formulas, bounds, and action effects. Those fields are required to calculate the future and are not sent to direct, planner, or critic. Oracle fields are not sent to any system."
+}

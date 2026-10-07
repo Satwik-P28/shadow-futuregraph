@@ -1,0 +1,394 @@
+[
+  {
+    "structure": "robust_nominal",
+    "domain": "travel",
+    "optimal": "opt_a",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 0,
+    "copy": 0
+  },
+  {
+    "structure": "single_variable",
+    "domain": "scheduling",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 1,
+    "copy": 0
+  },
+  {
+    "structure": "two_variable",
+    "domain": "purchase",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0",
+      "x1"
+    ],
+    "material_edges": [
+      "x0",
+      "x1"
+    ],
+    "index": 2,
+    "copy": 0
+  },
+  {
+    "structure": "three_variable",
+    "domain": "travel",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0",
+      "x1",
+      "x2"
+    ],
+    "material_edges": [
+      "x0",
+      "x1",
+      "x2"
+    ],
+    "index": 3,
+    "copy": 0
+  },
+  {
+    "structure": "irrelevant_axes",
+    "domain": "scheduling",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 4,
+    "copy": 0
+  },
+  {
+    "structure": "multiple_valid",
+    "domain": "purchase",
+    "optimal": "opt_b",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 5,
+    "copy": 0
+  },
+  {
+    "structure": "cheapest_best",
+    "domain": "travel",
+    "optimal": "opt_a",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 6,
+    "copy": 0
+  },
+  {
+    "structure": "cheapest_not_best",
+    "domain": "scheduling",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 7,
+    "copy": 0
+  },
+  {
+    "structure": "impossible",
+    "domain": "purchase",
+    "optimal": null,
+    "minimal_cut": [],
+    "material_edges": [],
+    "index": 8,
+    "copy": 0
+  },
+  {
+    "structure": "unknown_material",
+    "domain": "travel",
+    "optimal": null,
+    "minimal_cut": [],
+    "material_edges": [
+      "vendor_confirm"
+    ],
+    "unknown": "vendor_confirm",
+    "index": 9,
+    "copy": 0
+  },
+  {
+    "structure": "stale_fact",
+    "domain": "scheduling",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 10,
+    "copy": 0
+  },
+  {
+    "structure": "repair_tradeoff",
+    "domain": "purchase",
+    "optimal": "opt_align",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 11,
+    "copy": 0
+  },
+  {
+    "structure": "hidden_downstream",
+    "domain": "travel",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 12,
+    "copy": 0
+  },
+  {
+    "structure": "no_change",
+    "domain": "scheduling",
+    "optimal": "opt_keep",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 13,
+    "copy": 0
+  },
+  {
+    "structure": "distractors",
+    "domain": "purchase",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 14,
+    "copy": 0
+  },
+  {
+    "structure": "robust_nominal",
+    "domain": "scheduling",
+    "optimal": "opt_a",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 15,
+    "copy": 1
+  },
+  {
+    "structure": "single_variable",
+    "domain": "purchase",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 16,
+    "copy": 1
+  },
+  {
+    "structure": "two_variable",
+    "domain": "travel",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0",
+      "x1"
+    ],
+    "material_edges": [
+      "x0",
+      "x1"
+    ],
+    "index": 17,
+    "copy": 1
+  },
+  {
+    "structure": "three_variable",
+    "domain": "scheduling",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0",
+      "x1",
+      "x2"
+    ],
+    "material_edges": [
+      "x0",
+      "x1",
+      "x2"
+    ],
+    "index": 18,
+    "copy": 1
+  },
+  {
+    "structure": "irrelevant_axes",
+    "domain": "purchase",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 19,
+    "copy": 1
+  },
+  {
+    "structure": "multiple_valid",
+    "domain": "travel",
+    "optimal": "opt_b",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 20,
+    "copy": 1
+  },
+  {
+    "structure": "cheapest_best",
+    "domain": "scheduling",
+    "optimal": "opt_a",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 21,
+    "copy": 1
+  },
+  {
+    "structure": "cheapest_not_best",
+    "domain": "purchase",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 22,
+    "copy": 1
+  },
+  {
+    "structure": "impossible",
+    "domain": "travel",
+    "optimal": null,
+    "minimal_cut": [],
+    "material_edges": [],
+    "index": 23,
+    "copy": 1
+  },
+  {
+    "structure": "unknown_material",
+    "domain": "scheduling",
+    "optimal": null,
+    "minimal_cut": [],
+    "material_edges": [
+      "vendor_confirm"
+    ],
+    "unknown": "vendor_confirm",
+    "index": 24,
+    "copy": 1
+  },
+  {
+    "structure": "stale_fact",
+    "domain": "purchase",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 25,
+    "copy": 1
+  },
+  {
+    "structure": "repair_tradeoff",
+    "domain": "travel",
+    "optimal": "opt_align",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 26,
+    "copy": 1
+  },
+  {
+    "structure": "hidden_downstream",
+    "domain": "scheduling",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 27,
+    "copy": 1
+  },
+  {
+    "structure": "no_change",
+    "domain": "purchase",
+    "optimal": "opt_keep",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 28,
+    "copy": 1
+  },
+  {
+    "structure": "distractors",
+    "domain": "travel",
+    "optimal": "opt_c",
+    "minimal_cut": [
+      "x0"
+    ],
+    "material_edges": [
+      "x0"
+    ],
+    "index": 29,
+    "copy": 1
+  }
+]

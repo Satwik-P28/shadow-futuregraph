@@ -1,0 +1,205 @@
+# Shadow
+
+**Find bugs in your future before you commit to it.**
+
+Shadow turns a personal plan into a bounded graph of the futures that can actually break it, finds a minimal way each future fails, and will only execute the future you approve.
+
+Demo video: record `docs/DEMO_SCRIPT.md` (2:40–2:50). The sandbox path needs no API keys.
+
+## Why Shadow
+
+A planner that checks the happy path will book the cheaper flight that arrives at 17:05 and still miss a 19:00 dinner once a delay stacks with traffic. Shadow treats that as a bug in the future, not as a chat to continue. You approve the repaired future. The semantic broker will not move an unrelated calendar event just because a calendar API is available.
+
+## 30-second example
+
+Alex, a synthetic persona, asks: "Move my NYC trip to Friday and make sure everything still works."
+
+The world has a 19:00 dinner that cannot move, a Friday design review that cannot move, an algorithms exam that must stay untouched, a $100 fare cap, and three Friday flights. The 14:40 flight is the cheapest one that still reaches dinner if nothing goes wrong. Search finds a nearer failure: a modest delay together with extra ground time. Neither piece alone, at that size, misses dinner. The 11:20 flight survives a much larger perturbation and costs $76 more. Moving dinner is proposed and rejected because dinner is a hard constraint. After approval, the sandbox updates the flight, the ride, and the trip event, then blocks an attempt to move the exam.
+
+Nothing in the search source names "11:20". The fixture states the times, ranges, and constraints. The ranking is lexicographic over measured violations and failure radius.
+
+## How it works
+
+1. Retrieve material facts. Support, attack, and unresolved evidence. Not embedding search.
+2. Nemotron, when live, proposes structure and at most five repairs. It does not rank them.
+3. Build a typed future graph and prune it to what reaches a constraint or outcome.
+4. Sample exogenous ranges, then refine near the boundary. Cap 1024 worlds per repair.
+5. Reduce each discovered failure to a minimal perturbation set.
+6. Re-simulate every repair. Recommend by hard violations, unresolved constraints, failure radius, change count, cost, then reversibility.
+7. Show the future diff. Approval mints a contract.
+8. The broker authorizes each action. Execution is idempotent, verified, and logged.
+9. A later world change invalidates the affected assumption and revokes authority when an invariant breaks.
+
+## Architecture
+
+```mermaid
+flowchart LR
+  plan[Plan] --> nemotron[Nemotron proposals]
+  nemotron --> graph[Future graph]
+  graph --> search[Failure search]
+  search --> repair[Repair evaluator]
+  repair --> contract[Future contract]
+  contract --> broker[Shadow broker]
+  broker --> boundary[OpenShell boundary]
+  boundary --> adapters[Sandbox or test adapters]
+```
+
+Detail is in `docs/ARCHITECTURE.md`.
+
+| Piece | Role |
+| --- | --- |
+| Nemotron 3.5 Lightning on Nebius Token Factory | Semantic structure and repair proposals |
+| Deterministic core | Constraints, simulation, minimal failures, ranking |
+| Tavily | Live external evidence when a key is set |
+| Shadow broker | Which resource the approved future may change |
+| OpenShell | Filesystem, process, and network boundary when the prover is installed |
+| Adapters | Sandbox by default. Duffel test mode and Google Calendar only with credentials |
+| Event ledger | Append-only replay of what was authorized and verified |
+
+## Future graph
+
+Nodes are current state, actions, exogenous events, derived state, constraints, outcomes, failures, repairs, evidence, and unknowns. Edges are causes, constrains, depends-on, enables, precedes, violates, mitigates, supported-by, and invalidates. Interactive caps are about 80 nodes, 160 edges, and depth that stays on the material path. The default view hides detail nodes.
+
+Epistemic status stays visible: verified, computed, estimated, inferred, unknown. Inferred edges are not promoted, and unknown variables are not given a probability.
+
+## Minimal failure search
+
+A perturbation is a change from the declared baseline. Continuous values are scaled by the variable's declared range. The radius is the smallest normalized L2 distance this search actually found. The UI calls it the nearest discovered failure.
+
+For each failing point the search removes perturbations until removing any one of the rest stops the failure. Small sets are checked exactly. The afternoon flight's dinner failure is a two-variable set. The evening flight fails with the empty set: it is already late.
+
+## Counterfactual repair
+
+Every catalog repair and every model proposal is applied to a cloned world and searched again. A proposal that references an action id outside the catalog is dropped. A proposal that moves dinner fails the hard constraint and is not recommended.
+
+## Outcome-scoped execution
+
+The contract names the flight, the ride, and the trip event. `update_exam` is forbidden even though it is a calendar update of the same type. Idempotency keys are `contract_id:action_id`. A timeout after a commit reconciles the stored result instead of mutating twice. If the calendar step fails after the flight has committed, the flight is kept and the calendar step can be retried. Verification that does not match provider state does not claim success.
+
+Injecting `+74` minutes updates the delay assumption. The early flight still makes dinner, so authority stays. Injecting `+$80` breaks the fare cap, marks the contract stale, and halts execution.
+
+## NVIDIA / Nebius integration
+
+One client, `backend/shadow/llm/client.py`.
+
+- Base URL `https://api.tokenfactory.nebius.com/v1`
+- Model `nvidia/Nemotron-3_5-Lightning`
+- `temperature=0`
+- `chat_template_kwargs.enable_thinking=false`
+- `max_tokens=512`
+- Prices in `backend/shadow/llm/pricing.py`, `checked_at=2026-10-07`
+  - Lightning $0.06 / $0.24 per 1M input / output
+  - Super $0.30 / $0.90
+  - Ultra $1.00 / $3.00
+
+`NEBIUS_LIVE` must be `1` or the client throws before the request. The ledger's repo soft cap is $0.25 on top of $0.02030592 historical spend, under a $1.00 overall cap. Reservations use a conservative token estimate and the full output cap. Actual usage reconciles the reservation. Cache hits cost $0. A breach never opens the socket.
+
+Super stays off unless `ALLOW_SUPER=true`. Ultra stays off unless `ALLOW_ULTRA=true`. This build did not turn either on. The local failure is found by search, so a larger model was not the bottleneck.
+
+One live smoke call was made after the local gates passed: Lightning, schema-valid `PlanSpec`, 134 input tokens, 59 output tokens, cost `$0.0000222`.
+
+## ShadowBench
+
+Procedural worlds in three families: travel, scheduling, purchase. Each world has a hidden margin, three shocks, and three actions. The oracle probe set is not shown to the evaluator. Metrics are counts against that probe set. No model grades the answers.
+
+The checked-in run is `shadowbench/results/local-gate`, seeds 1000–1029, `$0`.
+
+| System | Task completion | Undetected failures | Repair success | Mean regret |
+| --- | --- | --- | --- | --- |
+| direct | 0/30 | 30/30 | 0/30 | 1.0 |
+| planner | 0/30 | 30/30 | 0/30 | 1.0 |
+| planner_critic | 0/30 | 30/30 | 0/30 | 1.0 |
+| shadow_no_search | 0/30 | 30/30 | 0/30 | 1.0 |
+| shadow | 30/30 | 0/30 | 30/30 | 0.0 |
+
+Bootstrap intervals on this run are degenerate because every world has the same qualitative outcome. That is a property of the generator, not a field accuracy rate. Read `docs/KNOWN_LIMITATIONS.md` before quoting the table.
+
+## Ablations
+
+`shadow_no_search` is the same catalog and the same nominal constraint check without failure-directed ranking. It commits to the cheap plan and misses every planted failure. The plot is `shadowbench/results/local-gate/plots/ablation.png`.
+
+Lightning versus Super was not run. The gap above does not depend on model size. Ultra was not enabled.
+
+## Security model
+
+`docs/THREAT_MODEL.md`. Fail closed on bad model output, broker denial, verification mismatch, and a stale contract.
+
+## Privacy model
+
+Fixtures are fictional. The model context drops raw source bodies. Logs store hashes, token counts, and schema validity, not the raw prompt, unless `SHADOW_LOG_RAW_PROMPTS=true`.
+
+## Quickstart
+
+Python 3.12 and Node 22.
+
+```bash
+make setup
+make dev
+```
+
+Open `http://127.0.0.1:8000` after `make build`, or run the Vite dev server:
+
+```bash
+cd frontend && npm run dev
+```
+
+Vite proxies `/api` to port 8000. Start `make dev` first.
+
+## Environment variables
+
+Copy `.env.example`. Names only. The sandbox demo ignores empty values.
+
+`NEBIUS_API_KEY`, `NEBIUS_BASE_URL`, `NEBIUS_MODEL`, `NEBIUS_LIVE`, `NEBIUS_PROJECT_BUDGET_USD`, `ALLOW_SUPER`, `ALLOW_ULTRA`, `TAVILY_API_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, `DUFFEL_ACCESS_TOKEN`, `SHADOW_REAL_ACTIONS_ENABLED`.
+
+## Run the sandbox demo
+
+Leave the defaults. The badge reads `SANDBOX`.
+
+1. **Check the Friday trip.**
+2. Read the future bugs, the minimal failure, and the future diff.
+3. **Approve repaired future.**
+4. **Execute sandbox actions.** The final line is `Observed state matches approved future`.
+5. **Try unrelated change.** The broker blocks it.
+6. **+74 min delay** recomputes and keeps authority. **Fare +$80** or **Hotel canceled** revokes it.
+
+**Check the apartment move** runs the same engine on a lease overlap, a Thursday commitment, and cash. There is no second reasoning stack.
+
+## Run tests
+
+```bash
+make test
+```
+
+Backend coverage on the deterministic core is enforced at 85%. The latest local run is 90%. CI does not set `NEBIUS_LIVE`.
+
+Frontend unit tests are Vitest. The Playwright script is `frontend/e2e/hero.spec.ts`:
+
+```bash
+cd frontend && npx playwright install chromium && npm run e2e
+```
+
+## Run ShadowBench
+
+```bash
+make benchmark-local
+```
+
+Results land in `shadowbench/results/local-gate` and a copy of the summary in `shadowbench/results/latest`.
+
+## OpenShell
+
+`openshell/boundary.yaml` is the operator maximum. The candidate policy is compared locally. `openshell-prover` was not installed here, so the displayed status is `prover_unavailable`, not formally verified. The app runs without it.
+
+## Known limitations
+
+`docs/KNOWN_LIMITATIONS.md`.
+
+## Hackathon disclosure
+
+Built for the Nebius x NVIDIA Global AI Hackathon, personal AI track. License Apache-2.0. Devpost copy is `docs/DEVPOST_SUBMISSION.md`. The demo video still has to be recorded from `docs/DEMO_SCRIPT.md` and uploaded with the form. Judge feedback belongs on that form.
+
+NemoClaw is not integrated. OpenShell is the system boundary, and the broker is what knows which event was approved. A second sandbox would not change that decision.
+
+## License
+
+Apache-2.0. See `LICENSE`.

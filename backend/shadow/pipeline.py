@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
@@ -42,6 +43,28 @@ from shadow.world.modelability import assess_freeform
 
 def _now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _semantic_status(status: str) -> str:
+    if status in {"EXECUTABLE", "PARTIALLY_EXECUTABLE"}:
+        return "SUPPORTED"
+    if status == "NEEDS_INFORMATION":
+        return "NEEDS_INFORMATION"
+    if status == "CONTRADICTORY":
+        return "CONTRADICTORY"
+    return "UNSUPPORTED"
+
+
+def _compiled_modelability_status(status: str, reason: str, missing: list[str], constraints: list[str]) -> dict[str, Any]:
+    from shadow.world.modelability import ModelabilityResult
+
+    return ModelabilityResult(
+        status=status,  # type: ignore[arg-type]
+        reason=reason,
+        missing_information=missing,
+        compiled_constraints=[item for item in constraints if item],
+        provenance="semantic compiler",
+    ).model_dump(mode="json")
 
 
 def _compiled_modelability(compiled: Any) -> dict[str, Any]:
@@ -125,6 +148,10 @@ class PlanService:
             raise ValueError("Enter what you are planning.")
         if demo_context_id not in {None, "travel", "apartment"}:
             raise ValueError("Unknown example context.")
+        if demo_context_id is None and os.environ.get("NEBIUS_LIVE") == "1":
+            semantic = self._semantic_freeform(cleaned)
+            if semantic is not None:
+                return semantic
         if demo_context_id is None:
             from shadow.world.executable import compile_primitives
 
@@ -202,6 +229,52 @@ class PlanService:
         self._stage(record, "READY")
         record["future_summary"] = _future_summary(record)
         return self.view(plan_id)
+
+    def _semantic_freeform(self, text: str) -> dict[str, Any] | None:
+        from shadow.world.routing import study_compile_model
+        from shadow.world.semantic import SemanticWorld, ground_semantic
+
+        records = [{"id": "user", "text": text, "observed_at": "1970-01-01T00:00:00Z"}]
+        model = study_compile_model()
+        try:
+            world = self.client.complete_json(
+                "compile_semantic",
+                {"plan_text": text, "records": records},
+                SemanticWorld,
+                model=model,
+            )
+        except Exception:
+            return {
+                "modelability": _compiled_modelability_status(
+                    "UNSUPPORTED",
+                    "The model did not return a usable semantic world.",
+                    [],
+                    [],
+                ),
+                "plan": None,
+            }
+        if not isinstance(world, SemanticWorld):
+            return None
+        grounded = ground_semantic(world, records, text)
+        modelability = _compiled_modelability_status(
+            _semantic_status(grounded.status),
+            grounded.reason,
+            grounded.missing or grounded.contradictions,
+            [item.get("extracted", "") for item in grounded.shown],
+        )
+        if grounded.scenario is None:
+            return {"modelability": modelability, "plan": None}
+        view = self.open_compiled(text, grounded.scenario, seed=7)
+        self.plans[view["id"]]["understanding"] = {
+            "status": grounded.status,
+            "reason": grounded.reason,
+            "missing": grounded.missing,
+            "shown": grounded.shown,
+        }
+        self.plans[view["id"]]["compiled_from"] = "semantic compiler"
+        view = self.view(view["id"])
+        view["modelability"] = modelability
+        return {"modelability": modelability, "plan": view}
 
     def open_compiled(self, text: str, scenario: Scenario, seed: int = 7) -> dict[str, Any]:
         """Run search on a world the executable compiler produced. Not a fixture."""
@@ -356,6 +429,7 @@ class PlanService:
             "no_feasible_message": None
             if record["status"] != "NO_FEASIBLE_FUTURE"
             else "No feasible future found under the current hard constraints.",
+            "understanding": record.get("understanding"),
         }
 
     def persist_contract(self, record: dict[str, Any]) -> None:

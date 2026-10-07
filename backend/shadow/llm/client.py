@@ -28,6 +28,7 @@ PURPOSE_TOKENS = {
     "critique_choice": ("critique_choice.txt", 256),
     "compile_world": ("compile_world.txt", 512),
     "compile_executable": ("compile_executable.txt", 768),
+    "compile_semantic": ("compile_semantic.txt", 1024),
     "audit_world": ("audit_world.txt", 384),
 }
 
@@ -102,6 +103,10 @@ def coerce_payload(schema: type[BaseModel], payload: dict[str, Any]) -> dict[str
         from shadow.world.compiler import proposal_from_payload
 
         return proposal_from_payload(payload).model_dump()
+    if schema.__name__ == "SemanticWorld":
+        from shadow.world.semantic import coerce_semantic
+
+        return coerce_semantic(payload)
     return payload
 
 
@@ -259,7 +264,13 @@ class FakeNemotronClient:
     def __init__(self) -> None:
         self.calls = 0
 
-    def complete_json(self, purpose: str, context: dict[str, Any], schema: type[BaseModel]) -> BaseModel:
+    def complete_json(
+        self,
+        purpose: str,
+        context: dict[str, Any],
+        schema: type[BaseModel],
+        model: str | None = None,
+    ) -> BaseModel:
         self.calls += 1
         if purpose == "analyze_plan":
             payload = _fake_plan(context)
@@ -267,6 +278,8 @@ class FakeNemotronClient:
             payload = _fake_repairs(context)
         elif purpose == "compile_executable":
             payload = {"variables": [], "constraints": [], "actions": []}
+        elif purpose == "compile_semantic":
+            payload = {"facts": [], "links": [], "unknowns": [], "contradictions": []}
         else:
             raise SchemaError(f"unknown purpose {purpose}")
         return schema.model_validate(payload)
@@ -427,7 +440,7 @@ class NebiusClient:
         if "ultra" in lowered and os.environ.get("ALLOW_ULTRA", "false").lower() != "true":
             raise LiveDisabled("Ultra is disabled")
         allowed_super = os.environ.get("ALLOW_SUPER", "false").lower() == "true"
-        study_super = purpose == "compile_world" and model == study_compile_model()
+        study_super = purpose in {"compile_world", "compile_semantic"} and model == study_compile_model()
         if "super" in lowered and not allowed_super and not study_super:
             raise LiveDisabled("Super is disabled")
 

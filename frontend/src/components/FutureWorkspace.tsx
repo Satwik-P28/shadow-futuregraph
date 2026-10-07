@@ -89,6 +89,22 @@ export function FutureWorkspace({
           {plan.compiled_from ? (
             <p className="mt-3 text-xs text-mute">Compiled from {plan.compiled_from}. The model may structure the problem. Shadow does not treat that structure as proof.</p>
           ) : null}
+          {plan.understanding ? (
+            <details className="mt-3 text-xs text-mute">
+              <summary>How Shadow understood this plan</summary>
+              <p className="mt-2 text-paper">{plan.understanding.status}. {plan.understanding.reason}</p>
+              <ul className="mt-2 space-y-2">
+                {plan.understanding.shown.map((item) => (
+                  <li key={`${item.source}-${item.extracted}`}>
+                    <span className="text-mute">Source. {item.source}</span>
+                    <br />
+                    <span className="text-paper">Extracted. {item.extracted}</span>
+                  </li>
+                ))}
+              </ul>
+              {plan.understanding.missing.length ? <p className="mt-2">Still missing. {plan.understanding.missing.join("; ")}</p> : null}
+            </details>
+          ) : null}
           <p className="mt-1 text-xs text-mute">
             {plan.stages.map((stage) => STAGE_LABELS[stage.name] ?? stage.name).join(" · ")} · {plan.observability.worlds_simulated} worlds · {plan.observability.model_calls} model calls
           </p>

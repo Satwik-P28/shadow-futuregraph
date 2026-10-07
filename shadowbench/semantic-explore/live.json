@@ -1,0 +1,138 @@
+{
+  "dataset_hash": "762b66c6b93b574eeca811311af68faa7e0cc05b92700b0553a4540329d71045",
+  "grammar": [
+    {
+      "id": "A",
+      "status": "UNSUPPORTED",
+      "constraints": [],
+      "missing": [],
+      "contradictions": []
+    },
+    {
+      "id": "B",
+      "status": "UNSUPPORTED",
+      "constraints": [],
+      "missing": [],
+      "contradictions": []
+    },
+    {
+      "id": "C",
+      "status": "UNSUPPORTED",
+      "constraints": [],
+      "missing": [],
+      "contradictions": []
+    },
+    {
+      "id": "D",
+      "status": "UNSUPPORTED",
+      "constraints": [],
+      "missing": [],
+      "contradictions": []
+    },
+    {
+      "id": "E",
+      "status": "UNSUPPORTED",
+      "constraints": [],
+      "missing": [],
+      "contradictions": []
+    },
+    {
+      "id": "F",
+      "status": "UNSUPPORTED",
+      "constraints": [],
+      "missing": [],
+      "contradictions": []
+    },
+    {
+      "id": "G",
+      "status": "UNSUPPORTED",
+      "constraints": [],
+      "missing": [],
+      "contradictions": []
+    },
+    {
+      "id": "H",
+      "status": "UNSUPPORTED",
+      "constraints": [],
+      "missing": [],
+      "contradictions": []
+    },
+    {
+      "id": "I",
+      "status": "UNSUPPORTED",
+      "constraints": [],
+      "missing": [],
+      "contradictions": []
+    },
+    {
+      "id": "J",
+      "status": "UNSUPPORTED",
+      "constraints": [],
+      "missing": [],
+      "contradictions": []
+    }
+  ],
+  "live": {
+    "model": "nvidia/nemotron-3-super-120b-a12b",
+    "prompt_hash": "d4baa76d22f8c045",
+    "cost_usd": 0.0019668,
+    "rows": [
+      {
+        "id": "A",
+        "schema_ok": false,
+        "error": "schema invalid: variables.0.id:missing, variables.0.label:missing, variables.0.unit:missing, variables.0.role:missing, variables.0.value:float_type, variables.1.id:missing, variables.1.label:missing, variables.1.unit:missing"
+      },
+      {
+        "id": "B",
+        "schema_ok": false,
+        "error": "schema invalid: variables.0.id:missing, variables.0.label:missing, variables.0.unit:missing, variables.0.role:missing, variables.1.id:missing, variables.1.label:missing, variables.1.unit:missing, variables.1.role:missing"
+      },
+      {
+        "id": "C",
+        "schema_ok": false,
+        "error": "schema invalid: variables.0.id:missing, variables.0.label:missing, variables.0.unit:missing, variables.0.role:missing, variables.1.id:missing, variables.1.label:missing, variables.1.unit:missing, variables.1.role:missing"
+      },
+      {
+        "id": "D",
+        "schema_ok": false,
+        "error": "schema invalid: variables.0.id:missing, variables.0.label:missing, variables.0.unit:missing, variables.0.role:missing, variables.1.id:missing, variables.1.label:missing, variables.1.unit:missing, variables.1.role:missing"
+      },
+      {
+        "id": "E",
+        "schema_ok": true,
+        "cost_usd": 8.25e-05,
+        "validation": "READY",
+        "reason": "The proposal is grounded and executable.",
+        "rejected": [],
+        "constraints": [],
+        "variables": [],
+        "actions": []
+      },
+      {
+        "id": "F",
+        "schema_ok": false,
+        "error": "schema invalid: variables.0.id:missing, variables.0.label:missing, variables.0.unit:missing, variables.0.role:missing, variables.1.id:missing, variables.1.label:missing, variables.1.unit:missing, variables.1.role:missing"
+      },
+      {
+        "id": "G",
+        "schema_ok": false,
+        "error": "schema invalid: variables.0.id:missing, variables.0.label:missing, variables.0.unit:missing, variables.0.role:missing, variables.0.value:float_type, variables.1.id:missing, variables.1.label:missing, variables.1.unit:missing"
+      },
+      {
+        "id": "H",
+        "schema_ok": false,
+        "error": "schema invalid: variables.0.id:missing, variables.0.label:missing, variables.0.unit:missing, variables.0.role:missing, variables.1.id:missing, variables.1.label:missing, variables.1.unit:missing, variables.1.role:missing"
+      },
+      {
+        "id": "I",
+        "schema_ok": false,
+        "error": "schema invalid: variables.0.id:missing, variables.0.label:missing, variables.0.unit:missing, variables.0.role:missing, variables.1.id:missing, variables.1.label:missing, variables.1.unit:missing, variables.1.role:missing"
+      },
+      {
+        "id": "J",
+        "schema_ok": false,
+        "error": "schema invalid: variables.0.id:missing, variables.0.label:missing, variables.0.unit:missing, variables.0.role:missing, variables.0.value:float_type, variables.1.id:missing, variables.1.label:missing, variables.1.unit:missing"
+      }
+    ]
+  }
+}

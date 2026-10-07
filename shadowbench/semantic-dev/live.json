@@ -1,0 +1,277 @@
+{
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "prompt_hash": "13ddc170f383f9ec",
+  "role": "development, not held-out",
+  "cost_usd": 0.0037284,
+  "rows": [
+    {
+      "id": "A",
+      "schema_ok": true,
+      "cost_usd": 0.0003693,
+      "status": "UNSUPPORTED",
+      "reason": "The proposal did not yield a grounded constraint.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "finish at 4:15",
+          "extracted": "professor's lab finishes = 975.0",
+          "role": "time"
+        },
+        {
+          "source": "her practice ends at 5",
+          "extracted": "sister's practice ends = 1020.0",
+          "role": "time"
+        },
+        {
+          "source": "The drive normally takes 25 to 45 minutes",
+          "extracted": "drive in [25.0, 45.0]",
+          "role": "duration"
+        }
+      ],
+      "failure": null
+    },
+    {
+      "id": "B",
+      "schema_ok": true,
+      "cost_usd": 0.0005244,
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "My flight lands at 6:20",
+          "extracted": "flight landing = 1100.0",
+          "role": "time"
+        },
+        {
+          "source": "my dinner reservation is at 7:30",
+          "extracted": "dinner reservation = 1170.0",
+          "role": "time"
+        },
+        {
+          "source": "half an hour",
+          "extracted": "get out of the airport = 30.0",
+          "role": "duration"
+        },
+        {
+          "source": "another 20 to 50 minutes",
+          "extracted": "reach the restaurant in [20.0, 50.0]",
+          "role": "duration"
+        }
+      ],
+      "failure": {
+        "keep_feasible": true,
+        "keep_failures": 0,
+        "high_violates": false
+      }
+    },
+    {
+      "id": "C",
+      "schema_ok": true,
+      "cost_usd": 0.0004329,
+      "status": "UNSUPPORTED",
+      "reason": "The proposal did not yield a grounded constraint.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "$450 left for discretionary spending this month",
+          "extracted": "discretionary budget = 450.0",
+          "role": "money"
+        },
+        {
+          "source": "already committed $180 to a birthday present",
+          "extracted": "birthday commitment = 180.0",
+          "role": "money"
+        },
+        {
+          "source": "buying headphones for $210",
+          "extracted": "headphones cost = 210.0",
+          "role": "money"
+        },
+        {
+          "source": "concert tickets for $125",
+          "extracted": "concert tickets cost = 125.0",
+          "role": "money"
+        }
+      ],
+      "failure": null
+    },
+    {
+      "id": "D",
+      "schema_ok": true,
+      "cost_usd": 0.0004017,
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "{'id': 'dentist_appt_time', 'kind': 'time', 'name': 'dentist appointment time', 'quote': '', 'value': None, 'unit': None, 'source_id': 'user'}",
+        "{'id': 'travel_duration', 'kind': 'duration', 'name': 'travel to dentist', 'quote': '', 'value': None, 'unit': None, 'source_id': 'user'}"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "need to leave work by 4",
+          "extracted": "must leave work by = 960.0",
+          "role": "time"
+        },
+        {
+          "source": "meeting that ends at 4:30",
+          "extracted": "meeting ends = 990.0",
+          "role": "time"
+        }
+      ],
+      "failure": null
+    },
+    {
+      "id": "E",
+      "schema_ok": true,
+      "cost_usd": 0.0002214,
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "{'id': 'dinner_time', 'kind': 'time', 'name': 'dinner time', 'quote': 'around seven', 'value': '', 'unit': 'clock', 'source_id': 'user'}"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [],
+      "failure": null
+    },
+    {
+      "id": "F",
+      "schema_ok": true,
+      "cost_usd": 0.000375,
+      "status": "CONTRADICTORY",
+      "reason": "{'id': 'time_conflict', 'type': 'two_stated_times_same_event_no_supersede', 'inputs': ['calendar_time', 'email_time'], 'quote': \"My calendar says the interview is at 2, but the recruiter's newer email says 3. I'm not sure whether the calendar invitation was updated.\", 'source_id': 'user'}",
+      "missing": [],
+      "contradictions": [
+        "{'id': 'time_conflict', 'type': 'two_stated_times_same_event_no_supersede', 'inputs': ['calendar_time', 'email_time'], 'quote': \"My calendar says the interview is at 2, but the recruiter's newer email says 3. I'm not sure whether the calendar invitation was updated.\", 'source_id': 'user'}"
+      ],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "the interview is at 2",
+          "extracted": "interview per calendar = 840.0",
+          "role": "time"
+        },
+        {
+          "source": "the recruiter's newer email says 3",
+          "extracted": "interview per recruiter email = 900.0",
+          "role": "time"
+        }
+      ],
+      "failure": null
+    },
+    {
+      "id": "G",
+      "schema_ok": true,
+      "cost_usd": 0.0003402,
+      "status": "UNSUPPORTED",
+      "reason": "The proposal did not yield a grounded constraint.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "from 3",
+          "extracted": "partner needs car start = 900.0",
+          "role": "time"
+        },
+        {
+          "source": "until 6",
+          "extracted": "partner needs car end = 1080.0",
+          "role": "time"
+        },
+        {
+          "source": "at 4",
+          "extracted": "planned drive time = 960.0",
+          "role": "time"
+        }
+      ],
+      "failure": null
+    },
+    {
+      "id": "H",
+      "schema_ok": true,
+      "cost_usd": 0.0002964,
+      "status": "UNSUPPORTED",
+      "reason": "The proposal did not yield a grounded constraint.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "have to get to a wedding by 5",
+          "extracted": "must arrive by wedding = 1020.0",
+          "role": "time"
+        },
+        {
+          "source": "my train arrives at 4:15",
+          "extracted": "train arrives = 975.0",
+          "role": "time"
+        }
+      ],
+      "failure": null
+    },
+    {
+      "id": "I",
+      "schema_ok": true,
+      "cost_usd": 0.0002436,
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "original ceremony start time"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "starts half an hour earlier",
+          "extracted": "ceremony start (if rain) = 30.0",
+          "role": "duration"
+        }
+      ],
+      "failure": null
+    },
+    {
+      "id": "J",
+      "schema_ok": true,
+      "cost_usd": 0.0005235,
+      "status": "UNSUPPORTED",
+      "reason": "The proposal did not yield a grounded constraint.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [
+        "link total_travel_and_park cites text that is not in the records"
+      ],
+      "shown": [
+        {
+          "source": "My class ends at 3:30.",
+          "extracted": "class end = 930.0",
+          "role": "time"
+        },
+        {
+          "source": "The drive to the station takes 15-35 minutes",
+          "extracted": "drive to station in [15.0, 35.0]",
+          "role": "duration"
+        },
+        {
+          "source": "the train leaves at 4:10",
+          "extracted": "train leaves = 970.0",
+          "role": "time"
+        },
+        {
+          "source": "parking takes another 5-12 minutes",
+          "extracted": "parking in [5.0, 12.0]",
+          "role": "duration"
+        }
+      ],
+      "failure": null
+    }
+  ]
+}

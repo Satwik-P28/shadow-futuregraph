@@ -80,6 +80,16 @@ P0 depth. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - Durable session restore works on a sqlite file. The public demo still uses in-memory sqlite unless SHADOW_DB_PATH is set. Render's disk is ephemeral, so hosted durability is not claimed
 - New Nebius spend this pass: 0
 
+## Semantic compiler
+- `backend/shadow/world/semantic.py` turns cited quotes into Expr values. Nemotron proposes facts and links. It does not evaluate them
+- Development ten, Super, prompt `17228dc34eb2e73b`: flight and class-to-train chains executable, high end fails; unconfirmed dinner and missing transfer abstain; car overlap not linked
+- Frozen 40 `shadowbench/semantic-holdout/`: grammar executable 0/40, schema 40/40, frozen check 29/40. Not an independent author. Not re-scored after the hour-word parser fix
+- No audit model. Omitted links are not filled in by code
+- Public demo still has NEBIUS_LIVE off. Freeform uses Super only when that flag is on and no example context is selected
+- New Nebius spend this semantic pass: 0.02605860
+- recorded repo ledger: 0.06726678
+- recorded known total: 0.08759490
+
 ## Test commands
 - `make test`
 - `make benchmark-local`

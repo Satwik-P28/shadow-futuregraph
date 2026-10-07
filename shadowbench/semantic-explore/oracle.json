@@ -1,0 +1,48 @@
+{
+  "A": {
+    "expected": "NEEDS_INFORMATION",
+    "why": "Grocery stop duration is absent. The lab, pickup, and drive could be partial. A grocery duration must not be invented.",
+    "must_not_invent": [10, 15, 20, 30]
+  },
+  "B": {
+    "expected": "EXECUTABLE",
+    "why": "Landing 6:20, thirty-minute exit, 20-50 minute ride, dinner 7:30. High end misses dinner. Half an hour is 30.",
+    "high_misses": true
+  },
+  "C": {
+    "expected": "EXECUTABLE",
+    "why": "180 + 210 + 125 = 515, which is above 450. The birthday spend is committed.",
+    "over_budget": true
+  },
+  "D": {
+    "expected": "EXECUTABLE",
+    "why": "Leave-by 4:00 is before a meeting that ends at 4:30 and cannot move. Dentist travel time is not stated and is not required to see this conflict.",
+    "conflict": true
+  },
+  "E": {
+    "expected": "NEEDS_INFORMATION",
+    "why": "Around seven is unconfirmed. It must not become a hard 7:00 deadline."
+  },
+  "F": {
+    "expected": "CONTRADICTORY",
+    "why": "Calendar says 2 and the newer email says 3. The user does not know which one was updated."
+  },
+  "G": {
+    "expected": "EXECUTABLE",
+    "why": "The car is needed by someone else from 3 until 6, and the airport drive is at 4.",
+    "conflict": true
+  },
+  "H": {
+    "expected": "NEEDS_INFORMATION",
+    "why": "No transfer duration from the train to the wedding. Do not invent one."
+  },
+  "I": {
+    "expected": "NEEDS_INFORMATION",
+    "why": "The ceremony's original start is absent, and the shift is conditional on rain."
+  },
+  "J": {
+    "expected": "EXECUTABLE",
+    "why": "Class 3:30 plus parking 5-12 plus drive 15-35 versus a 4:10 train. Low end makes it. High end is 4:17.",
+    "high_misses": true
+  }
+}

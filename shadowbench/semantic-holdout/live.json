@@ -1,0 +1,1371 @@
+{
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "prompt_hash": "17228dc34eb2e73b",
+  "dataset_sha256": "e5496d88ac73d40b9cdaafa05121fed2292f3c9886dbea182dfdcc4ea29628a6",
+  "role": "frozen holdout, scored once",
+  "independence": "Written by the compiler author after the development ten. Not a separate human author. Not the grammar templates.",
+  "grammar_status": [
+    {
+      "id": "h01",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h02",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h03",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h04",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h05",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h06",
+      "status": "NEEDS_INFORMATION"
+    },
+    {
+      "id": "h07",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h08",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h09",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h10",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h11",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h12",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h13",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h14",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h15",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h16",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h17",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h18",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h19",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h20",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h21",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h22",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h23",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h24",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h25",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h26",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h27",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h28",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h29",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h30",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h31",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h32",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h33",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h34",
+      "status": "NEEDS_INFORMATION"
+    },
+    {
+      "id": "h35",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h36",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h37",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h38",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h39",
+      "status": "UNSUPPORTED"
+    },
+    {
+      "id": "h40",
+      "status": "UNSUPPORTED"
+    }
+  ],
+  "grammar_executable": 0,
+  "cost_usd": 0.0161856,
+  "hits": 29,
+  "n": 40,
+  "rows": [
+    {
+      "id": "h01",
+      "schema_ok": true,
+      "cost_usd": 0.0004209,
+      "expect": "EXECUTABLE",
+      "check": "high_miss",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "start time (from choir practice wrap-up to departure)",
+        "end time requirement (to arrive at rink by skating finish)"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "wraps up at quarter past four",
+          "extracted": "choir practice wraps up = 975.0",
+          "role": "time"
+        },
+        {
+          "source": "when skating finishes at five",
+          "extracted": "skating finishes: unparsed",
+          "role": "unknown"
+        },
+        {
+          "source": "anywhere from twenty minutes to fifty",
+          "extracted": "bus travel time in [20.0, 50.0]",
+          "role": "duration"
+        }
+      ],
+      "failure": null,
+      "hit": false
+    },
+    {
+      "id": "h02",
+      "schema_ok": true,
+      "cost_usd": 0.0004635,
+      "expect": "EXECUTABLE",
+      "check": "high_miss",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "clearing the dock",
+        "cab ride"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "docks at 6:05 PM",
+          "extracted": "ferry docks = 1085.0",
+          "role": "time"
+        },
+        {
+          "source": "Dinner is held at 7:10 PM",
+          "extracted": "dinner = 1150.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": false
+    },
+    {
+      "id": "h03",
+      "schema_ok": true,
+      "cost_usd": 0.0005817,
+      "expect": "EXECUTABLE",
+      "check": "high_miss",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "Seminar lets out at 2:40 PM",
+          "extracted": "seminar lets out = 880.0",
+          "role": "time"
+        },
+        {
+          "source": "Walking to the garage takes 8-15 minutes",
+          "extracted": "walk to garage in [8.0, 15.0]",
+          "role": "duration"
+        },
+        {
+          "source": "the garage shuttle to the coach stop takes 10-25 minutes",
+          "extracted": "garage shuttle to coach stop in [10.0, 25.0]",
+          "role": "duration"
+        },
+        {
+          "source": "the coach rolls at 3:15 PM",
+          "extracted": "coach departs = 915.0",
+          "role": "time"
+        }
+      ],
+      "failure": {
+        "keep_feasible": true,
+        "keep_failures": 1,
+        "high_violates": true
+      },
+      "hit": true
+    },
+    {
+      "id": "h04",
+      "schema_ok": true,
+      "cost_usd": 0.0004854,
+      "expect": "EXECUTABLE",
+      "check": "high_miss",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "My shift ends at 11:10.",
+          "extracted": "shift end = 670.0",
+          "role": "time"
+        },
+        {
+          "source": "The clinic wants me there by 11:40.",
+          "extracted": "clinic arrival deadline = 700.0",
+          "role": "time"
+        },
+        {
+          "source": "Crossing town usually takes 20 to 35 minutes.",
+          "extracted": "crossing town in [20.0, 35.0]",
+          "role": "duration"
+        }
+      ],
+      "failure": {
+        "keep_feasible": true,
+        "keep_failures": 1,
+        "high_violates": true
+      },
+      "hit": true
+    },
+    {
+      "id": "h05",
+      "schema_ok": true,
+      "cost_usd": 0.0004344,
+      "expect": "EXECUTABLE",
+      "check": "high_miss",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "start time (when 'on time' begins)",
+        "whether load-in finish or van ride precedes hall opening"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "Load-in finishes at 9:15 AM",
+          "extracted": "load-in finish = 555.0",
+          "role": "time"
+        },
+        {
+          "source": "The hall opens for soundcheck at 10:00 AM",
+          "extracted": "hall opens for soundcheck = 600.0",
+          "role": "time"
+        },
+        {
+          "source": "The van ride is 25-50 minutes",
+          "extracted": "van ride in [25.0, 50.0]",
+          "role": "duration"
+        }
+      ],
+      "failure": null,
+      "hit": false
+    },
+    {
+      "id": "h06",
+      "schema_ok": true,
+      "cost_usd": 0.0005736,
+      "expect": "EXECUTABLE",
+      "check": "high_miss",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "Lecture finishes at 1:05 PM",
+          "extracted": "lecture finish = 785.0",
+          "role": "time"
+        },
+        {
+          "source": "I need to be in the tutor's office at 1:50 PM",
+          "extracted": "be in tutor's office = 830.0",
+          "role": "time"
+        },
+        {
+          "source": "The walk is 15 to 30 minutes",
+          "extracted": "walk in [15.0, 30.0]",
+          "role": "duration"
+        },
+        {
+          "source": "which takes 10-20 minutes",
+          "extracted": "return laptop in [10.0, 20.0]",
+          "role": "duration"
+        }
+      ],
+      "failure": {
+        "keep_feasible": true,
+        "keep_failures": 1,
+        "high_violates": true
+      },
+      "hit": true
+    },
+    {
+      "id": "h07",
+      "schema_ok": true,
+      "cost_usd": 0.0004743,
+      "expect": "EXECUTABLE",
+      "check": "high_miss",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "Office hours end at 4:45 PM",
+          "extracted": "office hours end = 1005.0",
+          "role": "time"
+        },
+        {
+          "source": "The reading starts at 5:30 PM",
+          "extracted": "reading start = 1050.0",
+          "role": "time"
+        },
+        {
+          "source": "Biking over takes 25-50 minutes",
+          "extracted": "biking over in [25.0, 50.0]",
+          "role": "duration"
+        }
+      ],
+      "failure": {
+        "keep_feasible": true,
+        "keep_failures": 1,
+        "high_violates": true
+      },
+      "hit": true
+    },
+    {
+      "id": "h08",
+      "schema_ok": true,
+      "cost_usd": 0.0004782,
+      "expect": "EXECUTABLE",
+      "check": "high_miss",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "Rehearsal ends at 6:50 PM",
+          "extracted": "rehearsal end = 1130.0",
+          "role": "time"
+        },
+        {
+          "source": "Call time at the theater is 7:45 PM",
+          "extracted": "call time = 1185.0",
+          "role": "time"
+        },
+        {
+          "source": "The subway is 35-60 minutes",
+          "extracted": "subway travel in [35.0, 60.0]",
+          "role": "duration"
+        }
+      ],
+      "failure": {
+        "keep_feasible": true,
+        "keep_failures": 1,
+        "high_violates": true
+      },
+      "hit": true
+    },
+    {
+      "id": "h09",
+      "schema_ok": true,
+      "cost_usd": 0.0003855,
+      "expect": "NEEDS_INFORMATION",
+      "check": "abstain",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "Duration from station to venue is not provided."
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "My train gets in at 4:40 PM",
+          "extracted": "train arrives = 1000.0",
+          "role": "time"
+        },
+        {
+          "source": "The ceremony starts at 5:15 PM",
+          "extracted": "ceremony starts = 1035.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h10",
+      "schema_ok": true,
+      "cost_usd": 0.0002583,
+      "expect": "NEEDS_INFORMATION",
+      "check": "abstain",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "exhibit close"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h11",
+      "schema_ok": true,
+      "cost_usd": 0.0003735,
+      "expect": "NEEDS_INFORMATION",
+      "check": "abstain",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "Duration of walk from tram to bakery is not specified."
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "closes at 5:30 PM",
+          "extracted": "bakery closes = 1050.0",
+          "role": "time"
+        },
+        {
+          "source": "I get off the tram at 5:00 PM",
+          "extracted": "get off tram = 1020.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h12",
+      "schema_ok": true,
+      "cost_usd": 0.00033,
+      "expect": "NEEDS_INFORMATION",
+      "check": "abstain",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "taxi time"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "I land at 9:10 AM",
+          "extracted": "landing time = 550.0",
+          "role": "time"
+        },
+        {
+          "source": "The interview is downtown at 10.",
+          "extracted": "interview time = 600.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h13",
+      "schema_ok": true,
+      "cost_usd": 0.000375,
+      "expect": "NEEDS_INFORMATION",
+      "check": "abstain",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "route travel time"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "I leave class at 5:20 PM",
+          "extracted": "class ends = 1040.0",
+          "role": "time"
+        },
+        {
+          "source": "Soccer starts at 6 PM",
+          "extracted": "game starts = 1080.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h14",
+      "schema_ok": true,
+      "cost_usd": 0.0003435,
+      "expect": "NEEDS_INFORMATION",
+      "check": "abstain",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "bus travel time from studio to notary location"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "free at 3:15 PM",
+          "extracted": "notary free = 915.0",
+          "role": "time"
+        },
+        {
+          "source": "can leave the studio at 2:50 PM",
+          "extracted": "leave studio = 890.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h15",
+      "schema_ok": true,
+      "cost_usd": 0.0002985,
+      "expect": "NEEDS_INFORMATION",
+      "check": "abstain",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "lamp price",
+        "rug price"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h16",
+      "schema_ok": true,
+      "cost_usd": 0.0002784,
+      "expect": "NEEDS_INFORMATION",
+      "check": "abstain",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "talk time",
+        "dinner time"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h17",
+      "schema_ok": true,
+      "cost_usd": 0.0004068,
+      "expect": "CONTRADICTORY",
+      "check": "conflict",
+      "status": "CONTRADICTORY",
+      "reason": "{'id': 'demo_time_conflict', 'type': 'two_stated_times_same_event', 'inputs': ['calendar_demo', 'chat_demo'], 'quote': 'The shared calendar has the demo at 1:30 PM. A newer chat from the producer says 2:15 PM.', 'source_id': 'user'}",
+      "missing": [],
+      "contradictions": [
+        "{'id': 'demo_time_conflict', 'type': 'two_stated_times_same_event', 'inputs': ['calendar_demo', 'chat_demo'], 'quote': 'The shared calendar has the demo at 1:30 PM. A newer chat from the producer says 2:15 PM.', 'source_id': 'user'}"
+      ],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "at 1:30 PM",
+          "extracted": "demo (calendar) = 810.0",
+          "role": "time"
+        },
+        {
+          "source": "says 2:15 PM",
+          "extracted": "demo (producer chat) = 855.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h18",
+      "schema_ok": true,
+      "cost_usd": 0.0004314,
+      "expect": "CONTRADICTORY",
+      "check": "conflict",
+      "status": "CONTRADICTORY",
+      "reason": "{'id': 'brunch_time_conflict', 'type': 'two_stated_times_same_event', 'inputs': ['brunch_first', 'brunch_second'], 'quote': \"Mom's text says brunch is at 10:30 AM. The reservation email, sent later, says 11:00 AM. She did not say which one to follow.\", 'source_id': 'user'}",
+      "missing": [],
+      "contradictions": [
+        "{'id': 'brunch_time_conflict', 'type': 'two_stated_times_same_event', 'inputs': ['brunch_first', 'brunch_second'], 'quote': \"Mom's text says brunch is at 10:30 AM. The reservation email, sent later, says 11:00 AM. She did not say which one to follow.\", 'source_id': 'user'}"
+      ],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "brunch is at 10:30 AM",
+          "extracted": "brunch (first mention) = 630.0",
+          "role": "time"
+        },
+        {
+          "source": "says 11:00 AM",
+          "extracted": "brunch (reservation email) = 660.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h19",
+      "schema_ok": true,
+      "cost_usd": 0.0003822,
+      "expect": "CONTRADICTORY",
+      "check": "conflict",
+      "status": "CONTRADICTORY",
+      "reason": "{'id': 'review_time_conflict', 'type': 'two_stated_times_same_event', 'inputs': ['review_original', 'review_corrected'], 'quote': 'the review is at noon... it is at 1 PM', 'source_id': 'user'}",
+      "missing": [],
+      "contradictions": [
+        "{'id': 'review_time_conflict', 'type': 'two_stated_times_same_event', 'inputs': ['review_original', 'review_corrected'], 'quote': 'the review is at noon... it is at 1 PM', 'source_id': 'user'}"
+      ],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "the review is at noon",
+          "extracted": "review original: unparsed",
+          "role": "unknown"
+        },
+        {
+          "source": "it is at 1 PM",
+          "extracted": "review corrected = 780.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h20",
+      "schema_ok": true,
+      "cost_usd": 0.0004122,
+      "expect": "CONTRADICTORY",
+      "check": "conflict",
+      "status": "CONTRADICTORY",
+      "reason": "{'id': 'gate_time_conflict', 'type': 'two_stated_times_same_event', 'inputs': ['gate_closes_airline', 'gate_closes_boarding_pass'], 'quote': 'The boarding pass says the gate closes at 4:40 PM. The airline text says 5:05 PM.', 'source_id': 'user'}",
+      "missing": [],
+      "contradictions": [
+        "{'id': 'gate_time_conflict', 'type': 'two_stated_times_same_event', 'inputs': ['gate_closes_airline', 'gate_closes_boarding_pass'], 'quote': 'The boarding pass says the gate closes at 4:40 PM. The airline text says 5:05 PM.', 'source_id': 'user'}"
+      ],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "5:05 PM",
+          "extracted": "gate closes (airline) = 1025.0",
+          "role": "time"
+        },
+        {
+          "source": "4:40 PM",
+          "extracted": "gate closes (boarding pass) = 1000.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h21",
+      "schema_ok": true,
+      "cost_usd": 0.0004221,
+      "expect": "CONTRADICTORY",
+      "check": "conflict",
+      "status": "CONTRADICTORY",
+      "reason": "{'id': 'dismissal_conflict', 'type': 'two_stated_times_same_event_no_supersede', 'inputs': ['portal_dismissal', 'voicemail_dismissal'], 'quote': 'The school portal says dismissal at 3:05 PM. A voicemail from the office says 3:25 PM.', 'source_id': 'user'}",
+      "missing": [],
+      "contradictions": [
+        "{'id': 'dismissal_conflict', 'type': 'two_stated_times_same_event_no_supersede', 'inputs': ['portal_dismissal', 'voicemail_dismissal'], 'quote': 'The school portal says dismissal at 3:05 PM. A voicemail from the office says 3:25 PM.', 'source_id': 'user'}"
+      ],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "dismissal at 3:05 PM",
+          "extracted": "dismissal (portal) = 905.0",
+          "role": "time"
+        },
+        {
+          "source": "3:25 PM",
+          "extracted": "dismissal (voicemail) = 925.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h22",
+      "schema_ok": true,
+      "cost_usd": 0.0003336,
+      "expect": "CONTRADICTORY",
+      "check": "conflict",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "pending charge amount",
+        "whether either balance includes the pending charge"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "$300",
+          "extracted": "spreadsheet balance = 300.0",
+          "role": "money"
+        },
+        {
+          "source": "$260",
+          "extracted": "bank app balance = 260.0",
+          "role": "money"
+        }
+      ],
+      "failure": null,
+      "hit": false
+    },
+    {
+      "id": "h23",
+      "schema_ok": true,
+      "cost_usd": 0.0004473,
+      "expect": "EXECUTABLE",
+      "check": "over_budget",
+      "status": "UNSUPPORTED",
+      "reason": "The proposal did not yield a grounded constraint.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "$320 left for fun this month",
+          "extracted": "monthly fun budget = 320.0",
+          "role": "money"
+        },
+        {
+          "source": "The jacket I already promised to buy is $190",
+          "extracted": "jacket cost = 190.0",
+          "role": "money"
+        },
+        {
+          "source": "a book for $40",
+          "extracted": "book cost = 40.0",
+          "role": "money"
+        },
+        {
+          "source": "a poster for $110",
+          "extracted": "poster cost = 110.0",
+          "role": "money"
+        }
+      ],
+      "failure": null,
+      "hit": false
+    },
+    {
+      "id": "h24",
+      "schema_ok": true,
+      "cost_usd": 0.0005406,
+      "expect": "EXECUTABLE",
+      "check": "none",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "The gift fund is $150.",
+          "extracted": "gift fund total = 150.0",
+          "role": "money"
+        },
+        {
+          "source": "I already set aside $60 for flowers.",
+          "extracted": "set aside for flowers = 60.0",
+          "role": "money"
+        },
+        {
+          "source": "A vase would be $55",
+          "extracted": "cost of vase = 55.0",
+          "role": "money"
+        },
+        {
+          "source": "a card $20",
+          "extracted": "cost of card = 20.0",
+          "role": "money"
+        }
+      ],
+      "failure": {
+        "keep_feasible": true,
+        "keep_failures": 0,
+        "high_violates": false
+      },
+      "hit": true
+    },
+    {
+      "id": "h25",
+      "schema_ok": true,
+      "cost_usd": 0.0004296,
+      "expect": "EXECUTABLE",
+      "check": "over_budget",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "$80",
+          "extracted": "materials budget = 80.0",
+          "role": "money"
+        },
+        {
+          "source": "$35",
+          "extracted": "required workbook = 35.0",
+          "role": "money"
+        },
+        {
+          "source": "$50",
+          "extracted": "optional lab kit = 50.0",
+          "role": "money"
+        }
+      ],
+      "failure": {
+        "keep_feasible": false,
+        "keep_failures": 1,
+        "high_violates": true
+      },
+      "hit": true
+    },
+    {
+      "id": "h26",
+      "schema_ok": true,
+      "cost_usd": 0.0005082,
+      "expect": "EXECUTABLE",
+      "check": "none",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "capped this shop at $60",
+          "extracted": "shopping cap = 60.0",
+          "role": "money"
+        },
+        {
+          "source": "Milk is $4",
+          "extracted": "milk = 4.0",
+          "role": "money"
+        },
+        {
+          "source": "rice is $8",
+          "extracted": "rice = 8.0",
+          "role": "money"
+        },
+        {
+          "source": "the olive oil I want is $18",
+          "extracted": "olive oil = 18.0",
+          "role": "money"
+        }
+      ],
+      "failure": {
+        "keep_feasible": true,
+        "keep_failures": 0,
+        "high_violates": false
+      },
+      "hit": true
+    },
+    {
+      "id": "h27",
+      "schema_ok": true,
+      "cost_usd": 0.0004743,
+      "expect": "EXECUTABLE",
+      "check": "over_budget",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "$500 for the night",
+          "extracted": "club funds = 500.0",
+          "role": "money"
+        },
+        {
+          "source": "is $350",
+          "extracted": "room deposit = 350.0",
+          "role": "money"
+        },
+        {
+          "source": "would be $200",
+          "extracted": "speaker cost = 200.0",
+          "role": "money"
+        }
+      ],
+      "failure": {
+        "keep_feasible": false,
+        "keep_failures": 1,
+        "high_violates": true
+      },
+      "hit": true
+    },
+    {
+      "id": "h28",
+      "schema_ok": true,
+      "cost_usd": 0.0004413,
+      "expect": "EXECUTABLE",
+      "check": "none",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "$90 for extras",
+          "extracted": "available money = 90.0",
+          "role": "money"
+        },
+        {
+          "source": "The lab fee is $40",
+          "extracted": "lab fee = 40.0",
+          "role": "money"
+        },
+        {
+          "source": "the field trip is $45",
+          "extracted": "field trip = 45.0",
+          "role": "money"
+        }
+      ],
+      "failure": {
+        "keep_feasible": true,
+        "keep_failures": 0,
+        "high_violates": false
+      },
+      "hit": true
+    },
+    {
+      "id": "h29",
+      "schema_ok": true,
+      "cost_usd": 0.0003732,
+      "expect": "EXECUTABLE",
+      "check": "conflict_nominal",
+      "status": "UNSUPPORTED",
+      "reason": "The proposal did not yield a grounded constraint.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "from 1 PM",
+          "extracted": "roommate has van start = 780.0",
+          "role": "time"
+        },
+        {
+          "source": "until 4 PM",
+          "extracted": "roommate has van end = 960.0",
+          "role": "time"
+        },
+        {
+          "source": "at 2 PM",
+          "extracted": "wanted to load van = 840.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": false
+    },
+    {
+      "id": "h30",
+      "schema_ok": true,
+      "cost_usd": 0.0003129,
+      "expect": "EXECUTABLE",
+      "check": "conflict_nominal",
+      "status": "UNSUPPORTED",
+      "reason": "The proposal did not yield a grounded constraint.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "from 7 PM",
+          "extracted": "band booking start = 1140.0",
+          "role": "time"
+        },
+        {
+          "source": "to 9 PM",
+          "extracted": "band booking end = 1260.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": false
+    },
+    {
+      "id": "h31",
+      "schema_ok": true,
+      "cost_usd": 0.000444,
+      "expect": "EXECUTABLE",
+      "check": "conflict_nominal",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "an overlap endpoint is missing"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "from 5",
+          "extracted": "Sam starts using kitchen = 1020.0",
+          "role": "time"
+        },
+        {
+          "source": "until 7",
+          "extracted": "Sam ends using kitchen = 1140.0",
+          "role": "time"
+        },
+        {
+          "source": "start dinner at 6",
+          "extracted": "Dinner start = 1080.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": false
+    },
+    {
+      "id": "h32",
+      "schema_ok": true,
+      "cost_usd": 0.0003789,
+      "expect": "EXECUTABLE",
+      "check": "conflict_nominal",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "loading dock reservation end"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "from 10 AM",
+          "extracted": "loading dock reservation start = 600.0",
+          "role": "time"
+        },
+        {
+          "source": "to noon",
+          "extracted": "loading dock reservation end: unparsed",
+          "role": "unknown"
+        },
+        {
+          "source": "arrive at 11 AM",
+          "extracted": "truck arrival = 660.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": false
+    },
+    {
+      "id": "h33",
+      "schema_ok": true,
+      "cost_usd": 0.0003447,
+      "expect": "EXECUTABLE",
+      "check": "conflict_nominal",
+      "status": "UNSUPPORTED",
+      "reason": "The proposal did not yield a grounded constraint.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "need to be out of the building at 4:00 PM",
+          "extracted": "must be out of building = 960.0",
+          "role": "time"
+        },
+        {
+          "source": "mandatory sync was just placed on my calendar until 4:25 PM",
+          "extracted": "mandatory sync ends = 985.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": false
+    },
+    {
+      "id": "h34",
+      "schema_ok": true,
+      "cost_usd": 0.0004575,
+      "expect": "EXECUTABLE",
+      "check": "conflict_nominal",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "ends at 5:10 PM",
+          "extracted": "review end = 1030.0",
+          "role": "time"
+        },
+        {
+          "source": "My train is at 5:25 PM",
+          "extracted": "train departure = 1045.0",
+          "role": "time"
+        },
+        {
+          "source": "Walking to the platform takes 20 minutes.",
+          "extracted": "walk to platform = 20.0",
+          "role": "duration"
+        }
+      ],
+      "failure": {
+        "keep_feasible": false,
+        "keep_failures": 1,
+        "high_violates": true
+      },
+      "hit": true
+    },
+    {
+      "id": "h35",
+      "schema_ok": true,
+      "cost_usd": 0.0002835,
+      "expect": "NEEDS_INFORMATION",
+      "check": "abstain",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "Whether the restaurant has confirmed a table for the suggested time."
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "around eight",
+          "extracted": "dinner suggestion is unknown",
+          "role": "unknown"
+        }
+      ],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h36",
+      "schema_ok": true,
+      "cost_usd": 0.0003195,
+      "expect": "NEEDS_INFORMATION",
+      "check": "abstain",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "original start",
+        "forty-five minutes earlier"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [],
+      "failure": null,
+      "hit": true
+    },
+    {
+      "id": "h37",
+      "schema_ok": true,
+      "cost_usd": 0.0003966,
+      "expect": "EXECUTABLE",
+      "check": "none",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "stairs duration"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "The workshop ends at 3:00 PM",
+          "extracted": "workshop end = 900.0",
+          "role": "time"
+        },
+        {
+          "source": "The next commitment is at 4:30 PM",
+          "extracted": "next commitment = 990.0",
+          "role": "time"
+        }
+      ],
+      "failure": null,
+      "hit": false
+    },
+    {
+      "id": "h38",
+      "schema_ok": true,
+      "cost_usd": 0.0003819,
+      "expect": "EXECUTABLE",
+      "check": "over_budget",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "$70",
+          "extracted": "printer quote = 70.0",
+          "role": "money"
+        },
+        {
+          "source": "$40",
+          "extracted": "available budget = 40.0",
+          "role": "money"
+        }
+      ],
+      "failure": {
+        "keep_feasible": false,
+        "keep_failures": 1,
+        "high_violates": true
+      },
+      "hit": true
+    },
+    {
+      "id": "h39",
+      "schema_ok": true,
+      "cost_usd": 0.0004059,
+      "expect": "EXECUTABLE",
+      "check": "conflict_nominal",
+      "status": "EXECUTABLE",
+      "reason": "The grounded links are executable.",
+      "missing": [],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [
+        {
+          "source": "from 2 PM to 3 PM",
+          "extracted": "Jordan Lee uses projector from 840.0 to 900.0 minutes",
+          "role": "interval"
+        },
+        {
+          "source": "at 2:30 PM",
+          "extracted": "Jordan Patel requests projector = 870.0",
+          "role": "time"
+        }
+      ],
+      "failure": {
+        "keep_feasible": false,
+        "keep_failures": 1,
+        "high_violates": true
+      },
+      "hit": true
+    },
+    {
+      "id": "h40",
+      "schema_ok": true,
+      "cost_usd": 0.0003027,
+      "expect": "NEEDS_INFORMATION",
+      "check": "abstain",
+      "status": "NEEDS_INFORMATION",
+      "reason": "A material fact is missing or unparsed.",
+      "missing": [
+        "draft completion time",
+        "durations of two other tasks"
+      ],
+      "contradictions": [],
+      "rejected": [],
+      "shown": [],
+      "failure": null,
+      "hit": true
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "A",
+    "plan": "Can I stop for groceries on the way?",
+    "text": "My professor moved Thursday's lab to finish at 4:15. I need to pick up my sister when her practice ends at 5. The drive normally takes 25 to 45 minutes. Can I stop for groceries on the way?"
+  },
+  {
+    "id": "B",
+    "plan": "Can I make dinner?",
+    "text": "My flight lands at 6:20, but my dinner reservation is at 7:30. It usually takes half an hour to get out of the airport and another 20 to 50 minutes to reach the restaurant."
+  },
+  {
+    "id": "C",
+    "plan": "Can I buy both?",
+    "text": "I've got $450 left for discretionary spending this month. I already committed $180 to a birthday present. I'm considering buying headphones for $210 and concert tickets for $125."
+  },
+  {
+    "id": "D",
+    "plan": "Can I make the dentist?",
+    "text": "I need to leave work by 4 to make my dentist appointment. My manager just scheduled a meeting that ends at 4:30. That meeting cannot be moved."
+  },
+  {
+    "id": "E",
+    "plan": "Is dinner fixed?",
+    "text": "My friend wants dinner around seven, but she hasn't confirmed the reservation."
+  },
+  {
+    "id": "F",
+    "plan": "Which interview time should I trust?",
+    "text": "My calendar says the interview is at 2, but the recruiter's newer email says 3. I'm not sure whether the calendar invitation was updated."
+  },
+  {
+    "id": "G",
+    "plan": "Can I drive to the airport?",
+    "text": "My partner needs the car from 3 until 6. I was planning to drive to the airport at 4."
+  },
+  {
+    "id": "H",
+    "plan": "Can I get to the wedding?",
+    "text": "I have to get to a wedding by 5, and my train arrives at 4:15."
+  },
+  {
+    "id": "I",
+    "plan": "What happens if it rains?",
+    "text": "If it rains, the ceremony moves indoors and starts half an hour earlier."
+  },
+  {
+    "id": "J",
+    "plan": "Can I catch the train?",
+    "text": "My class ends at 3:30. The drive to the station takes 15-35 minutes, the train leaves at 4:10, and parking takes another 5-12 minutes."
+  }
+]

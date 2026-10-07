@@ -176,6 +176,8 @@ A later 40-case attack set, `shadowbench/redteam-compiler/`, was frozen before s
 
 A separate route, `backend/shadow/world/executable.py`, does emit typed expressions for a documented set of time, duration, and budget sentences. It does not read the travel fixture. Missing durations stay missing. Conflicting values stay conflicting unless one record supersedes the other. `shadowbench/primitive-holdout/` scores that grammar: status 40/40 on the development split and 40/40 on the frozen test split. Those sentences were generated from the forms the compiler implements, so this is a grammar check, not an open-world language result. See `docs/EXECUTABLE_WORLD.md`.
 
+Unfamiliar wording takes a different route. `backend/shadow/world/semantic.py` asks Nemotron Super for facts and links, then accepts a link only when the cited words support the numbers. The deterministic engine evaluates the resulting expressions. On a 40-case frozen set written after development, the grammar compiler produced 0 executable worlds and Super plus the grounder matched the frozen check on 29/40. That set was written by the compiler author, not an independent author. The public demo does not call the model. See `docs/SEMANTIC_GENERALIZATION_AUDIT.md`.
+
 The frozen holdout is `shadowbench/world_compiler_holdout/` (16 cases). One Lightning compile call per case. Oracle labels were frozen before the run. No LLM judged the labels.
 
 | Metric | Result |

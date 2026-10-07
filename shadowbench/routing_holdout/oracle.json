@@ -1,0 +1,133 @@
+{
+  "dental_fixed": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "workshop_movable": {
+    "hard": [],
+    "not_hard": [
+      "optional",
+      "can move"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "rent_email": {
+    "hard": [
+      "cannot be late"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "quiet_car": {
+    "hard": [],
+    "not_hard": [
+      "quiet",
+      "prefers"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "presenter_conflict": {
+    "hard": [
+      "must present"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "stale_badge": {
+    "hard": [
+      "confirmed"
+    ],
+    "not_hard": [
+      "closed"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "parking_unknown": {
+    "hard": [],
+    "not_hard": [
+      "parking"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "parking"
+    ],
+    "repair": "abstain"
+  },
+  "team_irrelevant": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [
+      "team",
+      "likes"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "babysitter": {
+    "hard": [
+      "cannot stay"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "keys_depend": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [
+      "depend on"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "food_budget": {
+    "hard": [
+      "at most $25"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "portal_sequence": {
+    "hard": [
+      "before"
+    ],
+    "not_hard": [],
+    "dependencies": [
+      "portal"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  }
+}

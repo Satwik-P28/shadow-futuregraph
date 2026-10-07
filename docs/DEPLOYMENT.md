@@ -13,7 +13,7 @@ The container filesystem is ephemeral. SQLite files under `data/` disappear on r
 
 `NEBIUS_LIVE` defaults off inside the image unless you set it. The sandbox demo works with no keys.
 
-No hosted URL is attached to this repository. `render` is installed, and `~/.render/cli.yaml` exists, but the CLI token is expired (`Error: your token is expired; run render login`). Render MCP is also unauthenticated. Do not deploy until `render login` succeeds. Then:
+`render.yaml` builds the Dockerfile and leaves `NEBIUS_LIVE` unset so the public demo stays in the sandbox. `render` is installed, and `~/.render/cli.yaml` exists, but the CLI token was expired (`Error: your token is expired; run render login`). Render MCP was unauthenticated. After `render login`:
 
 ```bash
 render login

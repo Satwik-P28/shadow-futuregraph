@@ -19,7 +19,8 @@ Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - Naive plan = lowest sticker cost among nominally feasible bundles
 - Recommendation = violations, unresolved, failure radius, changes, cost, reversibility
 - Nemotron proposes. It does not rank or authorize
-- Model `nvidia/Nemotron-3_5-Lightning`. Super and Ultra off
+- Model `nvidia/Nemotron-3_5-Lightning`. Ultra off
+- Frozen compile route: compiler_verifier (Lightning proposal plus deterministic verifier). Super lost on the development set
 - Prices only in `backend/shadow/llm/pricing.py`, checked_at 2026-10-07
 
 ## Important paths
@@ -53,12 +54,15 @@ Published. https://github.com/Satwik-P28/shadow-futuregraph (main)
 - `cd frontend && npm run build`
 
 ## Live-token spend
-- recorded repo ledger: 0.01838022
+- live pilot ledger portion: 0.01838022
 - earlier repo call, not in this ledger: 0.0000222
 - prior external: 0.02030592
 - recorded known total before this pass: 0.03870834
 - World Compiler holdout, 16 Lightning calls: 0.00059778
-- recorded known total: 0.03930612
+- recorded known total before the route study: 0.03930612
+- route study, development plus one holdout: 0.00415368
+- recorded repo ledger: 0.02313168
+- recorded known total: 0.04345980
 - one pre-fix call was omitted from the ledger; usage was not stored
 - model: nvidia/Nemotron-3_5-Lightning
 - official pilot: live-pilot-20261007T180515Z

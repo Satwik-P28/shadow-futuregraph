@@ -1,0 +1,149 @@
+[
+  {
+    "id": "dental_fixed",
+    "plan_text": "Protect Friday morning.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The dental surgery cannot move."
+      }
+    ]
+  },
+  {
+    "id": "workshop_movable",
+    "plan_text": "The workshop is optional.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "Optional workshop. It can move."
+      }
+    ]
+  },
+  {
+    "id": "rent_email",
+    "plan_text": "Do not miss rent.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "Rent cannot be late."
+      }
+    ]
+  },
+  {
+    "id": "quiet_car",
+    "plan_text": "Choose a car.",
+    "records": [
+      {
+        "id": "pref",
+        "kind": "preference",
+        "text": "Alex prefers a quiet car."
+      }
+    ]
+  },
+  {
+    "id": "presenter_conflict",
+    "plan_text": "Decide who presents.",
+    "records": [
+      {
+        "id": "a",
+        "kind": "email",
+        "text": "Alex must present."
+      },
+      {
+        "id": "b",
+        "kind": "email",
+        "text": "Sam must present instead."
+      }
+    ]
+  },
+  {
+    "id": "stale_badge",
+    "plan_text": "Use the live badge.",
+    "records": [
+      {
+        "id": "old",
+        "kind": "email",
+        "text": "Old note: the satellite office was closed."
+      },
+      {
+        "id": "new",
+        "kind": "reservation",
+        "text": "Current badge office is confirmed."
+      }
+    ]
+  },
+  {
+    "id": "parking_unknown",
+    "plan_text": "Find parking.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "The parking spot number was not said."
+      }
+    ]
+  },
+  {
+    "id": "team_irrelevant",
+    "plan_text": "Keep the legal block.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "Alex likes the home team."
+      },
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The hearing cannot move."
+      }
+    ]
+  },
+  {
+    "id": "babysitter",
+    "plan_text": "Respect the sitter.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "The babysitter cannot stay past 9."
+      }
+    ]
+  },
+  {
+    "id": "keys_depend",
+    "plan_text": "Get the keys.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "The keys depend on the superintendent arriving."
+      }
+    ]
+  },
+  {
+    "id": "food_budget",
+    "plan_text": "Cap the groceries.",
+    "records": [
+      {
+        "id": "pref",
+        "kind": "preference",
+        "text": "Groceries are at most $25."
+      }
+    ]
+  },
+  {
+    "id": "portal_sequence",
+    "plan_text": "File before close.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "Submit the form before the portal closes."
+      }
+    ]
+  }
+]

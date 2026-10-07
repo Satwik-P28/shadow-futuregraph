@@ -1,0 +1,224 @@
+{
+  "fixed_hearing": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "movable_brainstorm": {
+    "hard": [],
+    "not_hard": [
+      "optional",
+      "can move"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "email_pickup": {
+    "hard": [
+      "must arrive"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "aisle_preference": {
+    "hard": [],
+    "not_hard": [
+      "aisle",
+      "prefers"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "conflict_lease": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "stale_address": {
+    "hard": [
+      "confirmed"
+    ],
+    "not_hard": [
+      "closed"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "unknown_gate": {
+    "hard": [],
+    "not_hard": [
+      "gate"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "gate"
+    ],
+    "repair": "abstain"
+  },
+  "irrelevant_cat": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [
+      "birthday",
+      "cat"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "other_person": {
+    "hard": [
+      "cannot reschedule"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "badge_dependency": {
+    "hard": [],
+    "not_hard": [],
+    "dependencies": [
+      "depends on"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "cab_budget": {
+    "hard": [
+      "at most $40"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "courier_sequence": {
+    "hard": [
+      "before"
+    ],
+    "not_hard": [],
+    "dependencies": [
+      "courier"
+    ],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "impossible_hours": {
+    "hard": [
+      "must"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "abstain"
+  },
+  "no_change": {
+    "hard": [],
+    "not_hard": [
+      "no change"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "ambiguous_call": {
+    "hard": [],
+    "not_hard": [
+      "shift"
+    ],
+    "dependencies": [],
+    "not_dependencies": [
+      "shift"
+    ],
+    "unknowns": [
+      "maybe"
+    ],
+    "repair": "abstain"
+  },
+  "visa_protected": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "two_kids": {
+    "hard": [
+      "cannot move"
+    ],
+    "not_hard": [
+      "playdate",
+      "can move"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "table_confirmed": {
+    "hard": [
+      "confirmed"
+    ],
+    "not_hard": [],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "ideally_soft": {
+    "hard": [
+      "must arrive"
+    ],
+    "not_hard": [
+      "ideally"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [],
+    "repair": "keep"
+  },
+  "weather_unknown": {
+    "hard": [],
+    "not_hard": [
+      "weather"
+    ],
+    "dependencies": [],
+    "not_dependencies": [],
+    "unknowns": [
+      "weather"
+    ],
+    "repair": "abstain"
+  }
+}

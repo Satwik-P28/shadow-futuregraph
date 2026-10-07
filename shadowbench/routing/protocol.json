@@ -1,0 +1,18 @@
+{
+  "systems": ["lightning", "super", "compiler_verifier"],
+  "models": {
+    "lightning": "nvidia/Nemotron-3_5-Lightning",
+    "super": "nvidia/nemotron-3-super-120b-a12b",
+    "compiler_verifier": "nvidia/Nemotron-3_5-Lightning"
+  },
+  "temperature": 0,
+  "thinking": false,
+  "ultra": false,
+  "selection": ["repair_rate", "hard_recall", "neg_false_hard_rate", "unknown_rate", "neg_cost_usd"],
+  "tie_break": ["compiler_verifier", "lightning", "super"],
+  "holdout_runs": 1,
+  "dev_session_cap_usd": 5.0,
+  "authorized_cap_usd": 50.0,
+  "compiler_verifier": "Lightning proposal plus deterministic verifier. No second model call.",
+  "note": "Development cases choose the winner. The held-out set is scored once after the winner is frozen."
+}

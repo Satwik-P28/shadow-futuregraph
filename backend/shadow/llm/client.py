@@ -34,6 +34,12 @@ class LiveDisabled(RuntimeError):
     pass
 
 
+class _BilledRefusal(LiveDisabled):
+    def __init__(self, message: str, usage: dict[str, int]) -> None:
+        super().__init__(message)
+        self.usage = usage
+
+
 class SchemaError(RuntimeError):
     pass
 
@@ -329,10 +335,16 @@ class NebiusClient:
         self.cache = cache
         self.calls: list[dict[str, Any]] = []
 
-    def complete_json(self, purpose: str, context: dict[str, Any], schema: type[BaseModel]) -> BaseModel:
+    def complete_json(
+        self,
+        purpose: str,
+        context: dict[str, Any],
+        schema: type[BaseModel],
+        model: str | None = None,
+    ) -> BaseModel:
         if os.environ.get("NEBIUS_LIVE") != "1":
             raise LiveDisabled("NEBIUS_LIVE is not 1. Refusing to call Token Factory.")
-        model = os.environ.get("NEBIUS_MODEL") or DEFAULT_MODEL
+        model = model or os.environ.get("NEBIUS_MODEL") or DEFAULT_MODEL
         self._guard_model(model)
         if purpose not in PURPOSE_TOKENS:
             raise SchemaError(f"unknown purpose {purpose}")
@@ -357,6 +369,10 @@ class NebiusClient:
             content, usage = self._http(model, messages, params["max_tokens"])
             actual = cost_usd(model, int(usage["prompt_tokens"]), int(usage["completion_tokens"]))
             self.ledger.reconcile(reservation, actual)
+        except _BilledRefusal as exc:
+            actual = cost_usd(model, int(exc.usage["prompt_tokens"]), int(exc.usage["completion_tokens"]))
+            self.ledger.reconcile(reservation, actual)
+            raise LiveDisabled(str(exc)) from exc
         except BudgetError:
             raise
         except Exception:
@@ -432,7 +448,13 @@ class NebiusClient:
         if returned and model not in returned and returned not in model:
             raise LiveDisabled("response model did not match the request")
         if reasoning or reasoning_tokens or "<think" in content.lower():
-            raise LiveDisabled("thinking was not disabled")
+            raise _BilledRefusal(
+                "thinking was not disabled",
+                {
+                    "prompt_tokens": int(usage.prompt_tokens if usage else 0),
+                    "completion_tokens": int(usage.completion_tokens if usage else 0),
+                },
+            )
         return content, {
             "prompt_tokens": int(usage.prompt_tokens if usage else 0),
             "completion_tokens": int(usage.completion_tokens if usage else 0),

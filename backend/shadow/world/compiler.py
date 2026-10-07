@@ -174,7 +174,7 @@ def compile_bundle(bundle: dict[str, Any], proposal: SemanticProposal | None = N
             _item("street_closure", "unknown", "street_closure", EpistemicStatus.UNKNOWN, [], "no evidence in the bundle", True)
         )
     if proposal is not None:
-        _merge_proposal(world, proposal)
+        _accept_model_proposal(bundle, world, proposal)
     world.licensed_constraint_ids = sorted(set(licensed))
     return world
 
@@ -200,6 +200,76 @@ def attach_compiled(scenario: Scenario) -> tuple[Scenario, CompiledWorld | None]
         return scenario, None
     compiled = compile_bundle(bundle)
     return license_scenario(scenario, compiled), compiled
+
+
+_HARD_MARKERS = ("cannot", "must", "maximum", "do not", "don't", "fixed", "at most", "no more than", "confirmed", "before")
+_SOFT_MARKERS = ("prefer", "maybe", "might", "optional", "can move", "perhaps", "ideally", "like")
+_UNKNOWN_CUES = ("unknown", "whether", "nobody has", "not said", "have not said", "unsure", "not confirmed", "maybe")
+_NUMBER = re.compile(r"\d+")
+
+
+def verify_proposal(bundle: dict[str, Any], proposal: SemanticProposal) -> CompiledWorld:
+    """Drop model claims the cited records do not support. Never promotes a status."""
+    records = {str(item["id"]): str(item["text"]) for item in bundle.get("records") or []}
+    world = CompiledWorld()
+    for index, row in enumerate(proposal.hard_constraints):
+        label = str(row.get("label") or "")
+        sources = _known_sources(row, records)
+        if not label or not sources:
+            continue
+        if _numbers_unsupported(label, sources, records):
+            continue
+        cited = " ".join(records[item].lower() for item in sources)
+        if any(marker in cited for marker in _HARD_MARKERS):
+            world.hard_constraints.append(
+                _item(f"vhard_{index}", "hard_constraint", label, EpistemicStatus.INFERRED, sources, "verifier", True)
+            )
+        elif any(marker in cited for marker in _SOFT_MARKERS):
+            world.soft_preferences.append(
+                _item(f"vsoft_{index}", "preference", label, EpistemicStatus.INFERRED, sources, "verifier", True)
+            )
+    for index, row in enumerate(proposal.dependencies):
+        label = str(row.get("label") or "")
+        sources = _known_sources(row, records)
+        if label and sources and not _numbers_unsupported(label, sources, records):
+            world.dependencies.append(
+                _item(f"vdep_{index}", "dependency", label, EpistemicStatus.INFERRED, sources, "verifier", True)
+            )
+    for index, row in enumerate(proposal.unknowns):
+        label = str(row.get("label") or "")
+        sources = _known_sources(row, records)
+        if label:
+            world.unknowns.append(
+                _item(f"vunk_{index}", "unknown", label, EpistemicStatus.UNKNOWN, sources, "verifier", True)
+            )
+    for source_id, text in records.items():
+        lowered = text.lower()
+        if any(cue in lowered for cue in _UNKNOWN_CUES):
+            if not any(source_id in item.source_ids for item in world.unknowns):
+                world.unknowns.append(
+                    _item(f"vgap_{source_id}", "unknown", text, EpistemicStatus.UNKNOWN, [source_id], "verifier", True)
+                )
+            world.hard_constraints = [
+                item
+                for item in world.hard_constraints
+                if source_id not in item.source_ids or any(marker in lowered for marker in _HARD_MARKERS)
+            ]
+    return world
+
+
+def world_from_proposal(proposal: SemanticProposal) -> CompiledWorld:
+    world = CompiledWorld()
+    _merge_proposal(world, proposal)
+    return world
+
+
+def _known_sources(row: dict[str, Any], records: dict[str, str]) -> list[str]:
+    return [str(item) for item in row.get("source_ids") or [] if str(item) in records]
+
+
+def _numbers_unsupported(label: str, sources: list[str], records: dict[str, str]) -> bool:
+    cited = " ".join(records[item] for item in sources)
+    return any(number not in cited for number in _NUMBER.findall(label))
 
 
 def score_compilation(compiled: CompiledWorld, oracle: dict[str, Any]) -> dict[str, Any]:
@@ -248,6 +318,46 @@ def _hits(labels: list[str], aliases: list[str]) -> int:
 
 def _false_hits(labels: list[str], banned: list[str]) -> int:
     return sum(1 for label in labels if any(word.lower() in label for word in banned))
+
+
+def frozen_route() -> str:
+    path = ROOT / "shadowbench" / "routing" / "decision.json"
+    if not path.exists():
+        return "lightning"
+    system = str(json.loads(path.read_text()).get("system") or "lightning")
+    if system not in {"lightning", "super", "compiler_verifier"}:
+        return "lightning"
+    return system
+
+
+def route_model() -> str:
+    """Compile calls use the frozen route. Other purposes stay on Lightning."""
+    if frozen_route() == "super":
+        return "nvidia/nemotron-3-super-120b-a12b"
+    return "nvidia/Nemotron-3_5-Lightning"
+
+
+def _accept_model_proposal(bundle: dict[str, Any], world: CompiledWorld, proposal: SemanticProposal) -> None:
+    if frozen_route() != "compiler_verifier":
+        _merge_proposal(world, proposal)
+        return
+    verified = verify_proposal(bundle, proposal)
+    existing = {item.label.lower() for item in world.items()}
+    for bucket in (verified.hard_constraints, verified.soft_preferences, verified.dependencies, verified.unknowns):
+        for item in bucket:
+            if item.label.lower() in existing:
+                continue
+            existing.add(item.label.lower())
+            getattr(world, _bucket_name(item.kind)).append(item)
+
+
+def _bucket_name(kind: str) -> str:
+    return {
+        "hard_constraint": "hard_constraints",
+        "preference": "soft_preferences",
+        "dependency": "dependencies",
+        "unknown": "unknowns",
+    }.get(kind, "facts")
 
 
 def _merge_proposal(world: CompiledWorld, proposal: SemanticProposal) -> None:

@@ -1,0 +1,247 @@
+[
+  {
+    "id": "fixed_hearing",
+    "plan_text": "Keep Thursday intact.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The deposition cannot move."
+      }
+    ]
+  },
+  {
+    "id": "movable_brainstorm",
+    "plan_text": "Shift the optional hour if needed.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "Optional brainstorm. It can move."
+      }
+    ]
+  },
+  {
+    "id": "email_pickup",
+    "plan_text": "Make the school run.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "You must arrive before the pickup window."
+      }
+    ]
+  },
+  {
+    "id": "aisle_preference",
+    "plan_text": "Book the seat.",
+    "records": [
+      {
+        "id": "pref",
+        "kind": "preference",
+        "text": "Alex prefers an aisle seat."
+      }
+    ]
+  },
+  {
+    "id": "conflict_lease",
+    "plan_text": "Resolve the apartment note.",
+    "records": [
+      {
+        "id": "a",
+        "kind": "email",
+        "text": "The lease says the inspection cannot move."
+      },
+      {
+        "id": "b",
+        "kind": "email",
+        "text": "Please move the inspection to Monday."
+      }
+    ]
+  },
+  {
+    "id": "stale_address",
+    "plan_text": "Use the current office.",
+    "records": [
+      {
+        "id": "old",
+        "kind": "email",
+        "text": "Old note: the Market Street office was closed."
+      },
+      {
+        "id": "new",
+        "kind": "reservation",
+        "text": "Current badge office is confirmed. This supersedes the old note."
+      }
+    ]
+  },
+  {
+    "id": "unknown_gate",
+    "plan_text": "Find the gate.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "The gate number was not said."
+      }
+    ]
+  },
+  {
+    "id": "irrelevant_cat",
+    "plan_text": "Protect the real commitment.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "note",
+        "text": "The cat's birthday is Saturday."
+      },
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The deposition cannot move."
+      }
+    ]
+  },
+  {
+    "id": "other_person",
+    "plan_text": "Do not disrupt Priya.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "Priya confirmed the demo. Priya cannot reschedule it."
+      }
+    ]
+  },
+  {
+    "id": "badge_dependency",
+    "plan_text": "Get into the building.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "Badge access depends on the host arriving first."
+      }
+    ]
+  },
+  {
+    "id": "cab_budget",
+    "plan_text": "Stay inside the cab cap.",
+    "records": [
+      {
+        "id": "pref",
+        "kind": "preference",
+        "text": "The cab is at most $40."
+      }
+    ]
+  },
+  {
+    "id": "courier_sequence",
+    "plan_text": "Meet the courier.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "Pack the envelope before the courier arrives."
+      }
+    ]
+  },
+  {
+    "id": "impossible_hours",
+    "plan_text": "Be in both places.",
+    "records": [
+      {
+        "id": "a",
+        "kind": "calendar",
+        "text": "Alex must be home by 6."
+      },
+      {
+        "id": "b",
+        "kind": "calendar",
+        "text": "Alex must stay at the office until 8."
+      }
+    ]
+  },
+  {
+    "id": "no_change",
+    "plan_text": "Leave the plan as it is.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "Every listed commitment already fits. No change is required."
+      }
+    ]
+  },
+  {
+    "id": "ambiguous_call",
+    "plan_text": "Read Jordan's note.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "Jordan said we might shift the call, or maybe not."
+      }
+    ]
+  },
+  {
+    "id": "visa_protected",
+    "plan_text": "Change only the trip.",
+    "records": [
+      {
+        "id": "cal",
+        "kind": "calendar",
+        "text": "The visa appointment is unrelated and cannot move."
+      }
+    ]
+  },
+  {
+    "id": "two_kids",
+    "plan_text": "Cover both children.",
+    "records": [
+      {
+        "id": "recital",
+        "kind": "calendar",
+        "text": "Sam's recital cannot move."
+      },
+      {
+        "id": "play",
+        "kind": "calendar",
+        "text": "The playdate can move."
+      }
+    ]
+  },
+  {
+    "id": "table_confirmed",
+    "plan_text": "Keep dinner.",
+    "records": [
+      {
+        "id": "res",
+        "kind": "reservation",
+        "text": "The table is confirmed for 8:30 PM."
+      }
+    ]
+  },
+  {
+    "id": "ideally_soft",
+    "plan_text": "Get to the hall.",
+    "records": [
+      {
+        "id": "note",
+        "kind": "preference",
+        "text": "Ideally under 20 minutes, but Alex must arrive by 9."
+      }
+    ]
+  },
+  {
+    "id": "weather_unknown",
+    "plan_text": "Check the delay.",
+    "records": [
+      {
+        "id": "mail",
+        "kind": "email",
+        "text": "Whether a weather delay applies was not said."
+      }
+    ]
+  }
+]

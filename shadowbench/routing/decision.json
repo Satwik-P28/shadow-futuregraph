@@ -1,0 +1,5 @@
+{
+  "system": "compiler_verifier",
+  "model": "nvidia/Nemotron-3_5-Lightning",
+  "dev_results": "shadowbench/routing_dev/results.json"
+}

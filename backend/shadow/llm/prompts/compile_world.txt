@@ -7,6 +7,7 @@ Rules:
 - Status must be UNKNOWN when the records do not contain the value. Do not guess it.
 - A preference is not a hard constraint unless the record states a maximum, a ban, or that something cannot move.
 - Do not choose a flight or a repair.
+- Quote a short phrase from the cited record inside each label.
 
 Shape:
 {"hard_constraints":[{"label":"short label","source_ids":["id"],"status":"INFERRED"}],"soft_preferences":[{"label":"short label","source_ids":["id"],"status":"INFERRED"}],"dependencies":[{"label":"A affects B","source_ids":["id"],"status":"INFERRED"}],"unknowns":[{"label":"short label","source_ids":[],"status":"UNKNOWN"}]}

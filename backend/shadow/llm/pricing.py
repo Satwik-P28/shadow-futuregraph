@@ -8,6 +8,8 @@ CHECKED_AT = "2026-10-07"
 PRICES: dict[str, dict[str, float]] = {
     "nvidia/Nemotron-3_5-Lightning": {"input": 0.06, "output": 0.24},
     "nvidia/Nemotron-3_5-Super": {"input": 0.30, "output": 0.90},
+    # Catalog id returned by Token Factory on 2026-10-07. Same published Super rates.
+    "nvidia/nemotron-3-super-120b-a12b": {"input": 0.30, "output": 0.90},
     "nvidia/Nemotron-3_5-Ultra": {"input": 1.00, "output": 3.00},
 }
 

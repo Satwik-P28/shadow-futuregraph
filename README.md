@@ -174,6 +174,20 @@ The frozen holdout is `shadowbench/world_compiler_holdout/` (16 cases). One Ligh
 
 Additional Token Factory spend for those 16 calls: `$0.00059778`.
 
+## Compile route
+
+A later comparison used new development cases, not the holdout above. The selection rule was frozen first: repair rate, then hard-constraint recall, then a lower false-hard rate, then unknown preservation, then lower cost. Ultra was not used.
+
+| System | Repair | Hard recall | False hard | Unknowns | Spend |
+| --- | --- | --- | --- | --- | --- |
+| Lightning | 14/20 | 7/13 | 0/12 | 2/3 | $0.00063612 |
+| Super (`nvidia/nemotron-3-super-120b-a12b`) | 13/20 | 8/13 | 0/15 | 1/3 | $0.00307590 |
+| compiler-verifier | 15/20 | 7/13 | 0/11 | 3/3 | $0.00063612 |
+
+The compiler-verifier is the Lightning proposal plus a deterministic check. It drops unsupported hard claims, moves preference wording out of the hard set, and keeps missing values unknown. It does not make a second model call. That route won and is frozen.
+
+It was then scored once on a new 12-case holdout: repair 10/12, hard recall 6/8, false hard 0/7, dependency recall 1/2, unknowns 1/1, provenance 15/15. That holdout was not used to pick the winner and was not run again.
+
 ## Adversarial Holdout
 
 `shadowbench/adversarial_holdout/` has 10 hand-authored scenarios, written before the run and not edited afterward. Same repair engine. No model tokens.

@@ -52,6 +52,55 @@ def test_model_proposal_cannot_promote_itself():
     assert scored["unknown_hit"] == 1
 
 
+def test_verifier_drops_preferences_and_invented_numbers():
+    from shadow.world.compiler import SemanticProposal, verify_proposal
+
+    bundle = {
+        "plan_text": "Check the note.",
+        "records": [
+            {"id": "pref", "text": "Alex prefers an aisle seat."},
+            {"id": "hard", "text": "The hearing cannot move."},
+            {"id": "gap", "text": "The gate number was not said."},
+        ],
+    }
+    proposal = SemanticProposal.model_validate(
+        {
+            "hard_constraints": [
+                {"label": "prefers an aisle", "source_ids": ["pref"], "status": "INFERRED"},
+                {"label": "hearing cannot move", "source_ids": ["hard"], "status": "VERIFIED"},
+                {"label": "cap of 90", "source_ids": ["hard"], "status": "INFERRED"},
+                {"label": "mystery", "source_ids": ["missing"], "status": "INFERRED"},
+            ],
+            "dependencies": [{"label": "ride affects arrival", "source_ids": [], "status": "INFERRED"}],
+            "unknowns": [],
+        }
+    )
+    compiled = verify_proposal(bundle, proposal)
+    hard_labels = [item.label for item in compiled.hard_constraints]
+    assert hard_labels == ["hearing cannot move"]
+    assert all(item.epistemic_status.value == "INFERRED" for item in compiled.hard_constraints)
+    assert any(item.epistemic_status.value == "UNKNOWN" and "not said" in item.label.lower() for item in compiled.unknowns)
+    assert compiled.dependencies == []
+
+
+def test_frozen_route_filters_model_proposals():
+    from shadow.world.compiler import SemanticProposal, frozen_route
+
+    assert frozen_route() == "compiler_verifier"
+    compiled = compile_bundle(
+        {"plan_text": "Book the seat.", "records": [{"id": "pref", "kind": "preference", "text": "Alex prefers an aisle seat."}]},
+        SemanticProposal.model_validate(
+            {
+                "hard_constraints": [{"label": "prefers an aisle", "source_ids": ["pref"], "status": "INFERRED"}],
+                "dependencies": [],
+                "unknowns": [],
+            }
+        ),
+    )
+    assert all("aisle" not in item.label for item in compiled.hard_constraints)
+    assert any("aisle" in item.label for item in compiled.soft_preferences)
+
+
 def test_adversarial_holdout_is_ten_frozen_cases():
     cases = load_cases()
     assert len(cases) == 10

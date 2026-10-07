@@ -1,0 +1,12 @@
+[
+  {"id": "nothing_optimal", "kind": "slack", "baseline_dep": 600, "bundles": [{"id": "stay", "dep": 600, "cost": 0}, {"id": "move", "dep": 1000, "cost": 20}], "best": "stay", "naive_fails": false},
+  {"id": "cheap_is_robust", "kind": "slack", "baseline_dep": 600, "bundles": [{"id": "cheap", "dep": 600, "cost": 0}, {"id": "pricey", "dep": 900, "cost": 80}], "best": "cheap", "naive_fails": false},
+  {"id": "non_monotonic", "kind": "slack", "baseline_dep": 880, "bundles": [{"id": "fragile", "dep": 880, "cost": 0}, {"id": "medium", "dep": 680, "cost": 30}, {"id": "large", "dep": 640, "cost": 90}], "best": "medium", "naive_fails": true, "cut": ["flight_delay_min", "traffic_extra_min"]},
+  {"id": "fix_creates_another", "kind": "slack", "baseline_dep": 880, "bundles": [{"id": "fragile", "dep": 880, "cost": 0}, {"id": "overfix", "dep": 600, "cost": 200}, {"id": "balanced", "dep": 680, "cost": 40}], "best": "balanced", "naive_fails": true, "budget": 100, "cut": ["flight_delay_min", "traffic_extra_min"]},
+  {"id": "equal_radius_cost", "kind": "slack", "baseline_dep": 680, "bundles": [{"id": "low_cost", "dep": 660, "cost": 20}, {"id": "high_cost", "dep": 640, "cost": 70}], "best": "low_cost", "naive_fails": false},
+  {"id": "unresolved_unknown", "kind": "unknown", "best": null, "naive_fails": false, "unknown": true},
+  {"id": "contradiction", "kind": "contradiction", "best": null, "naive_fails": false},
+  {"id": "sequence", "kind": "sequence", "best": "with_ride", "naive_fails": false},
+  {"id": "impossible", "kind": "impossible", "best": null, "naive_fails": false},
+  {"id": "other_person", "kind": "person", "baseline_dep": 880, "best": "keep_dinner", "naive_fails": true, "cut": ["flight_delay_min", "traffic_extra_min"]}
+]

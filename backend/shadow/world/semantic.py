@@ -155,7 +155,7 @@ def ground_semantic(world: SemanticWorld, records: list[dict[str, Any]], plan: s
         if not quote or not _contains(source, quote):
             rejected.append(f"{fact.name or fact.id} is not in a cited record")
             continue
-        if fact.value and not _contains(source, fact.value) and not _contains(quote, fact.value):
+        if fact.value and not _value_supported(source, quote, fact.value):
             rejected.append(f"{fact.name or fact.id} uses a value that is not in its quote")
             continue
         reading = _read(fact.value or quote)
@@ -213,9 +213,6 @@ def ground_semantic(world: SemanticWorld, records: list[dict[str, Any]], plan: s
         if missing_sources:
             rejected.append(f"link {link.id} cites unknown source ID(s): {', '.join(missing_sources)}")
             continue
-        link_blob = "\n".join(sources[source_id] for source_id in link_sources)
-        if link.quote and not _contains(link_blob, link.quote):
-            rejected.append(f"link {link.id} quote is not verbatim; the link is kept because its facts are")
         if link.relation in {"contradicts", "contradiction"}:
             conflicts.append(link.quote or link.id or "The records conflict.")
             continue
@@ -302,6 +299,8 @@ def _assess_obligations(obligations: list[Obligation], provenance: list[dict[str
     assessed = []
     for obligation in obligations:
         status = "MODELED" if set(obligation.source_ids) & relationship_sources else "UNRESOLVED"
+        if obligation.kind == "missing_duration":
+            status = "UNRESOLVED"
         assessed.append(obligation.model_copy(update={"status": status}))
     obligations[:] = assessed
     return [item for item in assessed if item.status == "UNRESOLVED"]
@@ -690,6 +689,22 @@ def _same_name_conflicts(facts: list[SemanticFact], parsed: dict[str, dict[str, 
 def _contains(haystack: str, needle: str) -> bool:
     folded = " ".join(haystack.lower().split())
     return " ".join(needle.lower().split()) in folded
+
+
+def _value_supported(source: str, quote: str, value: str) -> bool:
+    if _contains(source, value) or _contains(quote, value):
+        return True
+    quoted = _read(quote)
+    represented = _read(value)
+    if quoted is None or represented is None:
+        return False
+    if quoted.get("kind") not in {"duration", "money"} or represented.get("kind") != quoted.get("kind"):
+        return False
+    return (
+        quoted.get("point") == represented.get("point")
+        and quoted.get("low") == represented.get("low")
+        and quoted.get("high") == represented.get("high")
+    )
 
 
 def _show(reading: dict[str, Any]) -> str:

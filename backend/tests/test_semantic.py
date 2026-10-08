@@ -132,6 +132,37 @@ def test_quarter_past_and_spoken_ranges_parse() -> None:
     assert _read("about half an hour")["point"] == 30
 
 
+def test_supported_duration_normalization_does_not_promote_ambiguous_clocks():
+    records = [{"id": "user", "text": "The transfer takes half an hour."}]
+    normalized = ground_semantic(
+        SemanticWorld.model_validate(
+            {
+                "facts": [
+                    {
+                        "id": "transfer",
+                        "name": "transfer",
+                        "quote": "half an hour",
+                        "value": "30 minutes",
+                    }
+                ]
+            }
+        ),
+        records,
+    )
+    assert normalized.rejected == []
+    ambiguous = ground_semantic(
+        SemanticWorld.model_validate(
+            {
+                "facts": [
+                    {"id": "time", "name": "time", "quote": "quarter past four", "value": "4:15 PM"}
+                ]
+            }
+        ),
+        [{"id": "user", "text": "The event is quarter past four."}],
+    )
+    assert any("value" in item for item in ambiguous.rejected)
+
+
 def test_a_link_quote_with_an_ellipsis_still_evaluates() -> None:
     world = SemanticWorld.model_validate(
         {
@@ -156,6 +187,7 @@ def test_a_link_quote_with_an_ellipsis_still_evaluates() -> None:
     assert grounded.status == "EXECUTABLE"
     assert grounded.scenario is not None
     assert grounded.scenario.constraints[0].hardness == "hard"
+    assert grounded.rejected == []
 
 
 def test_invented_quote_is_rejected_and_aliases_coerce() -> None:

@@ -9,6 +9,7 @@ Rules:
 - quote and value must be copied from the record, not a minute count you calculated. Do not insert ellipses.
 - If you extracted a start, one or more durations, and a deadline, emit sum_before. If a duration is missing, put that gap in unknowns and do not invent it.
 - If you extracted spends and a budget, emit sum_at_most.
+- Mark a spend optional when the record says considering, optional, may skip, or can drop it, so the grounded action can remove only that spend.
 - If you extracted an occupied interval and another use inside it, emit overlaps.
 - A stated deadline stays hard. Put uncertainty in the duration's range, not by dropping the link.
 - relation is one of sum_before, sum_at_most, overlaps, contradicts.
@@ -18,3 +19,9 @@ Rules:
 - around, about, and unconfirmed times are unknowns, not hard clocks.
 - two stated times for the same event, with no record superseding the other, go in contradictions.
 - source_id is the record id you were given.
+- Before returning, check every material time, duration, spend, commitment, resource claim, and deadline in the records.
+- For each material obligation, emit exactly one relationship that is supported by its cited facts, or name the missing premise in unknowns.
+- A relationship is not complete unless every input and deadline points to a fact in facts and every cited source_id is valid.
+- Do not omit a relationship merely because the relationship itself is not quoted verbatim; cite the operand facts and use the supported relation.
+- Do not create a relationship solely to increase completeness. If entity identity, timing, or causality is ambiguous, report it as unknown.
+- If a material optional action is supported, include it in the fact and preserve the exact source wording that makes it optional.

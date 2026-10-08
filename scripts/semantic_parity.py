@@ -53,7 +53,7 @@ def _case(client: Any, model: str, case: dict[str, Any], expected: dict[str, Any
             [(item.id, item.label, item.action_ids, "catalog") for item in scenario.bundles],
             seed=7,
         )
-        repairs = sum(item.feasible for item in scored)
+        repairs = sum(item.feasible and item.id != "keep" for item in scored)
     call = client.calls[-1] if client.calls else {}
     rejected_links = sum(item.startswith("link ") for item in grounded.rejected)
     return {
@@ -62,6 +62,10 @@ def _case(client: Any, model: str, case: dict[str, Any], expected: dict[str, Any
         "schema_valid": call.get("schema_valid"),
         "facts": len(world.facts),
         "links": len(world.links),
+        "raw_facts": [item.model_dump(mode="json") for item in world.facts],
+        "raw_links": [item.model_dump(mode="json") for item in world.links],
+        "raw_unknowns": list(world.unknowns),
+        "raw_contradictions": list(world.contradictions),
         "links_rejected": rejected_links,
         "facts_rejected": len(grounded.rejected) - rejected_links,
         "obligations_missed": sum(item.status == "UNRESOLVED" for item in grounded.obligations),

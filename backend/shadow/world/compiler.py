@@ -89,6 +89,8 @@ def build_obligation_inventory(records: list[dict[str, Any]]) -> list[Obligation
             inventory.append(_obligation(index, "budget", text, source_id))
         if re.search(r"\b\d+\s*(?:to|–|-)?\s*\d*\s*minutes?\b", lowered):
             inventory.append(_obligation(index, "duration", text, source_id))
+        elif re.search(r"\b(stop|detour|transfer|walk|travel|packing|setup)\b", lowered):
+            inventory.append(_obligation(index, "missing_duration", text, source_id))
         if re.search(r"\b(from|between)\b.+\b(until|to|and)\b", lowered):
             inventory.append(_obligation(index, "exclusive_resource", text, source_id))
         if re.search(r"\b(must|cannot|isn't|is not).+\b(and|but)\b.+\b(must|cannot|isn't|is not)\b", lowered):

@@ -3,7 +3,7 @@
 from shadow.repair.evaluate import evaluate_repairs
 from shadow.simulation.engine import bind, evaluate_constraints
 from shadow.world.loader import effects_for
-from shadow.world.semantic import SemanticWorld, coerce_semantic, ground_semantic
+from shadow.world.semantic import SemanticWorld, coerce_semantic, ground_semantic, targeted_recovery
 
 TRAIN = (
     "My class ends at 3:30. The drive to the station takes 15-35 minutes, "
@@ -169,3 +169,175 @@ def test_invented_quote_is_rejected_and_aliases_coerce() -> None:
     coerced = coerce_semantic({"variables": [{"name": "doors", "value": "1:40 PM", "quote": "Doors close at 1:40 PM"}]})
     assert coerced["facts"][0]["id"] == "doors"
     assert coerced["facts"][0]["value"] == "1:40 PM"
+
+def test_relationship_can_ground_operands_from_independent_records():
+    world = SemanticWorld.model_validate(
+        {
+            "facts": [
+                {
+                    "id": "reservation",
+                    "name": "van reservation",
+                    "quote": "van is reserved from 3 PM until 6 PM",
+                    "value": "from 3 PM until 6 PM",
+                    "source_id": "reservation",
+                    "entity": "van-1",
+                },
+                {
+                    "id": "use",
+                    "name": "van use",
+                    "quote": "I need that van at 4 PM",
+                    "value": "at 4 PM",
+                    "source_id": "request",
+                    "entity": "van-1",
+                },
+            ],
+            "links": [
+                {
+                    "id": "same_van",
+                    "relation": "overlaps",
+                    "inputs": ["reservation", "use"],
+                    "source_ids": ["reservation", "request"],
+                    "resource": "van-1",
+                }
+            ],
+        }
+    )
+    grounded = ground_semantic(
+        world,
+        [
+            {"id": "reservation", "text": "The van is reserved from 3 PM until 6 PM."},
+            {"id": "request", "text": "I need that van at 4 PM."},
+        ],
+    )
+    assert grounded.status == "EXECUTABLE"
+    assert grounded.scenario is not None
+    assert evaluate_constraints(grounded.scenario, bind(grounded.scenario, {}, {}))["c_same_van"] is False
+
+
+def test_different_resources_do_not_create_a_conflict():
+    world = SemanticWorld.model_validate(
+            {
+                "facts": [
+                    {
+                        "id": "reservation",
+                        "name": "van reservation",
+                        "quote": "van is reserved from 3 PM until 6 PM",
+                        "value": "from 3 PM until 6 PM",
+                        "source_id": "reservation",
+                        "entity": "van-1",
+                    },
+                    {
+                        "id": "use",
+                        "name": "van use",
+                        "quote": "I need a different van at 4 PM",
+                        "value": "at 4 PM",
+                        "source_id": "request",
+                        "entity": "van-2",
+                    },
+                ],
+                "links": [
+                    {
+                        "id": "different_van",
+                        "relation": "overlaps",
+                        "inputs": ["reservation", "use"],
+                        "source_ids": ["reservation", "request"],
+                        "resource": "van-1",
+                    }
+                ],
+            }
+    )
+    grounded = ground_semantic(
+        world,
+        [
+            {"id": "reservation", "text": "The van is reserved from 3 PM until 6 PM."},
+            {"id": "request", "text": "I need a different van at 4 PM."},
+        ],
+    )
+    assert grounded.status == "NEEDS_INFORMATION"
+    assert grounded.scenario is None
+
+
+def test_omitted_material_obligations_are_unresolved():
+    records = [
+            {"id": "deadline", "text": "The report must be submitted by 5."},
+            {"id": "budget", "text": "The fixed budget is $100 and the purchase is $80."},
+            {"id": "commitment", "text": "The protected hearing cannot move."},
+    ]
+    world = SemanticWorld.model_validate({})
+    grounded = ground_semantic(world, records)
+    assert grounded.status == "NEEDS_INFORMATION"
+    assert {item.status for item in grounded.obligations} == {"UNRESOLVED"}
+    assert len(grounded.missing) >= 3
+
+
+def test_unknown_source_id_is_rejected_without_searching_other_records():
+    grounded = ground_semantic(
+            SemanticWorld.model_validate(
+                {
+                    "facts": [
+                        {
+                            "id": "deadline",
+                            "name": "deadline",
+                            "quote": "deadline is at 5",
+                            "value": "at 5",
+                            "source_id": "invented",
+                        }
+                    ]
+                }
+            ),
+            [{"id": "real", "text": "The deadline is at 5."}],
+    )
+    assert grounded.status == "INVALID_MODEL_OUTPUT"
+    assert "invented" in grounded.rejected[0]
+
+
+def test_targeted_recovery_is_single_call_and_revalidated():
+    records = [
+        {"id": "reservation", "text": "The van is reserved from 3 PM until 6 PM."},
+        {"id": "request", "text": "I need that van at 4 PM."},
+    ]
+    incomplete = SemanticWorld.model_validate(
+        {
+            "facts": [
+                {
+                    "id": "reservation",
+                    "name": "van reservation",
+                    "quote": "van is reserved from 3 PM until 6 PM",
+                    "value": "from 3 PM until 6 PM",
+                    "source_id": "reservation",
+                    "entity": "van-1",
+                },
+                {
+                    "id": "use",
+                    "name": "van use",
+                    "quote": "I need that van at 4 PM",
+                    "value": "at 4 PM",
+                    "source_id": "request",
+                    "entity": "van-1",
+                },
+            ]
+        }
+    )
+    calls = 0
+
+    def recover(_grounding):
+        nonlocal calls
+        calls += 1
+        return SemanticWorld.model_validate(
+            {
+                **incomplete.model_dump(),
+                "links": [
+                    {
+                        "id": "same_van",
+                        "relation": "overlaps",
+                        "inputs": ["reservation", "use"],
+                        "source_ids": ["reservation", "request"],
+                        "resource": "van-1",
+                    }
+                ],
+            }
+        )
+
+    recovered = targeted_recovery(incomplete, records, "Use the van safely.", recover)
+    assert calls == 1
+    assert recovered.status == "EXECUTABLE"

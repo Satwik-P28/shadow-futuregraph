@@ -7,7 +7,7 @@ A missing duration stays missing. A conflict is not given a winner.
 from __future__ import annotations
 
 import re
-from typing import Any, Literal
+from typing import Any, Callable, Literal
 
 from pydantic import BaseModel, Field
 
@@ -21,6 +21,7 @@ from shadow.core.models import (
     Variable,
     WorldFact,
 )
+from shadow.world.compiler import Obligation, build_obligation_inventory
 
 Status = Literal[
     "EXECUTABLE",
@@ -41,6 +42,8 @@ class SemanticFact(BaseModel):
     unit: str = "unspecified"
     hardness: str = "unknown"
     source_id: str = "user"
+    source_ids: list[str] = Field(default_factory=list)
+    entity: str | None = None
     optional: bool = False
 
 
@@ -52,6 +55,8 @@ class SemanticLink(BaseModel):
     hardness: str = "hard"
     quote: str = ""
     source_id: str = "user"
+    source_ids: list[str] = Field(default_factory=list)
+    resource: str | None = None
 
 
 class SemanticWorld(BaseModel):
@@ -69,6 +74,8 @@ class Grounding(BaseModel):
     rejected: list[str] = Field(default_factory=list)
     scenario: Scenario | None = None
     shown: list[dict[str, str]] = Field(default_factory=list)
+    provenance: list[dict[str, Any]] = Field(default_factory=list)
+    obligations: list[Obligation] = Field(default_factory=list)
 
 
 def coerce_semantic(payload: dict[str, Any]) -> dict[str, Any]:
@@ -95,6 +102,8 @@ def coerce_semantic(payload: dict[str, Any]) -> dict[str, Any]:
                 "unit": str(item.get("unit") or "unspecified"),
                 "hardness": str(item.get("hardness") or "unknown"),
                 "source_id": str(item.get("source_id") or item.get("source") or "user"),
+                "source_ids": [str(source) for source in item.get("source_ids") or []],
+                "entity": None if item.get("entity") is None else str(item.get("entity")),
                 "optional": bool(item.get("optional", False)),
             }
         )
@@ -114,6 +123,8 @@ def coerce_semantic(payload: dict[str, Any]) -> dict[str, Any]:
                 "hardness": str(item.get("hardness") or "hard"),
                 "quote": str(item.get("quote") or ""),
                 "source_id": str(item.get("source_id") or item.get("source") or "user"),
+                "source_ids": [str(source) for source in item.get("source_ids") or []],
+                "resource": None if item.get("resource") is None else str(item.get("resource")),
             }
         )
     unknowns = payload.get("unknowns") or []
@@ -128,12 +139,18 @@ def coerce_semantic(payload: dict[str, Any]) -> dict[str, Any]:
 
 def ground_semantic(world: SemanticWorld, records: list[dict[str, Any]], plan: str = "") -> Grounding:
     sources = {str(row.get("id") or "user"): str(row.get("text") or "") for row in records}
-    blob = "\n".join(sources.values())
     rejected: list[str] = []
     parsed: dict[str, dict[str, Any]] = {}
     shown: list[dict[str, str]] = []
+    provenance: list[dict[str, Any]] = []
+    obligations = build_obligation_inventory(records)
     for fact in world.facts:
-        source = sources.get(fact.source_id) or blob
+        fact_sources = list(dict.fromkeys(fact.source_ids or [fact.source_id]))
+        missing_sources = [source_id for source_id in fact_sources if source_id not in sources]
+        if missing_sources:
+            rejected.append(f"{fact.name or fact.id} cites unknown source ID(s): {', '.join(missing_sources)}")
+            continue
+        source = "\n".join(sources[source_id] for source_id in fact_sources)
         quote = fact.quote.strip() or (fact.value or "")
         if not quote or not _contains(source, quote):
             rejected.append(f"{fact.name or fact.id} is not in a cited record")
@@ -148,11 +165,21 @@ def ground_semantic(world: SemanticWorld, records: list[dict[str, Any]], plan: s
             continue
         reading["name"] = fact.name or fact.id
         reading["quote"] = quote
+        reading["source_ids"] = fact_sources
+        reading["entity"] = fact.entity
         reading["optional"] = fact.optional or "considering" in quote.lower()
         reading["locked"] = bool(re.search(r"committed|cannot be moved|cannot move", quote, re.IGNORECASE))
         parsed[fact.id] = reading
         parsed[_key(fact.name)] = reading
         shown.append({"source": quote, "extracted": _show(reading), "role": reading["kind"]})
+        provenance.append(
+            {
+                "id": fact.id,
+                "role": "operand",
+                "source_ids": fact_sources,
+                "evidence_type": "direct",
+            }
+        )
     if rejected and not parsed:
         return Grounding(status="INVALID_MODEL_OUTPUT", reason=rejected[0], rejected=rejected, shown=shown)
     conflicts = list(world.contradictions)
@@ -164,6 +191,8 @@ def ground_semantic(world: SemanticWorld, records: list[dict[str, Any]], plan: s
             contradictions=conflicts,
             rejected=rejected,
             shown=shown,
+            provenance=provenance,
+            obligations=obligations,
         )
     variables: list[Variable] = []
     constraints: list[Constraint] = []
@@ -171,16 +200,51 @@ def ground_semantic(world: SemanticWorld, records: list[dict[str, Any]], plan: s
     missing = [item for item in world.unknowns if item]
     built: set[str] = set()
     for link in world.links:
+        link_sources = list(dict.fromkeys(link.source_ids or [link.source_id]))
+        if not link.source_ids and link.source_id not in sources:
+            link_sources = list(
+                dict.fromkeys(
+                    source_id
+                    for input_id in link.inputs
+                    for source_id in (_lookup(parsed, input_id) or {}).get("source_ids", [])
+                )
+            )
+        missing_sources = [source_id for source_id in link_sources if source_id not in sources]
+        if missing_sources:
+            rejected.append(f"link {link.id} cites unknown source ID(s): {', '.join(missing_sources)}")
+            continue
+        link_blob = "\n".join(sources[source_id] for source_id in link_sources)
+        if link.quote and not _contains(link_blob, link.quote):
+            rejected.append(f"link {link.id} quote is not verbatim; the link is kept because its facts are")
         if link.relation in {"contradicts", "contradiction"}:
             conflicts.append(link.quote or link.id or "The records conflict.")
             continue
-        if link.quote and not _contains(blob, link.quote):
-            rejected.append(f"link {link.id} quote is not verbatim; the link is kept because its facts are")
         error = _apply_link(link, parsed, variables, constraints, actions, built, missing)
         if error:
             missing.append(error)
+        else:
+            provenance.append(
+                {
+                    "id": link.id,
+                    "role": "relationship",
+                    "source_ids": link_sources,
+                    "evidence_type": "deterministic_derivation",
+                    "relation": link.relation,
+                    "inputs": list(link.inputs),
+                }
+            )
     if conflicts:
-        return Grounding(status="CONTRADICTORY", reason=conflicts[0], contradictions=conflicts, rejected=rejected, shown=shown)
+        return Grounding(
+            status="CONTRADICTORY",
+            reason=conflicts[0],
+            contradictions=conflicts,
+            rejected=rejected,
+            shown=shown,
+            provenance=provenance,
+            obligations=obligations,
+        )
+    unresolved = _assess_obligations(obligations, provenance)
+    missing.extend(item.label for item in unresolved if item.status == "UNRESOLVED")
     if constraints and missing:
         status: Status = "PARTIALLY_EXECUTABLE"
         reason = "Some grounded constraints can be evaluated. Material facts are still missing."
@@ -197,7 +261,8 @@ def ground_semantic(world: SemanticWorld, records: list[dict[str, Any]], plan: s
         reason = "The proposal did not yield a grounded constraint."
     scenario = None
     if constraints:
-        scenario = _scenario(plan, variables, constraints, actions, records, status)
+        scenario = _scenario(plan, variables, constraints, actions, records, status, provenance)
+        scenario.metadata["obligations"] = [item.model_dump(mode="json") for item in obligations]
     return Grounding(
         status=status,
         reason=reason,
@@ -205,7 +270,41 @@ def ground_semantic(world: SemanticWorld, records: list[dict[str, Any]], plan: s
         rejected=rejected,
         scenario=scenario,
         shown=shown,
+        provenance=provenance,
+        obligations=obligations,
     )
+
+
+def targeted_recovery(
+    world: SemanticWorld,
+    records: list[dict[str, Any]],
+    plan: str,
+    recover: Callable[[Grounding], SemanticWorld | None],
+) -> Grounding:
+    """Try one targeted proposal only for unresolved coverage, then re-ground it."""
+    initial = ground_semantic(world, records, plan)
+    if initial.status not in {"PARTIALLY_EXECUTABLE", "NEEDS_INFORMATION"}:
+        return initial
+    candidate = recover(initial)
+    if candidate is None:
+        return initial
+    recovered = ground_semantic(candidate, records, plan)
+    return recovered if recovered.status == "EXECUTABLE" else initial
+
+
+def _assess_obligations(obligations: list[Obligation], provenance: list[dict[str, Any]]) -> list[Obligation]:
+    relationship_sources = {
+        source_id
+        for item in provenance
+        if item.get("role") == "relationship"
+        for source_id in item.get("source_ids", [])
+    }
+    assessed = []
+    for obligation in obligations:
+        status = "MODELED" if set(obligation.source_ids) & relationship_sources else "UNRESOLVED"
+        assessed.append(obligation.model_copy(update={"status": status}))
+    obligations[:] = assessed
+    return [item for item in assessed if item.status == "UNRESOLVED"]
 
 
 def _apply_link(
@@ -324,6 +423,10 @@ def _overlap(
     items = [_lookup(parsed, item) for item in link.inputs]
     if any(item is None for item in items):
         return "an overlap endpoint is missing"
+    if link.resource:
+        identities = {str(item.get("entity")) for item in items if item and item.get("entity")}
+        if identities and identities != {link.resource}:
+            return "the overlap has conflicting resource identities"
     window = next((item for item in items if item and item.get("end") is not None), None)
     point = next((item for item in items if item and item.get("point") is not None and item is not window), None)
     if window is None or point is None or point.get("point") is None:
@@ -407,6 +510,7 @@ def _scenario(
     actions: list[ActionDef],
     records: list[dict[str, Any]],
     status: str,
+    provenance: list[dict[str, Any]],
 ) -> Scenario:
     bundles = [Bundle(id="keep", label="Keep the stated plan", action_ids=["keep"], rationale="No extra action was grounded.")]
     for action in actions:
@@ -438,7 +542,12 @@ def _scenario(
         actions=actions,
         bundles=bundles,
         facts=facts,
-        metadata={"compiled_from": "semantic compiler", "route": "nemotron", "executable_status": status},
+        metadata={
+            "compiled_from": "semantic compiler",
+            "route": "nemotron",
+            "executable_status": status,
+            "provenance": provenance,
+        },
     )
 
 

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+
 from shadow.core.models import ActionDef, FutureContract, Scenario
 from shadow.integrations.sandbox import ProviderError, SandboxProviders
 from shadow.runtime.broker import AuthorizationDenied, authorize
@@ -38,6 +40,7 @@ def execute_bundle(
     providers: SandboxProviders,
     events: EventLog,
     plan_id: str,
+    now: datetime | None = None,
 ) -> dict[str, object]:
     actions = action_map(scenario)
     ordered = order_actions([actions[item.action_id] for item in contract.allowed_actions])
@@ -45,7 +48,10 @@ def execute_bundle(
     results = []
     for action in ordered:
         try:
-            authorize(contract, action, {"scenario": scenario})
+            world = {"scenario": scenario}
+            if now is not None:
+                world["now"] = now
+            authorize(contract, action, world)
         except AuthorizationDenied as exc:
             events.append(plan_id, "ACTION_BLOCKED", {"action_id": action.id, "reason": exc.reason}, "broker")
             return {"status": "blocked", "reason": exc.reason, "results": results}

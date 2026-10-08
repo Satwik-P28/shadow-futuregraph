@@ -110,6 +110,20 @@ def test_frozen_route_filters_model_proposals():
     assert all("aisle" not in item.label for item in compiled.hard_constraints)
     assert any("aisle" in item.label for item in compiled.soft_preferences)
 
+    def test_obligation_inventory_detects_omitted_commitment_without_licensing_it():
+        from shadow.world.compiler import (
+            assess_obligation_coverage,
+            build_obligation_inventory,
+            obligation_metrics,
+        )
+
+        records = [{"id": "calendar", "text": "The hearing cannot move."}]
+        inventory = build_obligation_inventory(records)
+        assert inventory and inventory[0].status == "UNRESOLVED"
+        coverage = assess_obligation_coverage(compile_bundle({"plan_text": "Keep Friday.", "records": records}), records)
+        assert coverage[0].status == "UNRESOLVED"
+        assert obligation_metrics(coverage)["material_obligation_recall"] == 0.0
+
 
 def test_adversarial_holdout_is_ten_frozen_cases():
     cases = load_cases()

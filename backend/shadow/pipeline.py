@@ -76,10 +76,13 @@ def _compiled_modelability(compiled: Any) -> dict[str, Any]:
         "CONTRADICTORY": "CONTRADICTORY",
         "UNSUPPORTED": "UNSUPPORTED",
     }[compiled.status]
+    unresolved = [item.label for item in getattr(compiled, "obligations", []) if item.status == "UNRESOLVED"]
+    if unresolved and status == "SUPPORTED":
+        status = "NEEDS_INFORMATION"
     return ModelabilityResult(
         status=status,
         reason=compiled.reason,
-        missing_information=list(compiled.missing or compiled.contradictions),
+        missing_information=list(compiled.missing or compiled.contradictions) + unresolved,
         compiled_constraints=list(compiled.constraint_labels),
         compiled_dependencies=list(compiled.dependency_labels),
         provenance="executable primitive compiler",
@@ -298,6 +301,9 @@ class PlanService:
 
     def approve(self, plan_id: str, repair_id: str) -> dict[str, Any]:
         record = self.plans[plan_id]
+        understanding = record.get("understanding") or {}
+        if understanding and understanding.get("status") != "EXECUTABLE":
+            raise ValueError("material obligations remain unresolved")
         repair = next(item for item in record["repairs"] if item.id == repair_id)
         if repair.hard_violations or repair.unresolved_hard:
             raise ValueError("repair is not feasible")

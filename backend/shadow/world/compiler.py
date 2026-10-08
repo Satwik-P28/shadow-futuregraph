@@ -40,6 +40,8 @@ class CompiledWorld(BaseModel):
     unknowns: list[CompiledItem] = Field(default_factory=list)
     actions: list[CompiledItem] = Field(default_factory=list)
     licensed_constraint_ids: list[str] = Field(default_factory=list)
+    rejected: list[str] = Field(default_factory=list)
+    obligations: list[Obligation] = Field(default_factory=list)
 
     def items(self) -> list[CompiledItem]:
         return [
@@ -61,6 +63,76 @@ class SemanticProposal(BaseModel):
     soft_preferences: list[dict[str, Any]] = Field(default_factory=list)
     dependencies: list[dict[str, Any]] = Field(default_factory=list)
     unknowns: list[dict[str, Any]] = Field(default_factory=list)
+
+
+class Obligation(BaseModel):
+    id: str
+    kind: str
+    label: str
+    source_ids: list[str] = Field(default_factory=list)
+    status: str = "UNRESOLVED"
+
+
+def build_obligation_inventory(records: list[dict[str, Any]]) -> list[Obligation]:
+    """Extract review candidates from raw records without authorizing any relation."""
+    inventory: list[Obligation] = []
+    for index, row in enumerate(records):
+        source_id = str(row.get("id") or "user")
+        text = str(row.get("text") or "").strip()
+        if not text:
+            continue
+        lowered = text.lower()
+        if re.search(r"\b(cannot|must|fixed|committed|reserved|booked|occupied|at most|no more than|by)\b", lowered):
+            kind = "deadline" if re.search(r"\bby\b|\bdeadline\b", lowered) else "commitment"
+            inventory.append(_obligation(index, kind, text, source_id))
+        if "$" in text and re.search(r"\$\s*\d", text):
+            inventory.append(_obligation(index, "budget", text, source_id))
+        if re.search(r"\b\d+\s*(?:to|–|-)?\s*\d*\s*minutes?\b", lowered):
+            inventory.append(_obligation(index, "duration", text, source_id))
+        if re.search(r"\b(from|between)\b.+\b(until|to|and)\b", lowered):
+            inventory.append(_obligation(index, "exclusive_resource", text, source_id))
+        if re.search(r"\b(must|cannot|isn't|is not).+\b(and|but)\b.+\b(must|cannot|isn't|is not)\b", lowered):
+            inventory.append(_obligation(index, "contradiction", text, source_id))
+    return inventory
+
+
+def _obligation(index: int, kind: str, label: str, source_id: str) -> Obligation:
+    return Obligation(id=f"obligation_{index}_{kind}", kind=kind, label=label, source_ids=[source_id])
+
+
+def assess_obligation_coverage(
+    compiled: CompiledWorld,
+    records: list[dict[str, Any]],
+) -> list[Obligation]:
+    """Compare raw-record candidates with modeled items; never promotes a candidate."""
+    modeled = [item for item in compiled.items() if item.kind != "goal"]
+    assessed: list[Obligation] = []
+    for obligation in build_obligation_inventory(records):
+        source_items = [item for item in modeled if set(obligation.source_ids) & set(item.source_ids)]
+        words = {word for word in re.findall(r"[a-z]{4,}", obligation.label.lower()) if word not in _STOP_WORDS}
+        matched = any(
+            len(words & set(re.findall(r"[a-z]{4,}", item.label.lower()))) >= min(2, len(words))
+            for item in source_items
+        )
+        status = "MODELED" if matched else "UNRESOLVED"
+        if not source_items and obligation.kind == "contradiction":
+            status = "UNSUPPORTED"
+        assessed.append(obligation.model_copy(update={"status": status}))
+    return assessed
+
+
+def obligation_metrics(obligations: list[Obligation]) -> dict[str, float | int]:
+    material = [item for item in obligations if item.status != "IRRELEVANT"]
+    modeled = sum(item.status == "MODELED" for item in material)
+    return {
+        "material_obligation_recall": modeled / len(material) if material else 1.0,
+        "false_obligation_detection": sum(item.status == "UNSUPPORTED" for item in obligations),
+        "obligation_total": len(obligations),
+        "obligation_modeled": modeled,
+    }
+
+
+_STOP_WORDS = {"cannot", "must", "from", "until", "with", "that", "this", "more", "than"}
 
 
 def load_bundle(scenario_id: str) -> dict[str, Any] | None:
@@ -87,6 +159,7 @@ def compile_bundle(bundle: dict[str, Any], proposal: SemanticProposal | None = N
     )
     if proposal is not None:
         _accept_model_proposal(bundle, world, proposal)
+    world.obligations = assess_obligation_coverage(world, list(bundle.get("records") or []))
     return world
 
 
@@ -135,6 +208,7 @@ def verify_proposal(bundle: dict[str, Any], proposal: SemanticProposal) -> Compi
     world = CompiledWorld()
     for index, row in enumerate(proposal.hard_constraints):
         label = str(row.get("label") or "")
+        world.rejected.extend(_unknown_source_errors(label, row, records))
         sources = _known_sources(row, records)
         if not label or not sources:
             continue
@@ -151,6 +225,7 @@ def verify_proposal(bundle: dict[str, Any], proposal: SemanticProposal) -> Compi
             )
     for index, row in enumerate(proposal.dependencies):
         label = str(row.get("label") or "")
+        world.rejected.extend(_unknown_source_errors(label, row, records))
         sources = _known_sources(row, records)
         if label and sources and not _numbers_unsupported(label, sources, records):
             world.dependencies.append(
@@ -158,6 +233,7 @@ def verify_proposal(bundle: dict[str, Any], proposal: SemanticProposal) -> Compi
             )
     for index, row in enumerate(proposal.unknowns):
         label = str(row.get("label") or "")
+        world.rejected.extend(_unknown_source_errors(label, row, records))
         sources = _known_sources(row, records)
         if label:
             world.unknowns.append(
@@ -186,6 +262,13 @@ def world_from_proposal(proposal: SemanticProposal) -> CompiledWorld:
 
 def _known_sources(row: dict[str, Any], records: dict[str, str]) -> list[str]:
     return [str(item) for item in row.get("source_ids") or [] if str(item) in records]
+
+
+def _unknown_source_errors(label: str, row: dict[str, Any], records: dict[str, str]) -> list[str]:
+    unknown = [str(item) for item in row.get("source_ids") or [] if str(item) not in records]
+    if not unknown:
+        return []
+    return [f"{label or 'proposal item'} cites unknown source ID(s): {', '.join(unknown)}"]
 
 
 def _numbers_unsupported(label: str, sources: list[str], records: dict[str, str]) -> bool:

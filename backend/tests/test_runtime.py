@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from shadow.core.models import ActionDef, Assumption, ContractAction, FutureContract
 from shadow.integrations.sandbox import SandboxProviders
 from shadow.runtime.broker import AuthorizationDenied, authorize
@@ -37,6 +39,9 @@ def _contract(action_ids: list[str]) -> FutureContract:
     )
 
 
+TEST_NOW = datetime(2026, 10, 7, 18, tzinfo=timezone.utc)
+
+
 def test_broker_rejects_unrelated_event():
     scenario = load_scenario("travel")
     exam = next(item for item in scenario.actions if item.id == "update_exam")
@@ -54,6 +59,7 @@ def test_duplicate_execution_does_not_double_apply():
         providers=providers,
         events=events,
         plan_id="p1",
+        now=TEST_NOW,
     )
     assert result["status"] == "verified"
     mutations = providers.mutations
@@ -63,6 +69,7 @@ def test_duplicate_execution_does_not_double_apply():
         providers=providers,
         events=events,
         plan_id="p1",
+        now=TEST_NOW,
     )
     assert again["status"] == "verified"
     assert providers.mutations == mutations
@@ -82,6 +89,7 @@ def test_timeout_then_retry_is_idempotent():
         providers=providers,
         events=events,
         plan_id="p2",
+        now=TEST_NOW,
     )
     # Timeout is raised after commit, then retry uses the same key and verifies.
     assert result["status"] == "verified"
@@ -105,6 +113,7 @@ def test_failed_flight_compensates_completed_calendar_step():
         providers=providers,
         events=events,
         plan_id="p4",
+        now=TEST_NOW,
     )
     # confirm_friday sorts first and commits. The flight then fails closed.
     assert result["status"] == "halted"
@@ -122,6 +131,7 @@ def test_provider_lie_halts():
         providers=providers,
         events=events,
         plan_id="p3",
+        now=TEST_NOW,
     )
     assert result["status"] == "halted"
     assert result["decision"] == "verify_mismatch"

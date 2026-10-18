@@ -4,6 +4,9 @@
 
 Public demo: https://shadow-futuregraph.onrender.com
 
+Submission materials: [final demo script](docs/FINAL_DEMO_SCRIPT.md) and
+[submission checklist](docs/SUBMISSION_CHECKLIST.md).
+
 No login and no API key. The badge stays SANDBOX. Demo video: not recorded. Script: `docs/DEMO_SCRIPT.md` (2:40–2:55).
 
 Shadow compiles messy personal context into a typed model of the future around a plan, searches that model for nearby failures, repairs the plan, asks you to approve the repaired future, executes only those state transitions, and checks the result.

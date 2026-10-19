@@ -182,12 +182,18 @@ class PlanService:
         found = retrieve(scenario, record["text"])
         context = compact_context(scenario, record["text"])
         self.events.append(plan_id, "FACT_RETRIEVED", {"counts": {key: len(value) for key, value in found.items()}}, "retrieval")
-        spec = self.client.complete_json("analyze_plan", context, PlanSpec)
+        if record.get("compiled_from") == "executable primitive compiler":
+            spec = _spec_for_compiled_scenario(scenario)
+        else:
+            spec = self.client.complete_json("analyze_plan", context, PlanSpec)
         self._stage(record, "BUILDING_GRAPH")
         catalog = [
             (bundle.id, bundle.label, bundle.action_ids, "catalog") for bundle in scenario.bundles
         ]
-        proposal = self.client.complete_json("propose_repairs", context, RepairProposal)
+        if record.get("compiled_from") == "executable primitive compiler":
+            proposal = RepairProposal(repairs=[])
+        else:
+            proposal = self.client.complete_json("propose_repairs", context, RepairProposal)
         model_rows = [(item.id, item.label, item.action_ids, "model") for item in proposal.repairs[:5]]
         self._stage(record, "SEARCHING_FAILURES")
         self._stage(record, "TESTING_REPAIRS")
@@ -200,6 +206,10 @@ class PlanService:
                 "evaluator",
             )
         naive_id = select_naive(scenario)
+        if record.get("compiled_from") == "executable primitive compiler":
+            # The unmodified future is the comparison point even when it fails.
+            if any(bundle.id == "keep" for bundle in scenario.bundles):
+                naive_id = "keep"
         recommended = next((item for item in repairs if item.recommended), None)
         graph = build_graph(scenario, repairs, naive_id=naive_id, recommended_id=None if recommended is None else recommended.id)
         self.events.append(
@@ -687,6 +697,30 @@ def _contract(plan_id: str, scenario: Scenario, repair: Any, spec: PlanSpec) -> 
         verification_requirements=["provider.verify must match the approved effects"],
         compensation_actions=[action.id for action in scenario.actions if action.compensatable],
         provenance="user-approved-repair",
+    )
+
+
+def _spec_for_compiled_scenario(scenario: Scenario) -> PlanSpec:
+    """Create the non-authorizing plan view for a deterministic compiled world."""
+    return PlanSpec(
+        goals=[{"id": "goal", "description": scenario.plan_prompt or "Satisfy the stated plan."}],
+        hard_constraints=[
+            {
+                "id": item.id,
+                "description": item.description,
+                "hardness": item.hardness,
+                "epistemic_status": "COMPUTED",
+            }
+            for item in scenario.constraints
+            if item.hardness == "hard"
+        ],
+        dependencies=[],
+        unknowns=[
+            item.label
+            for item in scenario.variables
+            if item.epistemic_status.value == "UNKNOWN"
+        ],
+        hazards=[],
     )
 
 

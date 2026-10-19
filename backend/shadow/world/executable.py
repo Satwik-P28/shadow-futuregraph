@@ -511,6 +511,7 @@ def _variable(item: VariableIR) -> Variable:
         epistemic_status=status,
         distribution=distribution,
         formula=None if item.formula is None else _expr(item.formula),
+        show_in_diff=item.role != "derived",
     )
 
 
@@ -634,7 +635,8 @@ def _absorb(
         flags=re.IGNORECASE,
     ).strip()
     alternate = re.search(
-        r"^(?P<name>.+?) can start at (?P<clock>\d{1,2}(?::\d{2})?\s*[ap]m) instead$",
+        r"^(?P<name>.+?) (?:can|could|may) (?:start|be scheduled) at "
+        r"(?P<clock>\d{1,2}(?::\d{2})?\s*[ap]m)(?: instead| as an alternative)?$",
         piece,
         re.IGNORECASE,
     )
@@ -735,7 +737,8 @@ def _prepare(text: str) -> str:
 
 def _norm(text: str) -> str:
     cleaned = re.sub(r"\s+", " ", text.lower()).strip(" .")
-    return re.sub(r"^(the|a|an)\s+", "", cleaned)
+    cleaned = re.sub(r"^(the|a|an|my|our|this)\s+", "", cleaned)
+    return re.sub(r"\s+(?:meeting|appointment)\s+slot$", "", cleaned)
 
 
 def _slug(text: str) -> str:

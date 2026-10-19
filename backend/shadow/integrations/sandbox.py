@@ -61,6 +61,8 @@ class SandboxProviders:
 
     def verify(self, action: ActionDef) -> bool:
         resource = self.state.get(action.resource)
+        if not action.effects:
+            return True
         if "state_token" in action.effects:
             return resource is not None and resource.get("state_token") == action.effects["state_token"]
         if resource is None:
@@ -73,6 +75,10 @@ class SandboxProviders:
             return resource.get("day") == "friday"
         if action.resource == "cal_exam":
             return False
+        if action.effects:
+            return isinstance(resource, dict) and all(
+                resource.get(key) == value for key, value in action.effects.items()
+            )
         return True
 
     def compensate(self, action: ActionDef, idempotency_key: str) -> dict[str, Any]:
@@ -124,3 +130,7 @@ class SandboxProviders:
             bucket = self.state.setdefault(action.resource, {})
             if isinstance(bucket, dict):
                 bucket["state_token"] = action.effects["state_token"]
+        elif action.effects:
+            bucket = self.state.setdefault(action.resource, {})
+            if isinstance(bucket, dict):
+                bucket.update(action.effects)

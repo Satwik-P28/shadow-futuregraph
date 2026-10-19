@@ -3,6 +3,8 @@
 from fastapi.testclient import TestClient
 
 from shadow.api.app import create_app
+from shadow.pipeline import PlanService
+from shadow.runtime.events import EventLog
 
 TRIP = "Move my NYC trip to Friday and make sure everything still works."
 DENTIST = "Move my dentist appointment to Thursday without interfering with class."
@@ -96,3 +98,30 @@ def test_blank_plan_is_rejected() -> None:
     response = _client().post("/api/plans/freeform", json={"text": "   "})
     assert response.status_code == 400
     assert "Enter what you are planning" in response.json()["detail"]
+
+
+def test_unfamiliar_timing_plan_reaches_verified_sandbox_state() -> None:
+    service = PlanService(EventLog("sqlite://"))
+    result = service.analyze_freeform(
+        "My workshop ends at 3:10 pm. The workshop to the clinic takes 40 to 50 minutes. "
+        "The clinic starts at 3:30 pm. The clinic can start at 4:30 pm instead."
+    )
+    plan = result["plan"]
+    assert result["modelability"]["status"] == "SUPPORTED"
+    assert plan["naive_repair_id"] == "keep"
+    assert plan["recommended_repair_id"] == "move_clinic"
+    service.approve(plan["id"], plan["recommended_repair_id"])
+    execution = service.execute(plan["id"])
+    assert execution["status"] == "verified"
+    assert execution["state"]["clinic"]["clinic_start"] == 990.0
+    assert service.view(plan["id"])["reconciliation"]["matched"] is True
+
+
+def test_compiled_world_cannot_be_approved_without_a_repair() -> None:
+    service = PlanService(EventLog("sqlite://"))
+    result = service.analyze_freeform(
+        "My shift ends at 5 pm. The shift to the class takes 20 to 30 minutes. "
+        "The class starts at 5:10 pm."
+    )
+    assert result["modelability"]["status"] == "SUPPORTED"
+    assert result["plan"]["status"] == "NO_FEASIBLE_FUTURE"

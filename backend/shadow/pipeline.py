@@ -476,6 +476,13 @@ class PlanService:
         repair = self._repair(record, repair_id)
         return simulate(record["scenario"], repair.action_ids, overrides)
 
+    def batch_lab(self, plan_id: str, repair_id: str | None = None) -> dict[str, Any]:
+        from shadow.futures.lab import batch_simulate
+
+        record = self._ready(plan_id)
+        repair = self._repair(record, repair_id)
+        return batch_simulate(record["scenario"], repair.action_ids)
+
     def nearest_lab(self, plan_id: str, repair_id: str | None = None) -> dict[str, Any]:
         record = self._ready(plan_id)
         repair = self._repair(record, repair_id)

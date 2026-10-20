@@ -94,3 +94,62 @@ def nearest_failure(scenario: Scenario, repair: RepairMetrics) -> dict[str, Any]
     result["message"] = NEAREST_MESSAGE if failure else describe_failure(scenario, None)
     result["failure"] = None if failure is None else failure.model_dump(mode="json")
     return result
+
+
+def batch_simulate(
+    scenario: Scenario,
+    action_ids: list[str],
+    *,
+    points_per_variable: int = 16,
+) -> dict[str, Any]:
+    """Evaluate a bounded Cartesian grid using the same deterministic evaluator."""
+    controls = material_controls(scenario)
+    if not controls:
+        return {
+            "evaluated": 1,
+            "feasible": 1,
+            "failing": 0,
+            "action_ids": action_ids,
+            "variables": [],
+            "representative_failures": [],
+            "representative_successes": [{"overrides": {}, "violated": []}],
+            "simulation": True,
+        }
+    axes = [
+        [
+            float(spec["lower"])
+            + (float(spec["upper"]) - float(spec["lower"])) * index / (points_per_variable - 1)
+            for index in range(points_per_variable)
+        ]
+        for spec in controls
+    ]
+    cases: list[dict[str, Any]] = [{}]
+    for spec, values in zip(controls, axes):
+        cases = [{**case, spec["id"]: value} for case in cases for value in values]
+    feasible = 0
+    failures: list[dict[str, Any]] = []
+    successes: list[dict[str, Any]] = []
+    for overrides in cases:
+        result = simulate(scenario, action_ids, overrides)
+        case = {
+            "overrides": result["overrides"],
+            "holds": result["holds"],
+            "violated": result["violated"],
+            "violated_labels": result["violated_labels"],
+        }
+        if result["holds"]:
+            feasible += 1
+            if len(successes) < 3:
+                successes.append(case)
+        elif len(failures) < 5:
+            failures.append(case)
+    return {
+        "evaluated": len(cases),
+        "feasible": feasible,
+        "failing": len(cases) - feasible,
+        "action_ids": action_ids,
+        "variables": [spec["id"] for spec in controls],
+        "representative_failures": failures,
+        "representative_successes": successes,
+        "simulation": True,
+    }

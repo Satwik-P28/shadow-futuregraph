@@ -194,6 +194,14 @@ def create_app(service: PlanService | None = None) -> FastAPI:
         except ValueError as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
 
+    @app.post("/api/plans/{plan_id}/lab/batch")
+    def lab_batch(plan_id: str, body: LabIn, request: Request) -> dict:
+        _require(request, plan_id)
+        try:
+            return request.state.service.batch_lab(plan_id, body.repair_id)
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+
     @app.get("/api/plans/{plan_id}/receipt")
     def receipt(plan_id: str, request: Request) -> dict:
         _require(request, plan_id)

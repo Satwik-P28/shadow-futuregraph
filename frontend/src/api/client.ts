@@ -37,6 +37,16 @@ export type LabResult = {
   evaluated_action_ids?: string[];
   simulation: boolean;
 };
+export type BatchResult = {
+  evaluated: number;
+  feasible: number;
+  failing: number;
+  action_ids: string[];
+  variables: string[];
+  representative_failures: { overrides: Record<string, number>; holds: boolean; violated: string[]; violated_labels: string[] }[];
+  representative_successes: { overrides: Record<string, number>; holds: boolean; violated: string[] }[];
+  simulation: boolean;
+};
 export type FutureCard = {
   future_id: string;
   plan_id: string;
@@ -81,6 +91,14 @@ export async function simulateLab(id: string, overrides: Record<string, number>,
 
 export async function nearestLab(id: string, repairId: string | null): Promise<LabResult> {
   return json(await fetch(`/api/plans/${id}/lab/nearest`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ repair_id: repairId }),
+  }));
+}
+
+export async function batchLab(id: string, repairId: string | null): Promise<BatchResult> {
+  return json(await fetch(`/api/plans/${id}/lab/batch`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ repair_id: repairId }),

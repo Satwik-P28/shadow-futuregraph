@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { loadLab, nearestLab, simulateLab, type LabResult, type LabVariable } from "../api/client";
+import { batchLab, loadLab, nearestLab, simulateLab, type BatchResult, type LabResult, type LabVariable } from "../api/client";
 
 export function FutureLab({
   planId,
@@ -15,6 +15,8 @@ export function FutureLab({
   const [variables, setVariables] = useState<LabVariable[]>([]);
   const [values, setValues] = useState<Record<string, number>>({});
   const [result, setResult] = useState<LabResult | null>(null);
+  const [batch, setBatch] = useState<BatchResult | null>(null);
+  const [batchBusy, setBatchBusy] = useState(false);
   const [pathId, setPathId] = useState(repairId);
 
   useEffect(() => {
@@ -33,11 +35,33 @@ export function FutureLab({
     setPathId(repairId);
   }, [repairId]);
 
+  useEffect(() => {
+    let alive = true;
+    setBatchBusy(true);
+    void batchLab(planId, pathId).then((body) => {
+      if (alive) setBatch(body);
+    }).catch(() => undefined).finally(() => {
+      if (alive) setBatchBusy(false);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [planId, pathId]);
+
   async function apply(next: Record<string, number>, nearest = false) {
     const body = nearest ? await nearestLab(planId, pathId) : await simulateLab(planId, next, pathId);
     setValues((current) => ({ ...current, ...body.overrides }));
     setResult(body);
     onHighlight(body.highlight);
+  }
+
+  async function runBatch() {
+    setBatchBusy(true);
+    try {
+      setBatch(await batchLab(planId, pathId));
+    } finally {
+      setBatchBusy(false);
+    }
   }
 
   if (!variables.length) return null;
@@ -77,6 +101,26 @@ export function FutureLab({
         <button type="button" className={`rounded-full border px-3 py-1 text-xs ${pathId === repairId ? "border-moss/60 text-moss" : "border-white/10 text-mute"}`} onClick={() => { setPathId(repairId); setResult(null); }}>
           Recommended future
         </button>
+      </div>
+      <div className="mt-4 rounded-control border border-white/10 bg-black/10 p-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.14em] text-tide">Bounded future sweep</p>
+            <p className="mt-1 text-xs text-mute">Actual grid evaluation across the selected path; not probabilities.</p>
+          </div>
+          <button type="button" className="rounded-control border border-tide/40 px-3 py-1.5 text-xs text-tide" onClick={() => void runBatch()} disabled={batchBusy}>
+            {batchBusy ? "Evaluating…" : "Evaluate futures"}
+          </button>
+        </div>
+        {batch ? (
+          <div className="mt-3">
+            <p className="text-lg text-paper">{batch.evaluated} futures evaluated</p>
+            <p className="mt-1 text-xs text-mute">{batch.feasible} feasible · {batch.failing} failing · variables: {batch.variables.join(", ")}</p>
+            {batch.representative_failures[0] ? (
+              <p className="mt-2 text-xs text-fault">Failure example: {batch.representative_failures[0].violated_labels.join("; ")}</p>
+            ) : null}
+          </div>
+        ) : null}
       </div>
       <p className="mt-3 text-xs text-mute">
         Evaluating: {pathId ?? "original intention"} · {selectedVariables.length ? selectedVariables.map((item) => item.label).join(", ") : "baseline"}

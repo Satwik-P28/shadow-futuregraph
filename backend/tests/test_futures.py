@@ -54,6 +54,17 @@ def test_nearest_failure_uses_the_stored_search() -> None:
     assert body["overrides"]
 
 
+def test_batch_lab_reports_actual_grid_counts_and_representative_cases() -> None:
+    client, plan_id = _analyzed()
+    body = client.post(f"/api/plans/{plan_id}/lab/batch", json={}).json()
+    assert body["evaluated"] == 256
+    assert body["evaluated"] == body["feasible"] + body["failing"]
+    assert body["action_ids"]
+    assert body["variables"] == ["flight_delay_min", "traffic_extra_min"]
+    assert body["representative_failures"]
+    assert all(item["holds"] is False for item in body["representative_failures"])
+
+
 def test_futures_list_and_cross_plan_disagreement() -> None:
     client, plan_id = _analyzed()
     listed = client.get("/api/futures").json()

@@ -29,6 +29,7 @@ PURPOSE_TOKENS = {
     "compile_world": ("compile_world.txt", 512),
     "compile_executable": ("compile_executable.txt", 768),
     "compile_semantic": ("compile_semantic.txt", 1024),
+    "extract_deadline": ("extract_deadline.txt", 256),
     "audit_world": ("audit_world.txt", 384),
 }
 
@@ -280,6 +281,8 @@ class FakeNemotronClient:
             payload = {"variables": [], "constraints": [], "actions": []}
         elif purpose == "compile_semantic":
             payload = {"facts": [], "links": [], "unknowns": [], "contradictions": []}
+        elif purpose == "extract_deadline":
+            payload = {"status": "NOT_FOUND", "ambiguities": []}
         else:
             raise SchemaError(f"unknown purpose {purpose}")
         return schema.model_validate(payload)
@@ -440,7 +443,7 @@ class NebiusClient:
         if "ultra" in lowered and os.environ.get("ALLOW_ULTRA", "false").lower() != "true":
             raise LiveDisabled("Ultra is disabled")
         allowed_super = os.environ.get("ALLOW_SUPER", "false").lower() == "true"
-        study_super = purpose in {"compile_world", "compile_semantic"} and model == study_compile_model()
+        study_super = purpose in {"compile_world", "compile_semantic", "extract_deadline"} and model == study_compile_model()
         if "super" in lowered and not allowed_super and not study_super:
             raise LiveDisabled("Super is disabled")
 

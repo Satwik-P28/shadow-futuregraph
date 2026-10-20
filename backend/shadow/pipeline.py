@@ -47,13 +47,15 @@ def _now() -> str:
 
 
 def _clock_minutes(value: str) -> int | None:
-    match = __import__("re").fullmatch(r"\s*(\d{1,2}):(\d{2})\s*([AP]M)\s*", value, __import__("re").IGNORECASE)
+    match = __import__("re").fullmatch(r"\s*(\d{1,2}):(\d{2})\s*([AP]M)?\s*", value, __import__("re").IGNORECASE)
     if match is None:
         return None
-    hour, minute, meridiem = int(match.group(1)), int(match.group(2)), match.group(3).upper()
+    hour, minute, meridiem = int(match.group(1)), int(match.group(2)), match.group(3)
+    if meridiem is None:
+        return hour * 60 + minute if 0 <= hour <= 23 else None
     if hour < 1 or hour > 12:
         return None
-    return (hour % 12 + (12 if meridiem == "PM" else 0)) * 60 + minute
+    return (hour % 12 + (12 if meridiem.upper() == "PM" else 0)) * 60 + minute
 
 
 def _semantic_status(status: str) -> str:
@@ -508,38 +510,32 @@ class PlanService:
 
         from shadow.llm.client import LiveDisabled, SchemaError
         from shadow.world.routing import study_compile_model
-        from shadow.world.semantic import SemanticWorld, ground_semantic
+        from shadow.world.semantic import DeadlineExtraction
 
         record = self._ready(plan_id)
         source = {"id": "reservation-confirmation", "text": text, "observed_at": _now()}
         try:
             world = self.client.complete_json(
-                "compile_semantic",
-                {"plan_text": "Extract only the event arrival deadline from this confirmation.", "records": [source]},
-                SemanticWorld,
+                "extract_deadline",
+                {"document": text},
+                DeadlineExtraction,
                 model=study_compile_model(),
             )
         except (LiveDisabled, SchemaError, ValidationError) as exc:
             return {"status": "ABSTAINED", "reason": f"Deadline extraction failed: {type(exc).__name__}."}
-        grounded = ground_semantic(world, [source], text)
-        candidates = [
-            fact for fact in world.facts
-            if any(token in f"{fact.name} {fact.kind}".lower() for token in ("arrival", "deadline"))
-        ]
-        if grounded.rejected or len(candidates) != 1:
-            detail = "; ".join(grounded.rejected[:2])
-            return {
-                "status": "ABSTAINED",
-                "reason": f"The confirmation did not yield one grounded, unambiguous arrival deadline{': ' + detail if detail else '.'}",
-            }
-        fact = candidates[0]
-        quote = fact.quote.strip()
-        value = fact.value or ""
-        if not quote or quote not in text or not value:
-            return {"status": "ABSTAINED", "reason": "The extracted deadline lacks a source-supported quotation or value."}
+        if world.status != "EXTRACTED":
+            return {"status": "ABSTAINED", "reason": "Nemotron reported no single explicit arrival deadline."}
+        quote = (world.source_quote or "").strip()
+        value = (world.time_text or "").strip()
+        if not quote or quote not in text:
+            return {"status": "ABSTAINED", "reason": "The extracted deadline quotation is not present in the supplied confirmation."}
+        if not world.deadline_text or world.deadline_text.strip() not in text:
+            return {"status": "ABSTAINED", "reason": "The extracted deadline text is not present in the supplied confirmation."}
+        if world.ambiguities:
+            return {"status": "ABSTAINED", "reason": "Nemotron reported ambiguity: " + "; ".join(world.ambiguities)}
         import re
 
-        times = re.findall(r"\b(?:[0-1]?\d):[0-5]\d\s*(?:AM|PM)\b", value, flags=re.IGNORECASE)
+        times = re.findall(r"\b(?:[0-2]?\d):[0-5]\d(?:\s*(?:AM|PM))?\b", value, flags=re.IGNORECASE)
         if len(times) != 1:
             return {"status": "ABSTAINED", "reason": "The extracted deadline is not an unambiguous clock time."}
         parsed = _clock_minutes(times[0])
@@ -549,6 +545,7 @@ class PlanService:
         if deadline is None:
             return {"status": "ABSTAINED", "reason": "This scenario has no supported deadline variable."}
         before = self.compare_lab(plan_id)
+        previous_deadline = deadline.baseline
         deadline.baseline = parsed
         record["scenario"].facts.append(WorldFact(
             id="nemotron_deadline",
@@ -562,6 +559,14 @@ class PlanService:
             text=quote,
         ))
         after = self.compare_lab(plan_id)
+        if previous_deadline != parsed and record.get("contract") is not None:
+            record["contract"].status = "STALE"
+            self.events.append(
+                plan_id,
+                "AUTHORITY_INVALIDATED",
+                {"reason": "grounded deadline changed", "previous": previous_deadline, "updated": parsed},
+                "deadline-ingestion",
+            )
         return {
             "status": "APPLIED",
             "fact": {"value": parsed, "quote": quote, "source_id": source["id"]},

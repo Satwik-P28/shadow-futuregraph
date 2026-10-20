@@ -68,6 +68,16 @@ class SemanticWorld(BaseModel):
     contradictions: list[str] = Field(default_factory=list)
 
 
+class DeadlineExtraction(BaseModel):
+    status: Literal["EXTRACTED", "AMBIGUOUS", "NOT_FOUND"]
+    deadline_text: str | None = None
+    source_quote: str | None = None
+    date_text: str | None = None
+    time_text: str | None = None
+    timezone: str | None = None
+    ambiguities: list[str] = Field(default_factory=list)
+
+
 class Grounding(BaseModel):
     status: Status
     reason: str

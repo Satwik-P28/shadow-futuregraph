@@ -6,7 +6,7 @@ from shadow.api.app import create_app
 from shadow.futures.conflicts import cross_plan_conflicts
 from shadow.pipeline import PlanService
 from shadow.runtime.events import EventLog
-from shadow.world.semantic import SemanticWorld
+from shadow.world.semantic import DeadlineExtraction
 
 TRIP = "Move my NYC trip to Friday and make sure everything still works."
 
@@ -95,18 +95,13 @@ def test_grounded_deadline_changes_real_comparison() -> None:
         calls = 0
 
         def complete_json(self, purpose, context, schema, model=None):
-            if purpose == "compile_semantic":
-                return SemanticWorld.model_validate(
-                    {
-                        "facts": [{
-                            "id": "arrival_deadline",
-                            "kind": "time",
-                            "name": "arrival deadline",
-                            "quote": "Guests must arrive by 6:30 PM",
-                            "value": "6:30 PM",
-                            "source_id": "reservation-confirmation",
-                        }]
-                    }
+            if purpose == "extract_deadline":
+                return DeadlineExtraction(
+                    status="EXTRACTED",
+                    deadline_text="Guests must arrive by 6:30 PM",
+                    source_quote="Guests must arrive by 6:30 PM",
+                    time_text="6:30 PM",
+                    ambiguities=[],
                 )
             return schema.model_validate({})
 
@@ -119,6 +114,31 @@ def test_grounded_deadline_changes_real_comparison() -> None:
     assert result["status"] == "APPLIED"
     assert result["before"]["recommended_id"] == before["recommended_id"]
     assert result["before"]["options"][0]["feasible"] != result["after"]["options"][0]["feasible"]
+
+
+def test_deadline_change_stales_existing_approval_before_execution() -> None:
+    class DeadlineClient:
+        calls = 0
+
+        def complete_json(self, purpose, context, schema, model=None):
+            if purpose == "extract_deadline":
+                return DeadlineExtraction(
+                    status="EXTRACTED",
+                    deadline_text="Guests must arrive by 6:30 PM",
+                    source_quote="Guests must arrive by 6:30 PM",
+                    time_text="6:30 PM",
+                )
+            return schema.model_validate({})
+
+    service = PlanService(EventLog("sqlite://"))
+    created = service.create(TRIP, "travel")
+    service.analyze(created["id"])
+    service.approve(created["id"], "b1120")
+    service.client = DeadlineClient()
+    result = service.ingest_deadline(created["id"], "Guests must arrive by 6:30 PM")
+    assert result["status"] == "APPLIED"
+    assert service.plans[created["id"]]["contract"].status == "STALE"
+    assert service.execute(created["id"])["status"] == "halted"
 
 
 def test_futures_list_and_cross_plan_disagreement() -> None:

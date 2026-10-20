@@ -20,6 +20,7 @@ export function FutureLab({
   const [comparison, setComparison] = useState<ComparisonResult | null>(null);
   const [confirmation, setConfirmation] = useState("");
   const [deadlineResult, setDeadlineResult] = useState<Record<string, unknown> | null>(null);
+  const [deadlineBusy, setDeadlineBusy] = useState(false);
   const [pathId, setPathId] = useState(repairId);
 
   useEffect(() => {
@@ -72,10 +73,15 @@ export function FutureLab({
   }
 
   async function submitConfirmation() {
-    const response = await ingestDeadline(planId, confirmation);
-    setDeadlineResult(response);
-    if (response.status === "APPLIED") {
-      setComparison((response.after as ComparisonResult) ?? null);
+    setDeadlineBusy(true);
+    try {
+      const response = await ingestDeadline(planId, confirmation);
+      setDeadlineResult(response);
+      if (response.status === "APPLIED") {
+        setComparison((response.after as ComparisonResult) ?? null);
+      }
+    } finally {
+      setDeadlineBusy(false);
     }
   }
 
@@ -145,7 +151,7 @@ export function FutureLab({
             <p className="text-[11px] uppercase tracking-[0.14em] text-tide">Grounded deadline update</p>
             <p className="mt-1 text-xs text-mute">Paste a supported event confirmation. Nemotron must quote it before Shadow changes the modeled deadline.</p>
             <textarea className="mt-2 min-h-20 w-full rounded-control border border-white/10 bg-black/20 p-2 text-xs text-paper" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} placeholder="Reservation confirmation: guests must arrive by 6:30 PM." />
-            <button type="button" className="mt-2 rounded-control border border-tide/40 px-3 py-1.5 text-xs text-tide" disabled={!confirmation.trim()} onClick={() => void submitConfirmation()}>Extract and re-evaluate</button>
+            <button type="button" className="mt-2 rounded-control border border-tide/40 px-3 py-1.5 text-xs text-tide" disabled={!confirmation.trim() || deadlineBusy} onClick={() => void submitConfirmation()}>{deadlineBusy ? "Updating future…" : "Update future from confirmation"}</button>
             {deadlineResult ? <p className={`mt-2 text-xs ${deadlineResult.status === "APPLIED" ? "text-moss" : "text-fault"}`}>{String(deadlineResult.status)}: {String(deadlineResult.reason ?? (deadlineResult.fact as { quote?: string })?.quote ?? "comparison updated")}</p> : null}
           </div>
           <button type="button" className="rounded-control border border-tide/40 px-3 py-1.5 text-xs text-tide" onClick={() => void runBatch()} disabled={batchBusy}>

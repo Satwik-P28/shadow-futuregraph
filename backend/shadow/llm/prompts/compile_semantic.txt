@@ -25,3 +25,7 @@ Rules:
 - Do not omit a relationship merely because the relationship itself is not quoted verbatim; cite the operand facts and use the supported relation.
 - Do not create a relationship solely to increase completeness. If entity identity, timing, or causality is ambiguous, report it as unknown.
 - If a material optional action is supported, include it in the fact and preserve the exact source wording that makes it optional.
+- If a record offers a different appointment time, emit a fact with kind `alternative`, an
+  `entity` equal to the appointment fact id, an `option_id`, and the exact proposed value.
+  Preserve the offer as evidence; do not treat it as already booked. The grounded compiler
+  will create a bounded `plan.select_option` action for that entity.

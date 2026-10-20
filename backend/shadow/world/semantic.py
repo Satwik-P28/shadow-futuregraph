@@ -45,6 +45,8 @@ class SemanticFact(BaseModel):
     source_ids: list[str] = Field(default_factory=list)
     entity: str | None = None
     optional: bool = False
+    option_id: str | None = None
+    original_value: str | None = None
 
 
 class SemanticLink(BaseModel):
@@ -230,6 +232,7 @@ def ground_semantic(world: SemanticWorld, records: list[dict[str, Any]], plan: s
                     "inputs": list(link.inputs),
                 }
             )
+    _add_alternative_actions(world.facts, parsed, variables, actions, built, rejected)
     if conflicts:
         return Grounding(
             status="CONTRADICTORY",
@@ -323,6 +326,52 @@ def _apply_link(
     if relation in {"overlaps", "overlap", "during"}:
         return _overlap(link, parsed, variables, constraints, built, missing)
     return f"unsupported relation {link.relation}"
+
+
+def _add_alternative_actions(
+    facts: list[SemanticFact],
+    parsed: dict[str, dict[str, Any]],
+    variables: list[Variable],
+    actions: list[ActionDef],
+    built: set[str],
+    rejected: list[str],
+) -> None:
+    """Turn cited alternatives into bounded actions on an existing resource."""
+    for fact in facts:
+        if fact.kind.lower() not in {"alternative", "option", "offered_alternative"}:
+            continue
+        target = _lookup(parsed, fact.entity or "")
+        option = parsed.get(fact.id)
+        if target is None or option is None or option.get("point") is None:
+            rejected.append(f"{fact.name or fact.id} does not identify a usable appointment option")
+            continue
+        target_id = _ensure_number(target, variables, built)
+        if target_id is None:
+            rejected.append(f"{fact.name or fact.id} has no grounded target value")
+            continue
+        option_id = fact.option_id or f"move_{_key(fact.entity or target.get('name') or fact.id)}"
+        if any(action.id == option_id for action in actions):
+            continue
+        original = target.get("point")
+        proposed = option["point"]
+        actions.append(
+            ActionDef(
+                id=option_id,
+                action_type="plan.select_option",
+                label=f"Select {fact.name or 'the offered alternative'}",
+                resource=fact.entity or str(target.get("name") or target_id),
+                effects={target_id: proposed},
+                metadata={
+                    "option_id": option_id,
+                    "source_id": fact.source_id,
+                    "evidence_quote": fact.quote,
+                    "original_value": original if fact.original_value is None else fact.original_value,
+                    "proposed_value": proposed,
+                    "action_type": "plan.select_option",
+                    "expected_effect": {target_id: proposed},
+                },
+            )
+        )
 
 
 def _sum_before(

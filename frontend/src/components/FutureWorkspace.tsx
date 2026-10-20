@@ -70,6 +70,27 @@ export function FutureWorkspace({
       </div>
       <div className="mt-5 grid items-start gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(300px,0.85fr)]">
         <div className="min-w-0">
+          <div className="mb-4 rounded-card border border-tide/20 bg-tide/5 p-4" aria-label="Grounded understanding">
+            <p className="text-[11px] uppercase tracking-[0.16em] text-tide">
+              {plan.compiled_from === "semantic compiler" ? "Live AI analysis" : "Deterministic analysis"}
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-paper">
+              {plan.understanding?.reason ?? "Shadow compiled the supplied facts into executable constraints."}
+            </p>
+            {plan.understanding?.shown.length ? (
+              <ul className="mt-3 grid gap-2 text-xs text-mute sm:grid-cols-2">
+                {plan.understanding.shown.slice(0, 6).map((item) => (
+                  <li key={`${item.source}-${item.extracted}`} className="rounded-control bg-black/10 p-2">
+                    <span className="text-paper">{item.extracted}</span>
+                    <span className="mt-1 block">Evidence: {item.source}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {plan.understanding?.missing.length ? (
+              <p className="mt-3 text-sm text-clay">Unresolved: {plan.understanding.missing.join("; ")}</p>
+            ) : null}
+          </div>
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-[22px] text-paper">Future graph</h2>
             <button type="button" className="rounded-control border border-white/10 px-3 py-1 text-xs" onClick={onExpand}>
@@ -132,7 +153,10 @@ export function FutureWorkspace({
           <FutureDiffPanel plan={plan} />
           <FutureLab planId={plan.id} repairId={repairId} onHighlight={onHighlight} />
           {approved ? (
-            <ExecutionTimeline plan={plan} events={events} busy={busy} onExecute={onExecute} onBlock={onBlock} />
+            <div>
+              <p className="mb-2 text-[11px] uppercase tracking-[0.16em] text-clay">Sandbox execution</p>
+              <ExecutionTimeline plan={plan} events={events} busy={busy} onExecute={onExecute} onBlock={onBlock} />
+            </div>
           ) : (
             <ApprovalPanel plan={plan} repairId={repairId} busy={busy} approved={approved} onApprove={onApprove} />
           )}

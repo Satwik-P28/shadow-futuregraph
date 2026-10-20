@@ -21,7 +21,8 @@ export function ApprovalPanel({
   const held = (plan.graph?.nodes ?? []).filter((node) => node.type === "CONSTRAINT").slice(0, 4);
   return (
     <section className="rounded-card border border-white/10 bg-elevated p-4" aria-label="Approve this future">
-      <h2 className="text-xl text-paper">Approve this future</h2>
+      <p className="text-[11px] uppercase tracking-[0.16em] text-tide">Approval required</p>
+      <h2 className="mt-1 text-xl text-paper">The safer future</h2>
       {repair ? <p className="mt-1 text-sm text-mute">{repair.label} · {money(repair.additional_cost)}</p> : null}
       {included.length ? (
         <div className="mt-3">
@@ -49,6 +50,12 @@ export function ApprovalPanel({
           </ul>
         </div>
       ) : null}
+      <div className="mt-4 border-t border-white/10 pt-3">
+        <p className="text-[11px] uppercase tracking-[0.14em] text-mute">Shadow will not change</p>
+        <p className="mt-1 text-sm text-paper">Protected commitments or unrelated resources.</p>
+        <p className="mt-3 text-[11px] uppercase tracking-[0.14em] text-mute">Execution mode</p>
+        <p className="mt-1 text-sm text-clay">SANDBOX only. This is not a real-world booking.</p>
+      </div>
       {plan.contract?.forbidden_actions?.length ? (
         <ul className="mt-3 space-y-1">
           {plan.contract.forbidden_actions.slice(0, 4).map((id) => (

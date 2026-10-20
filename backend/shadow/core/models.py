@@ -111,6 +111,7 @@ class ActionDef(BaseModel):
     irreversible: bool = False
     impacts_others: int = 0
     retryable: bool = True
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class Bundle(BaseModel):

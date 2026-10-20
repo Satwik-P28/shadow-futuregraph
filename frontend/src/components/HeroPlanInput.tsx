@@ -37,12 +37,12 @@ export function HeroPlanInput({
       <p className="mt-4 max-w-xl text-base leading-relaxed text-mute md:text-lg">
         Shadow stress-tests your plans, finds hidden failure paths, and repairs them before you act.
       </p>
-      <label htmlFor="plan" className="mt-8 block text-[11px] uppercase tracking-[0.16em] text-mute">What are you planning?</label>
+      <label htmlFor="plan" className="mt-8 block text-[11px] uppercase tracking-[0.16em] text-mute">Describe your plan</label>
       <textarea
         id="plan"
         value={text}
         onChange={(event) => onEdit(event.target.value)}
-        placeholder="Tell Shadow what you're planning..."
+        placeholder="Tell Shadow what you're planning and what can't change."
         className="mt-2 h-28 w-full resize-none rounded-card border border-white/10 bg-elevated px-4 py-3 text-base text-paper placeholder:text-mute/70 sm:h-36"
       />
       <button

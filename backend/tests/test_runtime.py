@@ -183,3 +183,15 @@ def test_broker_blocks_expired_stale_unrelated_cost_and_missing_state():
     missing.assumptions = [Assumption(id="asm-x", description="missing", variable="not_a_var", expected=1)]
     with __import__("pytest").raises(AuthorizationDenied, match="missing material state"):
         authorize(missing, flight, _world(scenario))
+
+
+def test_broker_rejects_tampered_effects_and_resource_scope():
+    scenario = load_scenario("travel")
+    flight = _flight(scenario, "set_flight_1120")
+    contract = _contract(["set_flight_1120"])
+    tampered_effects = flight.model_copy(update={"effects": {"cal_exam": "moved"}})
+    with __import__("pytest").raises(AuthorizationDenied, match="hard invariant"):
+        authorize(contract, tampered_effects, _world(scenario))
+    tampered_resource = flight.model_copy(update={"resource": "cal_exam"})
+    with __import__("pytest").raises(AuthorizationDenied, match="outside the approved future"):
+        authorize(contract, tampered_resource, _world(scenario))

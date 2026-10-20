@@ -1,6 +1,8 @@
 """Grounding tests. These proposals are handwritten stand-ins for a model, not live calls."""
 
+from shadow.pipeline import PlanService
 from shadow.repair.evaluate import evaluate_repairs
+from shadow.runtime.events import EventLog
 from shadow.simulation.engine import bind, evaluate_constraints
 from shadow.world.loader import effects_for
 from shadow.world.semantic import SemanticWorld, coerce_semantic, ground_semantic, targeted_recovery
@@ -40,6 +42,55 @@ def test_composed_ranges_fail_only_at_the_high_end() -> None:
     )
     keep = next(item for item in scored if item.id == "keep")
     assert keep.failures
+
+
+def test_grounded_appointment_alternative_becomes_a_select_option_action() -> None:
+    text = (
+        "The workshop ends at 3:10 PM. Travel to the clinic takes 40 to 50 minutes. "
+        "The clinic starts at 3:30 PM. They offered another appointment at 4:30 PM."
+    )
+    world = SemanticWorld.model_validate(
+        {
+            "facts": [
+                {"id": "workshop", "kind": "time", "name": "workshop end", "quote": "ends at 3:10 PM", "value": "3:10 PM"},
+                {"id": "travel", "kind": "duration", "name": "travel", "quote": "takes 40 to 50 minutes", "value": "40 to 50 minutes"},
+                {"id": "clinic", "kind": "time", "name": "clinic appointment", "quote": "clinic starts at 3:30 PM", "value": "3:30 PM", "entity": "clinic"},
+                {
+                    "id": "clinic_option",
+                    "kind": "alternative",
+                    "name": "clinic at 4:30 PM",
+                    "quote": "offered another appointment at 4:30 PM",
+                    "value": "4:30 PM",
+                    "entity": "clinic",
+                    "option_id": "clinic_later",
+                },
+            ],
+            "links": [
+                {
+                    "id": "arrive_clinic",
+                    "relation": "sum_before",
+                    "inputs": ["workshop", "travel"],
+                    "deadline": "clinic",
+                    "quote": "Travel to the clinic takes 40 to 50 minutes.",
+                }
+            ],
+        }
+    )
+    grounded = ground_semantic(world, [{"id": "user", "text": text}])
+    assert grounded.status == "EXECUTABLE"
+    assert grounded.scenario is not None
+    action = next(item for item in grounded.scenario.actions if item.id == "clinic_later")
+    assert action.action_type == "plan.select_option"
+    assert action.resource == "clinic"
+    assert action.metadata["proposed_value"] == 16 * 60 + 30
+    assert action.metadata["evidence_quote"] in text
+    service = PlanService(EventLog("sqlite://"))
+    view = service.open_compiled(text, grounded.scenario)
+    assert view["recommended_repair_id"] == "clinic_later"
+    service.approve(view["id"], "clinic_later")
+    result = service.execute(view["id"])
+    assert result["status"] == "verified"
+    assert result["state"]["clinic"]["clinic_appointment"] == 16 * 60 + 30
 
 
 def test_missing_transfer_is_not_invented() -> None:

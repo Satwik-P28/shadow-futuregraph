@@ -20,7 +20,7 @@ export function ExecutionTimeline({
   const executed = events.filter((event) => event.event_type === "ACTION_EXECUTED");
   return (
     <section aria-label="Execution">
-      <h2 className="text-xl text-paper">Executing approved future</h2>
+      <h2 className="text-xl text-paper">Verified sandbox result</h2>
       {executed.length ? (
         <ol className="mt-3 space-y-2">
           {executed.map((event) => {

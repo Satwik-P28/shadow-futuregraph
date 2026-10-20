@@ -256,11 +256,11 @@ class PlanService:
                 SemanticWorld,
                 model=model,
             )
-        except Exception:
+        except Exception as exc:
             return {
                 "modelability": _compiled_modelability_status(
                     "UNSUPPORTED",
-                    "The model did not return a usable semantic world.",
+                    f"Live semantic compilation failed: {type(exc).__name__}.",
                     [],
                     [],
                 ),

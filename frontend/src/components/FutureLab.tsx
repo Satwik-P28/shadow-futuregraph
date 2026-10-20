@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { batchLab, loadLab, nearestLab, simulateLab, type BatchResult, type LabResult, type LabVariable } from "../api/client";
+import { batchLab, compareLab, ingestDeadline, loadLab, nearestLab, simulateLab, type BatchResult, type ComparisonResult, type LabResult, type LabVariable } from "../api/client";
 
 export function FutureLab({
   planId,
@@ -17,6 +17,9 @@ export function FutureLab({
   const [result, setResult] = useState<LabResult | null>(null);
   const [batch, setBatch] = useState<BatchResult | null>(null);
   const [batchBusy, setBatchBusy] = useState(false);
+  const [comparison, setComparison] = useState<ComparisonResult | null>(null);
+  const [confirmation, setConfirmation] = useState("");
+  const [deadlineResult, setDeadlineResult] = useState<Record<string, unknown> | null>(null);
   const [pathId, setPathId] = useState(repairId);
 
   useEffect(() => {
@@ -48,6 +51,10 @@ export function FutureLab({
     };
   }, [planId, pathId]);
 
+  useEffect(() => {
+    void compareLab(planId).then(setComparison).catch(() => undefined);
+  }, [planId, batch]);
+
   async function apply(next: Record<string, number>, nearest = false) {
     const body = nearest ? await nearestLab(planId, pathId) : await simulateLab(planId, next, pathId);
     setValues((current) => ({ ...current, ...body.overrides }));
@@ -61,6 +68,14 @@ export function FutureLab({
       setBatch(await batchLab(planId, pathId));
     } finally {
       setBatchBusy(false);
+    }
+  }
+
+  async function submitConfirmation() {
+    const response = await ingestDeadline(planId, confirmation);
+    setDeadlineResult(response);
+    if (response.status === "APPLIED") {
+      setComparison((response.after as ComparisonResult) ?? null);
     }
   }
 
@@ -107,6 +122,31 @@ export function FutureLab({
           <div>
             <p className="text-[11px] uppercase tracking-[0.14em] text-tide">Bounded future sweep</p>
             <p className="mt-1 text-xs text-mute">Actual grid evaluation across the selected path; not probabilities.</p>
+          </div>
+          {comparison ? (
+            <div className="mt-4 rounded-control border border-white/10 bg-black/10 p-3">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-tide">Compared futures</p>
+              <p className="mt-1 text-xs text-mute">{comparison.evaluated_per_option} actual evaluations per supported option. {comparison.objective}.</p>
+              <div className="mt-3 grid gap-2 md:grid-cols-2">
+                {comparison.options.map((option) => (
+                  <div key={option.id} className={`rounded-control border p-3 ${option.recommended ? "border-moss/50" : "border-white/10"}`}>
+                    <div className="flex justify-between gap-2">
+                      <span className="text-sm text-paper">{option.label}</span>
+                      {option.recommended ? <span className="text-xs text-moss">Selected</span> : null}
+                    </div>
+                    <p className="mt-1 text-xs text-mute">{option.feasible} feasible · {option.hard_constraint_failures} failing · margin {Math.round(option.worst_tested_constraint_margin)} · cost {option.cost}</p>
+                    {option.representative_failures[0] ? <p className="mt-1 text-xs text-fault">{option.representative_failures[0].violated_labels.join("; ")}</p> : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+          <div className="mt-4 rounded-control border border-white/10 bg-black/10 p-3">
+            <p className="text-[11px] uppercase tracking-[0.14em] text-tide">Grounded deadline update</p>
+            <p className="mt-1 text-xs text-mute">Paste a supported event confirmation. Nemotron must quote it before Shadow changes the modeled deadline.</p>
+            <textarea className="mt-2 min-h-20 w-full rounded-control border border-white/10 bg-black/20 p-2 text-xs text-paper" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} placeholder="Reservation confirmation: guests must arrive by 6:30 PM." />
+            <button type="button" className="mt-2 rounded-control border border-tide/40 px-3 py-1.5 text-xs text-tide" disabled={!confirmation.trim()} onClick={() => void submitConfirmation()}>Extract and re-evaluate</button>
+            {deadlineResult ? <p className={`mt-2 text-xs ${deadlineResult.status === "APPLIED" ? "text-moss" : "text-fault"}`}>{String(deadlineResult.status)}: {String(deadlineResult.reason ?? (deadlineResult.fact as { quote?: string })?.quote ?? "comparison updated")}</p> : null}
           </div>
           <button type="button" className="rounded-control border border-tide/40 px-3 py-1.5 text-xs text-tide" onClick={() => void runBatch()} disabled={batchBusy}>
             {batchBusy ? "Evaluating…" : "Evaluate futures"}

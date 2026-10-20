@@ -45,6 +45,17 @@ export type BatchResult = {
   variables: string[];
   representative_failures: { overrides: Record<string, number>; holds: boolean; violated: string[]; violated_labels: string[] }[];
   representative_successes: { overrides: Record<string, number>; holds: boolean; violated: string[] }[];
+  hard_constraint_failures: number;
+  worst_tested_constraint_margin: number;
+  overall_feasible: boolean;
+  simulation: boolean;
+};
+export type ComparisonResult = {
+  evaluated_per_option: number;
+  variables: string[];
+  objective: string;
+  recommended_id: string | null;
+  options: (BatchResult & { id: string; label: string; source: string; cost: number; recommended: boolean })[];
   simulation: boolean;
 };
 export type FutureCard = {
@@ -102,6 +113,18 @@ export async function batchLab(id: string, repairId: string | null): Promise<Bat
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ repair_id: repairId }),
+  }));
+}
+
+export async function compareLab(id: string): Promise<ComparisonResult> {
+  return json(await fetch(`/api/plans/${id}/lab/compare`));
+}
+
+export async function ingestDeadline(id: string, text: string): Promise<Record<string, unknown>> {
+  return json(await fetch(`/api/plans/${id}/deadline`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text }),
   }));
 }
 

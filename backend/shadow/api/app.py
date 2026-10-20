@@ -49,6 +49,10 @@ class LabIn(BaseModel):
     repair_id: str | None = None
 
 
+class DeadlineIn(BaseModel):
+    text: str = Field(min_length=1, max_length=4000)
+
+
 def create_app(service: PlanService | None = None) -> FastAPI:
     app = FastAPI(title="Shadow", version="1.0.0")
     shared = service
@@ -199,6 +203,22 @@ def create_app(service: PlanService | None = None) -> FastAPI:
         _require(request, plan_id)
         try:
             return request.state.service.batch_lab(plan_id, body.repair_id)
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+    @app.get("/api/plans/{plan_id}/lab/compare")
+    def lab_compare(plan_id: str, request: Request) -> dict:
+        _require(request, plan_id)
+        try:
+            return request.state.service.compare_lab(plan_id)
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+    @app.post("/api/plans/{plan_id}/deadline")
+    def deadline(plan_id: str, body: DeadlineIn, request: Request) -> dict:
+        _require(request, plan_id)
+        try:
+            return request.state.service.ingest_deadline(plan_id, body.text)
         except ValueError as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
 

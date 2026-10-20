@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from shadow.core.expr import UNKNOWN, Expr, evaluate
 from shadow.core.models import RepairMetrics, Scenario
 from shadow.failures.search import describe_failure
 from shadow.simulation.engine import (
@@ -103,18 +104,50 @@ def batch_simulate(
     points_per_variable: int = 16,
 ) -> dict[str, Any]:
     """Evaluate a bounded Cartesian grid using the same deterministic evaluator."""
+    return _evaluate_option(scenario, action_ids, _grid(scenario, points_per_variable))
+
+
+def compare_simulations(
+    scenario: Scenario,
+    options: list[dict[str, Any]],
+    *,
+    points_per_variable: int = 16,
+) -> dict[str, Any]:
+    cases = _grid(scenario, points_per_variable)
+    comparisons = [_evaluate_option(scenario, option["action_ids"], cases) | {
+        "id": option["id"],
+        "label": option["label"],
+        "source": option.get("source", "catalog"),
+        "cost": option.get("cost", 0),
+    } for option in options]
+    ranked = sorted(
+        comparisons,
+        key=lambda item: (
+            not item["overall_feasible"],
+            -item["worst_tested_constraint_margin"],
+            item["cost"],
+            item["id"],
+        ),
+    )
+    winner = ranked[0]["id"] if ranked and ranked[0]["overall_feasible"] else None
+    for item in comparisons:
+        item["recommended"] = item["id"] == winner
+    return {
+        "evaluated_per_option": len(cases),
+        "variables": [spec["id"] for spec in material_controls(scenario)],
+        "objective": "hard constraints first; then maximize worst tested hard-constraint margin; then minimize added cost",
+        "options": comparisons,
+        "recommended_id": winner,
+        "simulation": True,
+    }
+
+
+def _grid(scenario: Scenario, points_per_variable: int) -> list[dict[str, float]]:
     controls = material_controls(scenario)
     if not controls:
-        return {
-            "evaluated": 1,
-            "feasible": 1,
-            "failing": 0,
-            "action_ids": action_ids,
-            "variables": [],
-            "representative_failures": [],
-            "representative_successes": [{"overrides": {}, "violated": []}],
-            "simulation": True,
-        }
+        return [{}]
+    if points_per_variable < 2:
+        raise ValueError("points_per_variable must be at least 2")
     axes = [
         [
             float(spec["lower"])
@@ -123,14 +156,30 @@ def batch_simulate(
         ]
         for spec in controls
     ]
-    cases: list[dict[str, Any]] = [{}]
+    cases: list[dict[str, float]] = [{}]
     for spec, values in zip(controls, axes):
         cases = [{**case, spec["id"]: value} for case in cases for value in values]
+    return cases
+
+
+def _evaluate_option(
+    scenario: Scenario,
+    action_ids: list[str],
+    cases: list[dict[str, float]],
+) -> dict[str, Any]:
     feasible = 0
+    nominal_holds = False
+    worst_margin = float("inf")
     failures: list[dict[str, Any]] = []
     successes: list[dict[str, Any]] = []
-    for overrides in cases:
+    for index, overrides in enumerate(cases):
         result = simulate(scenario, action_ids, overrides)
+        if index == 0:
+            nominal_holds = result["holds"]
+        env = bind(scenario, effects_for(scenario, action_ids), overrides)
+        margin = _hard_margin(scenario, env)
+        if margin is not None:
+            worst_margin = min(worst_margin, margin)
         case = {
             "overrides": result["overrides"],
             "holds": result["holds"],
@@ -148,8 +197,38 @@ def batch_simulate(
         "feasible": feasible,
         "failing": len(cases) - feasible,
         "action_ids": action_ids,
-        "variables": [spec["id"] for spec in controls],
+        "variables": [spec["id"] for spec in material_controls(scenario)],
         "representative_failures": failures,
         "representative_successes": successes,
+        "hard_constraint_failures": len(cases) - feasible,
+        "worst_tested_constraint_margin": 0 if worst_margin == float("inf") else worst_margin,
+        "overall_feasible": nominal_holds,
         "simulation": True,
     }
+
+
+def _hard_margin(scenario: Scenario, env: dict[str, Any]) -> float | None:
+    margins: list[float] = []
+    for constraint in scenario.constraints:
+        if constraint.hardness != "hard":
+            continue
+        margin = _constraint_margin(constraint.expr, env)
+        if margin is not None:
+            margins.append(margin)
+    return min(margins) if margins else None
+
+
+def _constraint_margin(expr: Expr, env: dict[str, Any]) -> float | None:
+    if expr.op in {"lte", "lt", "gte", "gt", "eq"} and len(expr.args) == 2:
+        left = evaluate(expr.args[0], env)
+        right = evaluate(expr.args[1], env)
+        if left is UNKNOWN or right is UNKNOWN or not isinstance(left, (int, float)) or not isinstance(right, (int, float)):
+            return None
+        if expr.op in {"lte", "lt"}:
+            return float(right - left)
+        if expr.op in {"gte", "gt"}:
+            return float(left - right)
+        return float(-abs(left - right))
+    margins = [_constraint_margin(arg, env) for arg in expr.args]
+    values = [value for value in margins if value is not None]
+    return min(values) if values else None

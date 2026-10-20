@@ -19,11 +19,12 @@ from shadow.core.models import (
     PlanSpec,
     RepairProposal,
     Scenario,
+    WorldFact,
 )
 from shadow.failures.search import describe_failure
 from shadow.future_graph.build import build_graph
 from shadow.futures.conflicts import cross_plan_conflicts, demo_pair
-from shadow.futures.lab import material_controls, nearest_failure, simulate
+from shadow.futures.lab import compare_simulations, material_controls, nearest_failure, simulate
 from shadow.integrations.sandbox import SandboxProviders
 from shadow.life.graph import project_life
 from shadow.llm.client import FakeNemotronClient
@@ -43,6 +44,16 @@ from shadow.world.modelability import assess_freeform
 
 def _now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _clock_minutes(value: str) -> int | None:
+    match = __import__("re").fullmatch(r"\s*(\d{1,2}):(\d{2})\s*([AP]M)\s*", value, __import__("re").IGNORECASE)
+    if match is None:
+        return None
+    hour, minute, meridiem = int(match.group(1)), int(match.group(2)), match.group(3).upper()
+    if hour < 1 or hour > 12:
+        return None
+    return (hour % 12 + (12 if meridiem == "PM" else 0)) * 60 + minute
 
 
 def _semantic_status(status: str) -> str:
@@ -482,6 +493,81 @@ class PlanService:
         record = self._ready(plan_id)
         repair = self._repair(record, repair_id)
         return batch_simulate(record["scenario"], repair.action_ids)
+
+    def compare_lab(self, plan_id: str) -> dict[str, Any]:
+        record = self._ready(plan_id)
+        scenario: Scenario = record["scenario"]
+        options = [
+            {"id": repair.id, "label": repair.label, "action_ids": repair.action_ids, "source": repair.source, "cost": repair.additional_cost}
+            for repair in record["repairs"]
+        ]
+        return compare_simulations(scenario, options)
+
+    def ingest_deadline(self, plan_id: str, text: str) -> dict[str, Any]:
+        from pydantic import ValidationError
+
+        from shadow.llm.client import LiveDisabled, SchemaError
+        from shadow.world.routing import study_compile_model
+        from shadow.world.semantic import SemanticWorld, ground_semantic
+
+        record = self._ready(plan_id)
+        source = {"id": "reservation-confirmation", "text": text, "observed_at": _now()}
+        try:
+            world = self.client.complete_json(
+                "compile_semantic",
+                {"plan_text": "Extract only the event arrival deadline from this confirmation.", "records": [source]},
+                SemanticWorld,
+                model=study_compile_model(),
+            )
+        except (LiveDisabled, SchemaError, ValidationError) as exc:
+            return {"status": "ABSTAINED", "reason": f"Deadline extraction failed: {type(exc).__name__}."}
+        grounded = ground_semantic(world, [source], text)
+        candidates = [
+            fact for fact in world.facts
+            if any(token in f"{fact.name} {fact.kind}".lower() for token in ("arrival", "deadline"))
+        ]
+        if grounded.rejected or len(candidates) != 1:
+            detail = "; ".join(grounded.rejected[:2])
+            return {
+                "status": "ABSTAINED",
+                "reason": f"The confirmation did not yield one grounded, unambiguous arrival deadline{': ' + detail if detail else '.'}",
+            }
+        fact = candidates[0]
+        quote = fact.quote.strip()
+        value = fact.value or ""
+        if not quote or quote not in text or not value:
+            return {"status": "ABSTAINED", "reason": "The extracted deadline lacks a source-supported quotation or value."}
+        import re
+
+        times = re.findall(r"\b(?:[0-1]?\d):[0-5]\d\s*(?:AM|PM)\b", value, flags=re.IGNORECASE)
+        if len(times) != 1:
+            return {"status": "ABSTAINED", "reason": "The extracted deadline is not an unambiguous clock time."}
+        parsed = _clock_minutes(times[0])
+        if parsed is None:
+            return {"status": "ABSTAINED", "reason": "The extracted deadline could not be parsed."}
+        deadline = next((item for item in record["scenario"].variables if item.id == "dinner_deadline_min"), None)
+        if deadline is None:
+            return {"status": "ABSTAINED", "reason": "This scenario has no supported deadline variable."}
+        before = self.compare_lab(plan_id)
+        deadline.baseline = parsed
+        record["scenario"].facts.append(WorldFact(
+            id="nemotron_deadline",
+            subject="dinner",
+            predicate="arrival_deadline",
+            value=parsed,
+            observed_at=source["observed_at"],
+            source_type="user_confirmation",
+            source_id="user_confirmation",
+            epistemic_status="VERIFIED",
+            text=quote,
+        ))
+        after = self.compare_lab(plan_id)
+        return {
+            "status": "APPLIED",
+            "fact": {"value": parsed, "quote": quote, "source_id": source["id"]},
+            "before": before,
+            "after": after,
+        }
 
     def nearest_lab(self, plan_id: str, repair_id: str | None = None) -> dict[str, Any]:
         record = self._ready(plan_id)

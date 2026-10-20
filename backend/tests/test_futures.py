@@ -4,6 +4,9 @@ from fastapi.testclient import TestClient
 
 from shadow.api.app import create_app
 from shadow.futures.conflicts import cross_plan_conflicts
+from shadow.pipeline import PlanService
+from shadow.runtime.events import EventLog
+from shadow.world.semantic import SemanticWorld
 
 TRIP = "Move my NYC trip to Friday and make sure everything still works."
 
@@ -63,6 +66,59 @@ def test_batch_lab_reports_actual_grid_counts_and_representative_cases() -> None
     assert body["variables"] == ["flight_delay_min", "traffic_extra_min"]
     assert body["representative_failures"]
     assert all(item["holds"] is False for item in body["representative_failures"])
+
+
+def test_compare_lab_uses_same_grid_and_deterministic_winner() -> None:
+    client, plan_id = _analyzed()
+    body = client.get(f"/api/plans/{plan_id}/lab/compare").json()
+    assert body["evaluated_per_option"] == 256
+    assert len(body["options"]) >= 2
+    assert all(item["evaluated"] == 256 for item in body["options"])
+    assert body["recommended_id"] == "b1120"
+    assert next(item for item in body["options"] if item["id"] == "b1120")["recommended"] is True
+
+
+def test_ambiguous_deadline_confirmation_abstains_without_mutation() -> None:
+    client, plan_id = _analyzed()
+    before = client.get(f"/api/plans/{plan_id}/lab/compare").json()
+    response = client.post(
+        f"/api/plans/{plan_id}/deadline",
+        json={"text": "The reservation time is either 6:30 PM or 7:30 PM."},
+    ).json()
+    after = client.get(f"/api/plans/{plan_id}/lab/compare").json()
+    assert response["status"] == "ABSTAINED"
+    assert after["recommended_id"] == before["recommended_id"]
+
+
+def test_grounded_deadline_changes_real_comparison() -> None:
+    class DeadlineClient:
+        calls = 0
+
+        def complete_json(self, purpose, context, schema, model=None):
+            if purpose == "compile_semantic":
+                return SemanticWorld.model_validate(
+                    {
+                        "facts": [{
+                            "id": "arrival_deadline",
+                            "kind": "time",
+                            "name": "arrival deadline",
+                            "quote": "Guests must arrive by 6:30 PM",
+                            "value": "6:30 PM",
+                            "source_id": "reservation-confirmation",
+                        }]
+                    }
+                )
+            return schema.model_validate({})
+
+    service = PlanService(EventLog("sqlite://"))
+    created = service.create(TRIP, "travel")
+    service.analyze(created["id"])
+    service.client = DeadlineClient()
+    before = service.compare_lab(created["id"])
+    result = service.ingest_deadline(created["id"], "Guests must arrive by 6:30 PM")
+    assert result["status"] == "APPLIED"
+    assert result["before"]["recommended_id"] == before["recommended_id"]
+    assert result["before"]["options"][0]["feasible"] != result["after"]["options"][0]["feasible"]
 
 
 def test_futures_list_and_cross_plan_disagreement() -> None:

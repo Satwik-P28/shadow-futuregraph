@@ -70,7 +70,7 @@ describe("freeform planning", () => {
     });
     render(<App />);
     const custom = "Should I marry this person?";
-    fireEvent.change(screen.getByLabelText("Describe your plan"), { target: { value: custom } });
+    fireEvent.change(screen.getByLabelText("What are you planning?"), { target: { value: custom } });
     fireEvent.click(screen.getByRole("button", { name: "Analyze my future" }));
     await waitFor(() => expect(seen).toEqual([`${custom}|null`]));
   });
@@ -81,7 +81,7 @@ describe("freeform planning", () => {
     });
     render(<App />);
     fireEvent.click(screen.getByRole("button", { name: "NYC trip" }));
-    expect(screen.getByLabelText("Describe your plan")).toHaveProperty("value", TRIP);
+    expect(screen.getByLabelText("What are you planning?")).toHaveProperty("value", TRIP);
     expect(screen.getByText("EXAMPLE CONTEXT")).toBeTruthy();
   });
 
@@ -94,18 +94,18 @@ describe("freeform planning", () => {
     render(<App />);
     fireEvent.click(screen.getByRole("button", { name: "NYC trip" }));
     const edited = `${TRIP} Keep dinner.`;
-    fireEvent.change(screen.getByLabelText("Describe your plan"), { target: { value: edited } });
+    fireEvent.change(screen.getByLabelText("What are you planning?"), { target: { value: edited } });
     expect(screen.queryByText("EXAMPLE CONTEXT")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Analyze my future" }));
     await waitFor(() => expect(seen).toEqual([edited]));
-    expect(screen.getByLabelText("Describe your plan")).toHaveProperty("value", edited);
+    expect(screen.getByLabelText("What are you planning?")).toHaveProperty("value", edited);
   });
 
   it("fills the apartment example", () => {
     installFetch(() => ({ modelability: null, plan: null }));
     render(<App />);
     fireEvent.click(screen.getByRole("button", { name: "Apartment move" }));
-    expect(screen.getByLabelText("Describe your plan")).toHaveProperty("value", MOVE);
+    expect(screen.getByLabelText("What are you planning?")).toHaveProperty("value", MOVE);
   });
 
   it("renders missing information", async () => {
@@ -123,7 +123,7 @@ describe("freeform planning", () => {
       plan: null,
     }));
     render(<App />);
-    fireEvent.change(screen.getByLabelText("Describe your plan"), { target: { value: "Move my dentist appointment to Thursday without interfering with class." } });
+    fireEvent.change(screen.getByLabelText("What are you planning?"), { target: { value: "Move my dentist appointment to Thursday without interfering with class." } });
     fireEvent.click(screen.getByRole("button", { name: "Analyze my future" }));
     expect(await screen.findByText("Missing information")).toBeTruthy();
     expect(screen.getByText("the calendar record for the event you want to move")).toBeTruthy();
@@ -145,7 +145,7 @@ describe("freeform planning", () => {
       plan: null,
     }));
     render(<App />);
-    fireEvent.change(screen.getByLabelText("Describe your plan"), { target: { value: "Should I marry this person?" } });
+    fireEvent.change(screen.getByLabelText("What are you planning?"), { target: { value: "Should I marry this person?" } });
     fireEvent.click(screen.getByRole("button", { name: "Analyze my future" }));
     expect(await screen.findByText(/I don't have enough grounded information/)).toBeTruthy();
     expect(screen.getByText(/I won't pretend to simulate it/)).toBeTruthy();

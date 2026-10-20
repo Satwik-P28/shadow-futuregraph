@@ -37,7 +37,7 @@ export function HeroPlanInput({
       <p className="mt-4 max-w-xl text-base leading-relaxed text-mute md:text-lg">
         Shadow stress-tests your plans, finds hidden failure paths, and repairs them before you act.
       </p>
-      <label htmlFor="plan" className="mt-8 block text-[11px] uppercase tracking-[0.16em] text-mute">Describe your plan</label>
+      <label htmlFor="plan" className="mt-8 block text-[11px] uppercase tracking-[0.16em] text-mute">What are you planning?</label>
       <textarea
         id="plan"
         value={text}

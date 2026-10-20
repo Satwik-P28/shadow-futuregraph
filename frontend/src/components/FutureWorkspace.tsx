@@ -153,7 +153,7 @@ export function FutureWorkspace({
           />
           <RepairPanel plan={plan} repairId={repairId} onSelect={onSelectRepair} onDiff={() => document.getElementById("future-diff")?.scrollIntoView({ block: "nearest" })} />
           <FutureDiffPanel plan={plan} />
-          <FutureLab planId={plan.id} repairId={repairId} onHighlight={onHighlight} />
+          <FutureLab planId={plan.id} repairId={repairId} naiveRepairId={plan.naive_repair_id} onHighlight={onHighlight} />
           {approved ? (
             <div>
               <p className="mb-2 text-[11px] uppercase tracking-[0.16em] text-clay">Sandbox execution</p>

@@ -39,6 +39,11 @@ def test_future_lab_is_local_and_reports_the_boundary() -> None:
     assert broken["holds"] is False
     assert "not_a_variable" not in broken["overrides"]
     assert broken["violated_labels"]
+    assert {item["variable"] for item in broken["perturbations"]} == {
+        "flight_delay_min",
+        "traffic_extra_min",
+    }
+    assert broken["evaluated_action_ids"]
 
 
 def test_nearest_failure_uses_the_stored_search() -> None:

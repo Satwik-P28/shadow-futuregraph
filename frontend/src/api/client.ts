@@ -33,6 +33,8 @@ export type LabResult = {
   violated_labels: string[];
   highlight: string[];
   message: string;
+  perturbations?: { variable: string; label: string; baseline: number; value: number }[];
+  evaluated_action_ids?: string[];
   simulation: boolean;
 };
 export type FutureCard = {

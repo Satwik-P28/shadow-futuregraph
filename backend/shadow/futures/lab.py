@@ -56,6 +56,16 @@ def simulate(scenario: Scenario, action_ids: list[str], overrides: dict[str, Any
     results = evaluate_constraints(scenario, env)
     violations, unresolved, names = hard_status(scenario, results)
     labels = [next(item.label for item in scenario.constraints if item.id == name) for name in names]
+    perturbations = [
+        {
+            "variable": key,
+            "label": next(item["label"] for item in allowed.values() if item["id"] == key),
+            "baseline": item["baseline"],
+            "value": value,
+        }
+        for key, value in clean.items()
+        for item in [allowed[key]]
+    ]
     highlight = [f"con:{name}" for name in names] + [f"var:{key}" for key in clean]
     if violations == 0 and unresolved == 0:
         message = "Hard constraints hold under this simulation."
@@ -71,6 +81,8 @@ def simulate(scenario: Scenario, action_ids: list[str], overrides: dict[str, Any
         "unresolved": unresolved,
         "highlight": highlight,
         "message": message,
+        "perturbations": perturbations,
+        "evaluated_action_ids": list(action_ids),
         "simulation": True,
     }
 

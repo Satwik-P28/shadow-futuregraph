@@ -530,6 +530,8 @@ class PlanService:
     def personal_status(self) -> dict[str, Any]:
         import os
 
+        from shadow.world.compiler import load_bundle
+
         watched = [
             record
             for record in self.plans.values()
@@ -554,6 +556,14 @@ class PlanService:
                 "real_actions_enabled": os.environ.get("SHADOW_REAL_ACTIONS_ENABLED", "false").lower() == "true",
             },
             "mode": "SANDBOX",
+            "sample_workspace": [
+                {
+                    "source": row.get("kind", "record").replace("_", " ").title(),
+                    "record_id": row.get("id"),
+                    "text": row.get("text"),
+                }
+                for row in (load_bundle("travel") or {}).get("records", [])
+            ],
         }
 
     def _stage(self, record: dict[str, Any], name: str) -> None:

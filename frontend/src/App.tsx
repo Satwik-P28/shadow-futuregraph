@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { analyzeFreeform, approveRepair, attemptAction, executePlan, injectEvent, loadBenchmark, loadEvents, loadFutures, loadPersonalStatus, loadPlan, resetDemo, type CrossPlanConflict, type FutureCard } from "./api/client";
-import type { ConnectedTools, GraphNode, ModelabilityResult, PlanView, TraceEvent } from "./api/types";
+import type { ConnectedTools, GraphNode, ModelabilityResult, PlanView, SampleRecord, TraceEvent } from "./api/types";
 import { DecisionTrace } from "./components/DecisionTrace";
 import { EvaluationPanel, formatBenchmark } from "./components/EvaluationPanel";
 import { FutureEmptyState } from "./components/FutureEmptyState";
@@ -9,6 +9,7 @@ import { FutureWorkspace } from "./components/FutureWorkspace";
 import { GraphSkeleton } from "./components/AnalysisProgress";
 import { EXAMPLES, HeroPlanInput } from "./components/HeroPlanInput";
 import { ShadowWatch } from "./components/ShadowWatch";
+import { GuidedDemoControls } from "./components/GuidedDemoControls";
 
 const SANDBOX_TOOLS: ConnectedTools = { calendar: "SANDBOX", mail: "SANDBOX", travel: "SANDBOX", search: "OFF" };
 
@@ -34,10 +35,17 @@ export function App() {
   const [pulseToken, setPulseToken] = useState(0);
   const [futures, setFutures] = useState<FutureCard[]>([]);
   const [conflicts, setConflicts] = useState<CrossPlanConflict[]>([]);
+  const [sampleRecords, setSampleRecords] = useState<SampleRecord[]>([]);
+  const [sampleOpen, setSampleOpen] = useState(false);
+  const [guided, setGuided] = useState(false);
+  const [guidedStage, setGuidedStage] = useState(0);
 
   useEffect(() => {
     void loadPersonalStatus()
-      .then((status) => setTools(status.connected_tools))
+      .then((status) => {
+        setTools(status.connected_tools);
+        setSampleRecords(status.sample_workspace ?? []);
+      })
       .catch(() => undefined);
   }, []);
 
@@ -49,6 +57,24 @@ export function App() {
       })
       .catch(() => undefined);
   }, [plan?.id, plan?.status]);
+
+  useEffect(() => {
+    if (!guided || !workspace) return;
+    const timer = window.setInterval(() => setGuidedStage((value) => Math.min(value + 1, 4)), 1800);
+    return () => window.clearInterval(timer);
+  }, [guided, workspace]);
+
+  useEffect(() => {
+    if (!guided || !plan?.graph) return;
+    const types = [
+      new Set(["CURRENT_STATE", "EVIDENCE"]),
+      new Set(["ACTION", "REPAIR"]),
+      new Set(["EXOGENOUS_EVENT", "FAILURE", "CONSTRAINT"]),
+      new Set(["REPAIR", "OUTCOME"]),
+      new Set(["OUTCOME"]),
+    ][guidedStage];
+    setHighlight(plan.graph.nodes.filter((node) => types.has(node.type)).map((node) => node.id));
+  }, [guided, guidedStage, plan]);
 
   function loadExample(next: "travel" | "apartment") {
     setExampleId(next);
@@ -214,6 +240,23 @@ export function App() {
           });
         }}
       />
+      <div className="mb-6">
+        <GuidedDemoControls
+          active={guided}
+          stage={guidedStage}
+          onStart={() => {
+            setGuided(true);
+            setGuidedStage(0);
+            void restoreDemo();
+          }}
+          onPause={() => setGuided(false)}
+          onSkip={() => setGuidedStage((value) => Math.min(value + 1, 4))}
+          onRestart={() => {
+            setGuidedStage(0);
+            void restoreDemo();
+          }}
+        />
+      </div>
 
       {workspace && plan?.graph ? (
         <FutureWorkspace
@@ -252,6 +295,9 @@ export function App() {
               onEdit={editPlan}
               onAnalyze={() => void analyzeCurrentPlan()}
               onExample={loadExample}
+              sampleRecords={sampleRecords}
+              sampleOpen={sampleOpen}
+              onSampleToggle={() => setSampleOpen((value) => !value)}
             />
             <div className="mt-6">
               <ShadowWatch plan={plan} />

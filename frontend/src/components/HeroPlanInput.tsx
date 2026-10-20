@@ -2,6 +2,7 @@ import { ArrowRight } from "lucide-react";
 import type { ConnectedTools, ModelabilityResult } from "../api/types";
 import { AnalysisProgress } from "./AnalysisProgress";
 import { ConnectedContext } from "./ConnectedContext";
+import { SampleWorkspace } from "./SampleWorkspace";
 
 const TRIP = "Move my NYC trip to Friday and make sure everything still works.";
 const MOVE = "I'm thinking about moving apartments next month. Does this plan actually work?";
@@ -18,6 +19,9 @@ export function HeroPlanInput({
   onEdit,
   onAnalyze,
   onExample,
+  sampleRecords,
+  sampleOpen,
+  onSampleToggle,
 }: {
   text: string;
   exampleId: "travel" | "apartment" | null;
@@ -28,11 +32,14 @@ export function HeroPlanInput({
   onEdit: (value: string) => void;
   onAnalyze: () => void;
   onExample: (id: "travel" | "apartment") => void;
+  sampleRecords: import("../api/types").SampleRecord[];
+  sampleOpen: boolean;
+  onSampleToggle: () => void;
 }) {
   return (
     <div>
       <h1 className="max-w-xl text-4xl font-medium tracking-tight text-paper md:text-5xl md:leading-[1.08]">
-        See the future before you commit to it.
+        See what could go wrong. Choose what happens next.
       </h1>
       <p className="mt-4 max-w-xl text-base leading-relaxed text-mute md:text-lg">
         Shadow stress-tests your plans, finds hidden failure paths, and repairs them before you act.
@@ -69,6 +76,9 @@ export function HeroPlanInput({
       <div className="mt-5">
         <ConnectedContext tools={tools} />
       </div>
+      {sampleRecords.length ? (
+        <SampleWorkspace records={sampleRecords} open={sampleOpen} onToggle={onSampleToggle} onLoad={() => onExample("travel")} />
+      ) : null}
       {busy ? <AnalysisProgress active /> : null}
       {error ? <p className="mt-4 text-sm text-fault">{error}</p> : null}
       {modelability?.status === "NEEDS_INFORMATION" ? (

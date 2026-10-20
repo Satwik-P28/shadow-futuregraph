@@ -11,6 +11,7 @@ import { ExecutionTimeline } from "./ExecutionTimeline";
 import { FutureDiffPanel } from "./FutureDiffPanel";
 import { RepairPanel } from "./RepairPanel";
 import { ShadowWatch } from "./ShadowWatch";
+import { FutureStory } from "./FutureStory";
 
 export function FutureWorkspace({
   plan,
@@ -70,6 +71,7 @@ export function FutureWorkspace({
       </div>
       <div className="mt-5 grid items-start gap-6 lg:grid-cols-[minmax(0,1.7fr)_minmax(300px,0.85fr)]">
         <div className="min-w-0">
+          <FutureStory plan={plan} />
           <div className="mb-4 rounded-card border border-tide/20 bg-tide/5 p-4" aria-label="Grounded understanding">
             <p className="text-[11px] uppercase tracking-[0.16em] text-tide">
               {plan.compiled_from === "semantic compiler" ? "Live AI analysis" : "Deterministic analysis"}

@@ -1,4 +1,4 @@
-import type { ConnectedTools, FreeformResponse, PlanView, TraceEvent } from "./types";
+import type { ConnectedTools, FreeformResponse, PlanView, SampleRecord, TraceEvent } from "./types";
 
 async function json<T>(response: Response): Promise<T> {
   if (!response.ok) {
@@ -96,7 +96,7 @@ export async function loadReceipt(id: string): Promise<{
   return json(await fetch(`/api/plans/${id}/receipt`));
 }
 
-export async function loadPersonalStatus(): Promise<{ connected_tools: ConnectedTools }> {
+export async function loadPersonalStatus(): Promise<{ connected_tools: ConnectedTools; sample_workspace?: SampleRecord[] }> {
   return json(await fetch("/api/personal-ai/status"));
 }
 

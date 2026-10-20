@@ -67,6 +67,8 @@ export type ConnectedTools = {
   search: string;
 };
 
+export type SampleRecord = { source: string; record_id: string; text: string };
+
 export type PlanView = {
   id: string;
   text: string;
